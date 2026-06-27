@@ -178,12 +178,11 @@ function Index() {
                 Здесь мы создаём продукты, которые становятся частью жизни нашего комьюнити.
               </p>
             </div>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-5 sm:grid-cols-3">
               {[
                 { t: "Geshan Dev", d: "Профессиональная разработка для Minecraft: плагины, моды, шейдеры, ресурспаки." },
                 { t: "Geshan Lab", d: "Лаборатория инноваций для смелых и необычных экспериментов." },
                 { t: "Geshan Game", d: "Студия по созданию игр с уникальными механиками." },
-                { t: "Geshan AI", d: "ИИ-инструменты, доступные каждому для решения повседневных задач." },
               ].map((d) => (
                 <div key={d.t} className="rounded-2xl border border-border bg-background/40 p-6 transition hover:border-primary">
                   <h4 className="text-lg text-primary">{d.t}</h4>
@@ -194,8 +193,9 @@ function Index() {
           </div>
 
           {/* Other products */}
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {[
+              { t: "Geshan AI", d: "ИИ-инструменты, доступные каждому для решения повседневных задач." },
               { t: "MineCube", d: "Собственный сервер Minecraft, объединяющий игроков для масштабных приключений." },
               { t: "GeLink", d: "Современный мессенджер для удобного и безопасного общения." },
               { t: "Geshan Mystery", d: "Медиа-проект с атмосферными видео-страшилками в мире Minecraft." },
