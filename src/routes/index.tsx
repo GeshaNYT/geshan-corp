@@ -116,6 +116,17 @@ function Index() {
 
       {/* About */}
       <section id="about" className="mx-auto max-w-6xl px-6 py-24">
+        <div className="mx-auto mb-16 max-w-3xl text-center">
+          <p className="mb-3 text-sm uppercase tracking-[0.3em] text-primary">О корпорации</p>
+          <h2 className="text-4xl sm:text-5xl">Глобальная экосистема и сообщество</h2>
+          <p className="mt-6 text-lg text-muted-foreground">
+            Geshan Corporation — масштабное пространство, объединяющее технологии,
+            творчество и людей. Фундамент всей нашей деятельности —{" "}
+            <span className="text-primary">Geshan&rsquo;s Community</span>, динамичное
+            сообщество, которое стирает границы между проектами.
+          </p>
+        </div>
+
         <div className="grid gap-12 md:grid-cols-3">
           {[
             { t: "Видение", d: "Создавать пространство, где идеи превращаются в реальные проекты." },
@@ -128,6 +139,78 @@ function Index() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Ecosystem */}
+      <section id="ecosystem" className="mx-auto max-w-6xl px-6 py-24">
+        <div className="mb-14 text-center">
+          <p className="mb-3 text-sm uppercase tracking-[0.3em] text-primary">Структура</p>
+          <h2 className="text-4xl sm:text-5xl">Экосистема Geshan</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+            Десятки направлений — от разработки и игр до ИИ и медиа. И это далеко не всё:
+            список направлений постоянно растёт.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          {/* Community — featured */}
+          <div className="relative overflow-hidden rounded-3xl border border-primary/40 bg-gradient-to-br from-primary/15 via-card to-card p-8 sm:p-10">
+            <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
+            <div className="relative">
+              <p className="mb-2 text-xs uppercase tracking-[0.3em] text-primary">Главный актив</p>
+              <h3 className="text-3xl sm:text-4xl">
+                <span className="text-gold-gradient">Geshan&rsquo;s Community</span>
+              </h3>
+              <p className="mt-4 max-w-3xl text-muted-foreground">
+                Огромное объединение людей вокруг наших медиа-ресурсов — YouTube-каналов
+                разных тематик и других площадок. Каждый находит здесь что-то для себя,
+                независимо от интересов.
+              </p>
+            </div>
+          </div>
+
+          {/* Studio + sub-divisions */}
+          <div className="rounded-3xl border border-border bg-card/40 p-8 sm:p-10 backdrop-blur">
+            <div className="mb-8">
+              <p className="mb-2 text-xs uppercase tracking-[0.3em] text-primary">Штаб-квартира разработок</p>
+              <h3 className="text-3xl">Geshan Studio</h3>
+              <p className="mt-3 max-w-3xl text-muted-foreground">
+                Здесь мы создаём продукты, которые становятся частью жизни нашего комьюнити.
+              </p>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { t: "Geshan Dev", d: "Профессиональная разработка для Minecraft: плагины, моды, шейдеры, ресурспаки." },
+                { t: "Geshan Lab", d: "Лаборатория инноваций для смелых и необычных экспериментов." },
+                { t: "Geshan Game", d: "Студия по созданию игр с уникальными механиками." },
+                { t: "Geshan AI", d: "ИИ-инструменты, доступные каждому для решения повседневных задач." },
+              ].map((d) => (
+                <div key={d.t} className="rounded-2xl border border-border bg-background/40 p-6 transition hover:border-primary">
+                  <h4 className="text-lg text-primary">{d.t}</h4>
+                  <p className="mt-2 text-sm text-muted-foreground">{d.d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Other products */}
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              { t: "MineCube", d: "Собственный сервер Minecraft, объединяющий игроков для масштабных приключений." },
+              { t: "GeLink", d: "Современный мессенджер для удобного и безопасного общения." },
+              { t: "Geshan Mystery", d: "Медиа-проект с атмосферными видео-страшилками в мире Minecraft." },
+            ].map((d) => (
+              <div key={d.t} className="rounded-2xl border border-border bg-card/40 p-7 backdrop-blur transition hover:border-primary">
+                <h4 className="text-xl text-primary">{d.t}</h4>
+                <p className="mt-3 text-sm text-muted-foreground">{d.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="mt-10 text-center text-sm italic text-muted-foreground">
+          И это далеко не всё — мы запускаем новые разработки и расширяем возможности Geshan Corporation каждый день.
+        </p>
       </section>
 
       {/* Channels */}
