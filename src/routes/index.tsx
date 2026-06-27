@@ -29,6 +29,27 @@ const channels = [
   },
 ];
 
+const projects = [
+  {
+    name: "MineCube",
+    handle: "@minecube_info",
+    url: "https://t.me/minecube_info",
+    description: "Новости и обновления игрового проекта MineCube.",
+  },
+  {
+    name: "Мессенджер GeLink",
+    handle: "@GeLinkM",
+    url: "https://t.me/GeLinkM",
+    description: "Официальный канал мессенджера GeLink — анонсы и релизы.",
+  },
+  {
+    name: "Телеграм бот",
+    handle: "@GeshanAI_bot",
+    url: "https://t.me/GeshanAI_bot",
+    description: "AI-бот корпорации. Возможности, команды и обновления.",
+  },
+];
+
 function TelegramIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
