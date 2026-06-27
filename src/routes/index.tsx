@@ -29,6 +29,27 @@ const channels = [
   },
 ];
 
+const projects = [
+  {
+    name: "MineCube",
+    handle: "@minecube_info",
+    url: "https://t.me/minecube_info",
+    description: "Новости и обновления игрового проекта MineCube.",
+  },
+  {
+    name: "Мессенджер GeLink",
+    handle: "@GeLinkM",
+    url: "https://t.me/GeLinkM",
+    description: "Официальный канал мессенджера GeLink — анонсы и релизы.",
+  },
+  {
+    name: "Телеграм бот",
+    handle: "@GeshanAI_bot",
+    url: "https://t.me/GeshanAI_bot",
+    description: "AI-бот корпорации. Возможности, команды и обновления.",
+  },
+];
+
 function TelegramIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
@@ -142,6 +163,43 @@ function Index() {
                     <span aria-hidden="true" className="transition group-hover:translate-x-1">→</span>
                   </span>
                 </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* Projects */}
+      <section id="projects" className="mx-auto max-w-6xl px-6 py-24">
+        <div className="mb-14 text-center">
+          <p className="mb-3 text-sm uppercase tracking-[0.3em] text-primary">Проекты</p>
+          <h2 className="text-4xl sm:text-5xl">Каналы наших проектов</h2>
+          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+            Подпишитесь на Telegram-каналы продуктов и сервисов корпорации.
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {projects.map((c) => (
+            <a
+              key={c.url}
+              href={c.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative overflow-hidden rounded-3xl border border-border bg-card p-7 transition hover:border-primary"
+            >
+              <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/10 blur-3xl transition group-hover:bg-primary/20" />
+              <div className="relative">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                  <TelegramIcon className="h-6 w-6" />
+                </div>
+                <h3 className="text-xl">{c.name}</h3>
+                <p className="mt-1 font-mono text-xs text-primary">{c.handle}</p>
+                <p className="mt-3 text-sm text-muted-foreground">{c.description}</p>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                  Перейти
+                  <span aria-hidden="true" className="transition group-hover:translate-x-1">→</span>
+                </span>
               </div>
             </a>
           ))}
