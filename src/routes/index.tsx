@@ -392,9 +392,121 @@ function Index() {
 
           {/* Other products */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className="rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
+                >
+                  <h4 className="text-xl text-primary">Geshan AI</h4>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    ИИ-инструменты, доступные каждому для решения повседневных задач.
+                  </p>
+                  <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl text-gold-gradient">🤖 Geshan AI</DialogTitle>
+                  <DialogDescription>
+                    Многофункциональные нейросетевые модели для широкого спектра задач.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="mt-4 space-y-4">
+                  {[
+                    {
+                      n: "Geshan AI",
+                      d: "Универсальная текстовая нейросеть, поддерживающая множество стилей общения и набор функций для решения различных задач.",
+                      p: "Telegram bot",
+                      u: "https://t.me/GeshanAI_bot",
+                      wip: false,
+                    },
+                    {
+                      n: "Geshan Gemini",
+                      d: "Большая интеллектуальная нейросеть с расширенным функционалом для глубокой работы.",
+                      p: "Telegram bot",
+                      u: "https://t.me/geshan_co",
+                      wip: true,
+                    },
+                  ].map((p) => (
+                    <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
+                      <p className="text-base"><span className="text-primary">{p.n}</span></p>
+                      <p className="mt-1 text-sm text-muted-foreground">{p.d}</p>
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        Платформа: <span className="text-foreground">{p.p}</span>
+                      </p>
+                      <a
+                        href={p.u}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+                      >
+                        👉 СКАЧАТЬ{p.wip ? " (В разработке)" : ""}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className="rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
+                >
+                  <h4 className="text-xl text-primary">MineCube</h4>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Собственный сервер Minecraft, объединяющий игроков для масштабных приключений.
+                  </p>
+                  <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl text-gold-gradient">🛑 MineCube</DialogTitle>
+                  <DialogDescription>
+                    Такого гриферского сервера вы не видели даже во сне!
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="mt-4 space-y-4 text-sm">
+                  <p className="text-muted-foreground">
+                    MineCube — это бескомпромиссный сервер, где выживание становится настоящим испытанием. Вас ждут два уникальных режима:
+                  </p>
+                  <div className="rounded-xl border border-primary/40 bg-primary/5 p-4">
+                    <p><span className="text-primary">Гриф</span><span className="text-muted-foreground"> — масштабный режим с множеством авторских механик, уникальными кастомными предметами и захватывающими ивентами.</span></p>
+                  </div>
+                  <div className="rounded-xl border border-primary/40 bg-primary/5 p-4">
+                    <p><span className="text-primary">Ванила</span><span className="text-muted-foreground"> — классическое выживание, максимально приближенное к оригинальному Minecraft, но дополненное нашими уникальными механиками.</span></p>
+                  </div>
+
+                  <div className="rounded-xl border border-border bg-background/40 p-4 space-y-2">
+                    <p className="text-primary">Присоединяйся к битве:</p>
+                    <p className="text-muted-foreground">
+                      Сайт:{" "}
+                      <a href="https://mc.mine-cube.ru/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        mc.mine-cube.ru
+                      </a>
+                    </p>
+                    <p className="text-muted-foreground">
+                      Информационный канал:{" "}
+                      <a href="https://t.me/minecube_info" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        @minecube_info
+                      </a>
+                      {" "}— правила, гайды, новости.
+                    </p>
+                    <p className="text-muted-foreground">
+                      Java IP: <span className="font-mono text-foreground">mc.minecube.pro</span> (Версия: 1.16.5-26.1.2)
+                    </p>
+                    <p className="text-muted-foreground">
+                      Bedrock IP: <span className="font-mono text-foreground">pe.minecube.pro</span> | Port: <span className="font-mono text-foreground">25787</span>
+                    </p>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             {[
-              { t: "Geshan AI", d: "ИИ-инструменты, доступные каждому для решения повседневных задач." },
-              { t: "MineCube", d: "Собственный сервер Minecraft, объединяющий игроков для масштабных приключений." },
               { t: "GeLink", d: "Современный мессенджер для удобного и безопасного общения." },
               { t: "Geshan Mystery", d: "Медиа-проект с атмосферными видео-страшилками в мире Minecraft." },
             ].map((d) => (
