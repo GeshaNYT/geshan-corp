@@ -320,10 +320,72 @@ function Index() {
                 </DialogContent>
               </Dialog>
 
-              <div className="rounded-2xl border border-border bg-background/40 p-6 transition hover:border-primary">
-                <h4 className="text-lg text-primary">Geshan Game</h4>
-                <p className="mt-2 text-sm text-muted-foreground">Студия по созданию игр с уникальными механиками.</p>
-              </div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button
+                    type="button"
+                    className="rounded-2xl border border-border bg-background/40 p-6 text-left transition hover:border-primary cursor-pointer"
+                  >
+                    <h4 className="text-lg text-primary">Geshan Game</h4>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Студия по созданию игр с уникальными механиками.
+                    </p>
+                    <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl text-gold-gradient">🎮 Geshan Game</DialogTitle>
+                    <DialogDescription>
+                      Игровые проекты и интерактивные разработки.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="mt-4 space-y-4">
+                    {[
+                      {
+                        n: "Terratax",
+                        d: "Стратегия в жанре захвата стран.",
+                        p: "Windows",
+                        u: "https://t.me/geshan_co",
+                        wip: true,
+                      },
+                      {
+                        n: "Cactus Click",
+                        d: "Увлекательный кликер, где нужно кликать по кактусам.",
+                        p: "Android",
+                        u: "https://t.me/cactus_click/21",
+                        wip: false,
+                      },
+                      {
+                        n: "The First Spark",
+                        d: "Симулятор, в котором крошечные человечки развивают свою цивилизацию.",
+                        p: "Windows",
+                        u: "https://t.me/geshan_co",
+                        wip: true,
+                      },
+                    ].map((p) => (
+                      <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
+                        <p className="text-base">
+                          <span className="text-primary">{p.n}</span>
+                        </p>
+                        <p className="mt-1 text-sm text-muted-foreground">{p.d}</p>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          Платформа: <span className="text-foreground">{p.p}</span>
+                        </p>
+                        <a
+                          href={p.u}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+                        >
+                          👉 СКАЧАТЬ{p.wip ? " (В разработке)" : ""}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
 
             </div>
           </div>
