@@ -1,6 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/geshan-hero.jpg";
 import logoImg from "@/assets/geshan-logo.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/")({
   head: () => ({
