@@ -187,8 +187,74 @@ function Index() {
               </p>
             </div>
             <div className="grid gap-5 sm:grid-cols-3">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button
+                    type="button"
+                    className="rounded-2xl border border-border bg-background/40 p-6 text-left transition hover:border-primary cursor-pointer"
+                  >
+                    <h4 className="text-lg text-primary">Geshan Dev</h4>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Профессиональная разработка для Minecraft: плагины, моды, шейдеры, ресурспаки.
+                    </p>
+                    <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl text-gold-gradient">Geshan Dev</DialogTitle>
+                    <DialogDescription>
+                      Профессиональная разработка для Minecraft.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="mt-4 space-y-6">
+                    <div>
+                      <h5 className="text-lg text-primary">📦 Плагины (Серверные решения)</h5>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Внутренние разработки для обеспечения стабильности MineCube.
+                      </p>
+                      <ul className="mt-4 space-y-3 text-sm">
+                        {[
+                          { n: "Invate", d: "продвинутый античит для обеспечения честной игры." },
+                          { n: "WGExtender", d: "расширение функционала для гибкой защиты территорий." },
+                          { n: "AllowedCMDs", d: "система контроля команд для предотвращения злоупотреблений." },
+                          { n: "StaffWorker", d: "инструмент автоматизации работы персонала." },
+                          { n: "Granter", d: "модуль для автоматизированной выдачи наград." },
+                        ].map((p) => (
+                          <li key={p.n} className="rounded-xl border border-border bg-background/40 p-3">
+                            <span className="text-primary">{p.n}</span>
+                            <span className="text-muted-foreground"> — {p.d}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h5 className="text-lg text-primary">🎨 Визуальные проекты</h5>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Публичные разработки, доступные для всего сообщества.
+                      </p>
+                      <div className="mt-4 rounded-xl border border-primary/40 bg-primary/5 p-4">
+                        <p className="text-sm">
+                          <span className="text-primary">GeNature</span>
+                          <span className="text-muted-foreground">
+                            {" "}— фирменный шейдер для кардинального преображения атмосферы игры.
+                          </span>
+                        </p>
+                        <a
+                          href="#"
+                          className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+                        >
+                          👉 СКАЧАТЬ GeNature
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
               {[
-                { t: "Geshan Dev", d: "Профессиональная разработка для Minecraft: плагины, моды, шейдеры, ресурспаки." },
                 { t: "Geshan Lab", d: "Лаборатория инноваций для смелых и необычных экспериментов." },
                 { t: "Geshan Game", d: "Студия по созданию игр с уникальными механиками." },
               ].map((d) => (
