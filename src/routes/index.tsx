@@ -243,7 +243,9 @@ function Index() {
                           </span>
                         </p>
                         <a
-                          href="#"
+                          href="https://drive.google.com/drive/folders/1BM5Kx4gntsvZ7-woIfe0Mb6t5AYtlu1L?usp=sharing"
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
                         >
                           👉 СКАЧАТЬ GeNature
@@ -254,15 +256,75 @@ function Index() {
                 </DialogContent>
               </Dialog>
 
-              {[
-                { t: "Geshan Lab", d: "Лаборатория инноваций для смелых и необычных экспериментов." },
-                { t: "Geshan Game", d: "Студия по созданию игр с уникальными механиками." },
-              ].map((d) => (
-                <div key={d.t} className="rounded-2xl border border-border bg-background/40 p-6 transition hover:border-primary">
-                  <h4 className="text-lg text-primary">{d.t}</h4>
-                  <p className="mt-2 text-sm text-muted-foreground">{d.d}</p>
-                </div>
-              ))}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button
+                    type="button"
+                    className="rounded-2xl border border-border bg-background/40 p-6 text-left transition hover:border-primary cursor-pointer"
+                  >
+                    <h4 className="text-lg text-primary">Geshan Lab</h4>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Лаборатория инноваций для смелых и необычных экспериментов.
+                    </p>
+                    <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl text-gold-gradient">🧪 Geshan Lab</DialogTitle>
+                    <DialogDescription>
+                      Специализированные утилиты и инновационные решения, доступные для скачивания.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="mt-4 space-y-4">
+                    {[
+                      {
+                        n: "GeCalculator",
+                        d: "Собственный калькулятор для быстрых и точных вычислений.",
+                        p: "Android",
+                        u: "https://drive.google.com/drive/folders/1EzLLA8WGgytLEDUm-6E943oATysRplfU?usp=sharing",
+                      },
+                      {
+                        n: "GeAirDraw",
+                        d: "Уникальное решение для рисования на экране с помощью камеры.",
+                        p: "Windows",
+                        u: "https://drive.google.com/drive/folders/1OUxsTgMXbuYofPSeTr9vlABA_R-HN-3e?usp=sharing",
+                      },
+                      {
+                        n: "GeDrop",
+                        d: "Удобная утилита для быстрой передачи файлов по локальной сети.",
+                        p: "Windows",
+                        u: "https://drive.google.com/drive/folders/1vakm-Ysz3lr7Og-_0lHWrmLz88UErnAD?usp=sharing",
+                      },
+                    ].map((p) => (
+                      <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
+                        <p className="text-base">
+                          <span className="text-primary">{p.n}</span>
+                        </p>
+                        <p className="mt-1 text-sm text-muted-foreground">{p.d}</p>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          Платформа: <span className="text-foreground">{p.p}</span>
+                        </p>
+                        <a
+                          href={p.u}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+                        >
+                          👉 СКАЧАТЬ
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <div className="rounded-2xl border border-border bg-background/40 p-6 transition hover:border-primary">
+                <h4 className="text-lg text-primary">Geshan Game</h4>
+                <p className="mt-2 text-sm text-muted-foreground">Студия по созданию игр с уникальными механиками.</p>
+              </div>
+
             </div>
           </div>
 
