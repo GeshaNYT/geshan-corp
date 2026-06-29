@@ -506,15 +506,88 @@ function Index() {
               </DialogContent>
             </Dialog>
 
-            {[
-              { t: "GeLink", d: "Современный мессенджер для удобного и безопасного общения." },
-              { t: "Geshan Mystery", d: "Медиа-проект с атмосферными видео-страшилками в мире Minecraft." },
-            ].map((d) => (
-              <div key={d.t} className="rounded-2xl border border-border bg-card/40 p-7 backdrop-blur transition hover:border-primary">
-                <h4 className="text-xl text-primary">{d.t}</h4>
-                <p className="mt-3 text-sm text-muted-foreground">{d.d}</p>
-              </div>
-            ))}
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className="rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
+                >
+                  <h4 className="text-xl text-primary">GeLink</h4>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Современный мессенджер для удобного и безопасного общения.
+                  </p>
+                  <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl text-gold-gradient">💬 GeLink Messenger</DialogTitle>
+                  <DialogDescription>
+                    Современный и быстрый инструмент для общения.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="mt-4 space-y-4 text-sm">
+                  <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-2">
+                    <p className="text-primary">GeLink Messenger</p>
+                    <p className="text-muted-foreground">
+                      Защищенный мессенджер с удобным интерфейсом для обмена сообщениями в реальном времени.
+                    </p>
+                    <a
+                      href="https://gelink.vercel.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
+                    >
+                      👉 Веб-версия
+                    </a>
+                  </div>
+                  <div className="rounded-xl border border-border bg-background/40 p-4 space-y-2">
+                    <p className="text-muted-foreground">
+                      Telegram-канал проекта:{" "}
+                      <a href="https://t.me/GeLinkM" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        Перейти к новостям
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className="rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
+                >
+                  <h4 className="text-xl text-primary">Geshan Mystery</h4>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Медиа-проект с атмосферными видео-страшилками в мире Minecraft.
+                  </p>
+                  <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl text-gold-gradient">🔍 Проекты Geshan Mystery</DialogTitle>
+                  <DialogDescription>
+                    Погружение в неизвестное.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="mt-4 space-y-4 text-sm">
+                  <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-2">
+                    <p className="text-primary">Geshan Mystery</p>
+                    <p className="text-muted-foreground">
+                      Авторский проект, посвященный созданию мрачных историй, расследованию тайн и пугающих легенд в мире Minecraft.
+                    </p>
+                    <p>
+                      <span className="text-primary">Статус:</span>{" "}
+                      <span className="text-muted-foreground">Заморожен</span>
+                    </p>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
           </div>
         </div>
 
