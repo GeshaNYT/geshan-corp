@@ -477,7 +477,7 @@ function Index() {
                     <p><span className="text-primary">Гриф</span><span className="text-muted-foreground"> — масштабный режим с множеством авторских механик, уникальными кастомными предметами и захватывающими ивентами.</span></p>
                   </div>
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                    <p><span className="text-primary">Ванила</span><span className="text-muted-foreground"> — классическое выживание, максимально приближенное к оригинальному Minecraft, но дополненное нашими уникальными механиками.</span></p>
+                    <p><span className="text-primary">Ванилла</span><span className="text-muted-foreground"> — классическое выживание, максимально приближенное к оригинальному Minecraft, но дополненное нашими уникальными механиками.</span></p>
                   </div>
 
                   <div className="rounded-xl border border-border bg-background/40 p-4 space-y-2">
