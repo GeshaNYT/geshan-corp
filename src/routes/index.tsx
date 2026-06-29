@@ -297,6 +297,12 @@ function Index() {
                         p: "Windows",
                         u: "https://drive.google.com/drive/folders/1vakm-Ysz3lr7Og-_0lHWrmLz88UErnAD?usp=sharing",
                       },
+                      {
+                        n: "Geshan Virus",
+                        d: "Коллекция шуточных и полностью безвредных вирусов для розыгрышей.",
+                        p: "Windows",
+                        u: "https://drive.google.com/drive/folders/1EDkB7InWGjxLauGd6iZ_klfBDsSu9HGX?usp=sharing",
+                      },
                     ].map((p) => (
                       <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
                         <p className="text-base">
