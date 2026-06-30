@@ -426,7 +426,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl text-gold-gradient">🤖 Geshan AI</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><IconBot className="h-6 w-6" /> Geshan AI</DialogTitle>
                   <DialogDescription>
                     Многофункциональные нейросетевые модели для широкого спектра задач.
                   </DialogDescription>
