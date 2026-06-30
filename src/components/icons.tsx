@@ -91,11 +91,11 @@ export const IconSearch = ({ className }: IconProps) => (
 );
 
 export const IconDownload = ({ className }: IconProps) => (
-  <span className={className}>{wrap(<>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
     <path d="M12 3v12" />
     <path d="m7 10 5 5 5-5" />
     <path d="M4 19h16" />
-  </>)}</span>
+  </svg>
 );
 
 export const IconGlobe = ({ className }: IconProps) => (
