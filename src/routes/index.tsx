@@ -244,7 +244,7 @@ function Index() {
                     </div>
 
                     <div>
-                      <h5 className="text-lg text-primary">🎨 Визуальные проекты</h5>
+                      <h5 className="flex items-center gap-2 text-lg text-primary"><IconPalette className="h-5 w-5" /> Визуальные проекты</h5>
                       <p className="mt-1 text-sm text-muted-foreground">
                         Публичные разработки, доступные для всего сообщества.
                       </p>
