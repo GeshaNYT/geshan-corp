@@ -223,7 +223,7 @@ function Index() {
 
                   <div className="mt-4 space-y-6">
                     <div>
-                      <h5 className="text-lg text-primary">📦 Плагины (Серверные решения)</h5>
+                      <h5 className="flex items-center gap-2 text-lg text-primary"><IconPackage className="h-5 w-5" /> Плагины (Серверные решения)</h5>
                       <p className="mt-1 text-sm text-muted-foreground">
                         Внутренние разработки для обеспечения стабильности MineCube.
                       </p>
