@@ -10,6 +10,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  IconPackage,
+  IconPalette,
+  IconFlask,
+  IconGamepad,
+  IconBot,
+  IconCube,
+  IconChat,
+  IconSearch,
+  IconDownload,
+  IconGlobe,
+} from "@/components/icons";
 
 export const Route = createFileRoute("/")({
   head: () => ({
