@@ -483,7 +483,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl text-gold-gradient">🛑 MineCube</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><IconCube className="h-6 w-6" /> MineCube</DialogTitle>
                   <DialogDescription>
                     Такого гриферского сервера вы не видели даже во сне!
                   </DialogDescription>
