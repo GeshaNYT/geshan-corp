@@ -204,13 +204,13 @@ function Index() {
                 <DialogTrigger asChild>
                   <button
                     type="button"
-                    className="rounded-2xl border border-border bg-background/40 p-6 text-left transition hover:border-primary cursor-pointer"
+                    className="flex h-full flex-col rounded-2xl border border-border bg-background/40 p-6 text-left transition hover:border-primary cursor-pointer"
                   >
                     <h4 className="text-lg text-primary">Geshan Dev</h4>
                     <p className="mt-2 text-sm text-muted-foreground">
                       Профессиональная разработка для Minecraft: плагины, моды, шейдеры, ресурспаки.
                     </p>
-                    <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                    <span className="mt-auto inline-block pt-4 text-xs text-primary">Подробнее →</span>
                   </button>
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
@@ -273,13 +273,13 @@ function Index() {
                 <DialogTrigger asChild>
                   <button
                     type="button"
-                    className="rounded-2xl border border-border bg-background/40 p-6 text-left transition hover:border-primary cursor-pointer"
+                    className="flex h-full flex-col rounded-2xl border border-border bg-background/40 p-6 text-left transition hover:border-primary cursor-pointer"
                   >
                     <h4 className="text-lg text-primary">Geshan Lab</h4>
                     <p className="mt-2 text-sm text-muted-foreground">
                       Лаборатория инноваций для смелых и необычных экспериментов.
                     </p>
-                    <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                    <span className="mt-auto inline-block pt-4 text-xs text-primary">Подробнее →</span>
                   </button>
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
@@ -343,13 +343,13 @@ function Index() {
                 <DialogTrigger asChild>
                   <button
                     type="button"
-                    className="rounded-2xl border border-border bg-background/40 p-6 text-left transition hover:border-primary cursor-pointer"
+                    className="flex h-full flex-col rounded-2xl border border-border bg-background/40 p-6 text-left transition hover:border-primary cursor-pointer"
                   >
                     <h4 className="text-lg text-primary">Geshan Game</h4>
                     <p className="mt-2 text-sm text-muted-foreground">
                       Студия по созданию игр с уникальными механиками.
                     </p>
-                    <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                    <span className="mt-auto inline-block pt-4 text-xs text-primary">Подробнее →</span>
                   </button>
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
@@ -415,13 +415,13 @@ function Index() {
               <DialogTrigger asChild>
                 <button
                   type="button"
-                  className="rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
+                  className="flex h-full flex-col rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
                 >
                   <h4 className="text-xl text-primary">Geshan AI</h4>
                   <p className="mt-3 text-sm text-muted-foreground">
                     ИИ-инструменты, доступные каждому для решения повседневных задач.
                   </p>
-                  <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                  <span className="mt-auto inline-block pt-4 text-xs text-primary">Подробнее →</span>
                 </button>
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
@@ -472,13 +472,13 @@ function Index() {
               <DialogTrigger asChild>
                 <button
                   type="button"
-                  className="rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
+                  className="flex h-full flex-col rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
                 >
                   <h4 className="text-xl text-primary">MineCube</h4>
                   <p className="mt-3 text-sm text-muted-foreground">
                     Собственный сервер Minecraft, объединяющий игроков для масштабных приключений.
                   </p>
-                  <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                  <span className="mt-auto inline-block pt-4 text-xs text-primary">Подробнее →</span>
                 </button>
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
@@ -529,13 +529,13 @@ function Index() {
               <DialogTrigger asChild>
                 <button
                   type="button"
-                  className="rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
+                  className="flex h-full flex-col rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
                 >
                   <h4 className="text-xl text-primary">GeLink</h4>
                   <p className="mt-3 text-sm text-muted-foreground">
                     Современный мессенджер для удобного и безопасного общения.
                   </p>
-                  <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                  <span className="mt-auto inline-block pt-4 text-xs text-primary">Подробнее →</span>
                 </button>
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
@@ -576,13 +576,13 @@ function Index() {
               <DialogTrigger asChild>
                 <button
                   type="button"
-                  className="rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
+                  className="flex h-full flex-col rounded-2xl border border-border bg-card/40 p-7 text-left backdrop-blur transition hover:border-primary cursor-pointer"
                 >
                   <h4 className="text-xl text-primary">Geshan Mystery</h4>
                   <p className="mt-3 text-sm text-muted-foreground">
                     Медиа-проект с атмосферными видео-страшилками в мире Minecraft.
                   </p>
-                  <span className="mt-3 inline-block text-xs text-primary">Подробнее →</span>
+                  <span className="mt-auto inline-block pt-4 text-xs text-primary">Подробнее →</span>
                 </button>
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
@@ -632,18 +632,18 @@ function Index() {
               href={c.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative overflow-hidden rounded-3xl border border-border bg-card p-8 transition hover:border-primary"
+              className="group relative flex h-full overflow-hidden rounded-3xl border border-border bg-card p-8 transition hover:border-primary"
             >
               <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-primary/10 blur-3xl transition group-hover:bg-primary/20" />
-              <div className="relative flex items-start gap-5">
+              <div className="relative flex w-full items-start gap-5">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
                   <TelegramIcon className="h-7 w-7" />
                 </div>
-                <div className="flex-1">
+                <div className="flex min-w-0 flex-1 flex-col">
                   <h3 className="text-2xl">{c.name}</h3>
                   <p className="mt-1 font-mono text-sm text-primary">{c.handle}</p>
                   <p className="mt-4 text-muted-foreground">{c.description}</p>
-                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                  <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-medium text-primary">
                     Открыть в Telegram
                     <span aria-hidden="true" className="transition group-hover:translate-x-1">→</span>
                   </span>
@@ -671,17 +671,17 @@ function Index() {
               href={c.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative overflow-hidden rounded-3xl border border-border bg-card p-7 transition hover:border-primary"
+              className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card p-7 transition hover:border-primary"
             >
               <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/10 blur-3xl transition group-hover:bg-primary/20" />
-              <div className="relative">
+              <div className="relative flex h-full flex-col">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                   <TelegramIcon className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl">{c.name}</h3>
                 <p className="mt-1 font-mono text-xs text-primary">{c.handle}</p>
                 <p className="mt-3 text-sm text-muted-foreground">{c.description}</p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                <span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-medium text-primary">
                   Перейти
                   <span aria-hidden="true" className="transition group-hover:translate-x-1">→</span>
                 </span>
