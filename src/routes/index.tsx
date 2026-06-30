@@ -632,18 +632,18 @@ function Index() {
               href={c.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative overflow-hidden rounded-3xl border border-border bg-card p-8 transition hover:border-primary"
+              className="group relative flex h-full overflow-hidden rounded-3xl border border-border bg-card p-8 transition hover:border-primary"
             >
               <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-primary/10 blur-3xl transition group-hover:bg-primary/20" />
-              <div className="relative flex items-start gap-5">
+              <div className="relative flex w-full items-start gap-5">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
                   <TelegramIcon className="h-7 w-7" />
                 </div>
-                <div className="flex-1">
+                <div className="flex min-w-0 flex-1 flex-col">
                   <h3 className="text-2xl">{c.name}</h3>
                   <p className="mt-1 font-mono text-sm text-primary">{c.handle}</p>
                   <p className="mt-4 text-muted-foreground">{c.description}</p>
-                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                  <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-medium text-primary">
                     Открыть в Telegram
                     <span aria-hidden="true" className="transition group-hover:translate-x-1">→</span>
                   </span>
