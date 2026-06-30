@@ -540,7 +540,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl text-gold-gradient">💬 GeLink Messenger</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><IconChat className="h-6 w-6" /> GeLink Messenger</DialogTitle>
                   <DialogDescription>
                     Современный и быстрый инструмент для общения.
                   </DialogDescription>
