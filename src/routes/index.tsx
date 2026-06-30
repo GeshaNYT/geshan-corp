@@ -671,17 +671,17 @@ function Index() {
               href={c.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative overflow-hidden rounded-3xl border border-border bg-card p-7 transition hover:border-primary"
+              className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card p-7 transition hover:border-primary"
             >
               <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/10 blur-3xl transition group-hover:bg-primary/20" />
-              <div className="relative">
+              <div className="relative flex h-full flex-col">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                   <TelegramIcon className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl">{c.name}</h3>
                 <p className="mt-1 font-mono text-xs text-primary">{c.handle}</p>
                 <p className="mt-3 text-sm text-muted-foreground">{c.description}</p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                <span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-medium text-primary">
                   Перейти
                   <span aria-hidden="true" className="transition group-hover:translate-x-1">→</span>
                 </span>
