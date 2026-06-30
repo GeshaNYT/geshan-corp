@@ -557,7 +557,7 @@ function Index() {
                       rel="noopener noreferrer"
                       className="inline-block rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
                     >
-                      👉 Веб-версия
+                      <IconGlobe className="h-4 w-4" /> Веб-версия
                     </a>
                   </div>
                   <div className="rounded-xl border border-border bg-background/40 p-4 space-y-2">
