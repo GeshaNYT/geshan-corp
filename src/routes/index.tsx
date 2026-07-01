@@ -11,16 +11,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  IconPackage,
-  IconPalette,
-  IconFlask,
-  IconGamepad,
-  IconBot,
-  IconCube,
-  IconChat,
-  IconSearch,
-  IconDownload,
-  IconGlobe,
+  Package,
+  Palette,
+  FlaskConical,
+  Gamepad2,
+  Bot,
+  Box,
+  MessageCircle,
+  Search,
+  Download,
+  Globe,
 } from "@/components/icons";
 import { Search } from "lucide-react";
 
@@ -224,7 +224,7 @@ function Index() {
 
                   <div className="mt-4 space-y-6">
                     <div>
-                      <h5 className="flex items-center gap-2 text-lg text-primary"><IconPackage className="h-5 w-5" /> Плагины (Серверные решения)</h5>
+                      <h5 className="flex items-center gap-2 text-lg text-primary"><Package className="h-5 w-5" /> Плагины (Серверные решения)</h5>
                       <p className="mt-1 text-sm text-muted-foreground">
                         Внутренние разработки для обеспечения стабильности MineCube.
                       </p>
@@ -245,7 +245,7 @@ function Index() {
                     </div>
 
                     <div>
-                      <h5 className="flex items-center gap-2 text-lg text-primary"><IconPalette className="h-5 w-5" /> Визуальные проекты</h5>
+                      <h5 className="flex items-center gap-2 text-lg text-primary"><Palette className="h-5 w-5" /> Визуальные проекты</h5>
                       <p className="mt-1 text-sm text-muted-foreground">
                         Публичные разработки, доступные для всего сообщества.
                       </p>
@@ -262,7 +262,7 @@ function Index() {
                           rel="noopener noreferrer"
                           className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
                         >
-                          <IconDownload className="h-4 w-4" /> СКАЧАТЬ GeNature
+                          <Download className="h-4 w-4" /> СКАЧАТЬ GeNature
                         </a>
                       </div>
                     </div>
@@ -285,7 +285,7 @@ function Index() {
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><IconFlask className="h-6 w-6" /> Geshan Lab</DialogTitle>
+                    <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><FlaskConical className="h-6 w-6" /> Geshan Lab</DialogTitle>
                     <DialogDescription>
                       Специализированные утилиты и инновационные решения, доступные для скачивания.
                     </DialogDescription>
@@ -332,7 +332,7 @@ function Index() {
                           rel="noopener noreferrer"
                           className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
                         >
-                          <IconDownload className="h-4 w-4" /> СКАЧАТЬ
+                          <Download className="h-4 w-4" /> СКАЧАТЬ
                         </a>
                       </div>
                     ))}
@@ -355,7 +355,7 @@ function Index() {
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><IconGamepad className="h-6 w-6" /> Geshan Game</DialogTitle>
+                    <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><Gamepad2 className="h-6 w-6" /> Geshan Game</DialogTitle>
                     <DialogDescription>
                       Игровые проекты и интерактивные разработки.
                     </DialogDescription>
@@ -399,7 +399,7 @@ function Index() {
                           rel="noopener noreferrer"
                           className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
                         >
-                          <IconDownload className="h-4 w-4" /> СКАЧАТЬ{p.wip ? " (В разработке)" : ""}
+                          <Download className="h-4 w-4" /> СКАЧАТЬ{p.wip ? " (В разработке)" : ""}
                         </a>
                       </div>
                     ))}
@@ -427,7 +427,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><IconBot className="h-6 w-6" /> Geshan AI</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><Bot className="h-6 w-6" /> Geshan AI</DialogTitle>
                   <DialogDescription>
                     Многофункциональные нейросетевые модели для широкого спектра задач.
                   </DialogDescription>
@@ -461,7 +461,7 @@ function Index() {
                         rel="noopener noreferrer"
                         className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
                       >
-                        <IconDownload className="h-4 w-4" /> СКАЧАТЬ{p.wip ? " (В разработке)" : ""}
+                        <Download className="h-4 w-4" /> СКАЧАТЬ{p.wip ? " (В разработке)" : ""}
                       </a>
                     </div>
                   ))}
@@ -484,7 +484,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><IconCube className="h-6 w-6" /> MineCube</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><Box className="h-6 w-6" /> MineCube</DialogTitle>
                   <DialogDescription>
                     Такого гриферского сервера вы не видели даже во сне!
                   </DialogDescription>
@@ -541,7 +541,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><IconChat className="h-6 w-6" /> GeLink Messenger</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><MessageCircle className="h-6 w-6" /> GeLink Messenger</DialogTitle>
                   <DialogDescription>
                     Современный и быстрый инструмент для общения.
                   </DialogDescription>
@@ -558,7 +558,7 @@ function Index() {
                       rel="noopener noreferrer"
                       className="inline-block rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
                     >
-                      <IconGlobe className="h-4 w-4" /> Веб-версия
+                      <Globe className="h-4 w-4" /> Веб-версия
                     </a>
                   </div>
                   <div className="rounded-xl border border-border bg-background/40 p-4 space-y-2">
