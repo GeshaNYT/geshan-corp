@@ -235,9 +235,9 @@ function Index() {
                           { n: "StaffWorker", d: "инструмент автоматизации работы персонала." },
                           { n: "Granter", d: "модуль для автоматизированной выдачи наград." },
                         ].map((p) => (
-                          <li key={p.n} className="rounded-xl border border-border bg-background/40 p-3">
-                            <span className="text-primary">{p.n}</span>
-                            <span className="text-muted-foreground"> — {p.d}</span>
+                          <li key={p.n} className="flex items-start gap-2 rounded-xl border border-border bg-background/40 p-3">
+                            <Package className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                            <span><span className="text-primary">{p.n}</span><span className="text-muted-foreground"> — {p.d}</span></span>
                           </li>
                         ))}
                       </ul>
