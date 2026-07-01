@@ -495,10 +495,10 @@ function Index() {
                     MineCube — это бескомпромиссный сервер, где выживание становится настоящим испытанием. Вас ждут два уникальных режима:
                   </p>
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                    <p><span className="text-primary">Гриф</span><span className="text-muted-foreground"> — масштабный режим с множеством авторских механик, уникальными кастомными предметами и захватывающими ивентами.</span></p>
+                    <p className="flex items-start gap-2"><Box className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span><span className="text-primary">Гриф</span><span className="text-muted-foreground"> — масштабный режим с множеством авторских механик, уникальными кастомными предметами и захватывающими ивентами.</span></span></p>
                   </div>
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                    <p><span className="text-primary">Ванилла</span><span className="text-muted-foreground"> — классическое выживание, максимально приближенное к оригинальному Minecraft, но дополненное нашими уникальными механиками.</span></p>
+                    <p className="flex items-start gap-2"><Box className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span><span className="text-primary">Ванилла</span><span className="text-muted-foreground"> — классическое выживание, максимально приближенное к оригинальному Minecraft, но дополненное нашими уникальными механиками.</span></span></p>
                   </div>
 
                   <div className="rounded-xl border border-border bg-background/40 p-4 space-y-2">
