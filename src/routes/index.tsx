@@ -596,7 +596,7 @@ function Index() {
                 </DialogHeader>
                 <div className="mt-4 space-y-4 text-sm">
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-2">
-                    <p className="text-primary">Geshan Mystery</p>
+                    <p className="flex items-center gap-2 text-primary"><Search className="h-4 w-4" /> Geshan Mystery</p>
                     <p className="text-muted-foreground">
                       Авторский проект, посвященный созданию мрачных историй, расследованию тайн и пугающих легенд в мире Minecraft.
                     </p>
