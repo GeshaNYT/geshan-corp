@@ -22,6 +22,7 @@ import {
   IconDownload,
   IconGlobe,
 } from "@/components/icons";
+import { Search } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -587,7 +588,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><IconSearch className="h-6 w-6" /> Проекты Geshan Mystery</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><Search className="h-6 w-6" /> Geshan Mystery</DialogTitle>
                   <DialogDescription>
                     Погружение в неизвестное.
                   </DialogDescription>
