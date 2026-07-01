@@ -235,9 +235,9 @@ function Index() {
                           { n: "StaffWorker", d: "инструмент автоматизации работы персонала." },
                           { n: "Granter", d: "модуль для автоматизированной выдачи наград." },
                         ].map((p) => (
-                          <li key={p.n} className="rounded-xl border border-border bg-background/40 p-3">
-                            <span className="text-primary">{p.n}</span>
-                            <span className="text-muted-foreground"> — {p.d}</span>
+                          <li key={p.n} className="flex items-start gap-2 rounded-xl border border-border bg-background/40 p-3">
+                            <Package className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                            <span><span className="text-primary">{p.n}</span><span className="text-muted-foreground"> — {p.d}</span></span>
                           </li>
                         ))}
                       </ul>
@@ -249,11 +249,11 @@ function Index() {
                         Публичные разработки, доступные для всего сообщества.
                       </p>
                       <div className="mt-4 rounded-xl border border-primary/40 bg-primary/5 p-4">
-                        <p className="text-sm">
-                          <span className="text-primary">GeNature</span>
-                          <span className="text-muted-foreground">
+                        <p className="flex items-start gap-2 text-sm">
+                          <Palette className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                          <span><span className="text-primary">GeNature</span><span className="text-muted-foreground">
                             {" "}— фирменный шейдер для кардинального преображения атмосферы игры.
-                          </span>
+                          </span></span>
                         </p>
                         <a
                           href="https://drive.google.com/drive/folders/1BM5Kx4gntsvZ7-woIfe0Mb6t5AYtlu1L?usp=sharing"
@@ -318,7 +318,8 @@ function Index() {
                       },
                     ].map((p) => (
                       <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                        <p className="text-base">
+                        <p className="flex items-center gap-2 text-base">
+                          <FlaskConical className="h-4 w-4 text-primary" />
                           <span className="text-primary">{p.n}</span>
                         </p>
                         <p className="mt-1 text-sm text-muted-foreground">{p.d}</p>
@@ -385,7 +386,8 @@ function Index() {
                       },
                     ].map((p) => (
                       <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                        <p className="text-base">
+                        <p className="flex items-center gap-2 text-base">
+                          <Gamepad2 className="h-4 w-4 text-primary" />
                           <span className="text-primary">{p.n}</span>
                         </p>
                         <p className="mt-1 text-sm text-muted-foreground">{p.d}</p>
@@ -449,7 +451,7 @@ function Index() {
                     },
                   ].map((p) => (
                     <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                      <p className="text-base"><span className="text-primary">{p.n}</span></p>
+                      <p className="flex items-center gap-2 text-base"><Bot className="h-4 w-4 text-primary" /><span className="text-primary">{p.n}</span></p>
                       <p className="mt-1 text-sm text-muted-foreground">{p.d}</p>
                       <p className="mt-2 text-xs text-muted-foreground">
                         Платформа: <span className="text-foreground">{p.p}</span>
@@ -493,10 +495,10 @@ function Index() {
                     MineCube — это бескомпромиссный сервер, где выживание становится настоящим испытанием. Вас ждут два уникальных режима:
                   </p>
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                    <p><span className="text-primary">Гриф</span><span className="text-muted-foreground"> — масштабный режим с множеством авторских механик, уникальными кастомными предметами и захватывающими ивентами.</span></p>
+                    <p className="flex items-start gap-2"><Box className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span><span className="text-primary">Гриф</span><span className="text-muted-foreground"> — масштабный режим с множеством авторских механик, уникальными кастомными предметами и захватывающими ивентами.</span></span></p>
                   </div>
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                    <p><span className="text-primary">Ванилла</span><span className="text-muted-foreground"> — классическое выживание, максимально приближенное к оригинальному Minecraft, но дополненное нашими уникальными механиками.</span></p>
+                    <p className="flex items-start gap-2"><Box className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span><span className="text-primary">Ванилла</span><span className="text-muted-foreground"> — классическое выживание, максимально приближенное к оригинальному Minecraft, но дополненное нашими уникальными механиками.</span></span></p>
                   </div>
 
                   <div className="rounded-xl border border-border bg-background/40 p-4 space-y-2">
@@ -547,7 +549,7 @@ function Index() {
                 </DialogHeader>
                 <div className="mt-4 space-y-4 text-sm">
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-2">
-                    <p className="text-primary">GeLink Messenger</p>
+                    <p className="flex items-center gap-2 text-primary"><MessageCircle className="h-4 w-4" /> GeLink Messenger</p>
                     <p className="text-muted-foreground">
                       Защищенный мессенджер с удобным интерфейсом для обмена сообщениями в реальном времени.
                     </p>
@@ -555,7 +557,7 @@ function Index() {
                       href="https://gelink.vercel.app/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
+                      className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
                     >
                       <Globe className="h-4 w-4" /> Веб-версия
                     </a>
@@ -594,7 +596,7 @@ function Index() {
                 </DialogHeader>
                 <div className="mt-4 space-y-4 text-sm">
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-2">
-                    <p className="text-primary">Geshan Mystery</p>
+                    <p className="flex items-center gap-2 text-primary"><Search className="h-4 w-4" /> Geshan Mystery</p>
                     <p className="text-muted-foreground">
                       Авторский проект, посвященный созданию мрачных историй, расследованию тайн и пугающих легенд в мире Minecraft.
                     </p>
