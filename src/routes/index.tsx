@@ -549,7 +549,7 @@ function Index() {
                 </DialogHeader>
                 <div className="mt-4 space-y-4 text-sm">
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-2">
-                    <p className="text-primary">GeLink Messenger</p>
+                    <p className="flex items-center gap-2 text-primary"><MessageCircle className="h-4 w-4" /> GeLink Messenger</p>
                     <p className="text-muted-foreground">
                       Защищенный мессенджер с удобным интерфейсом для обмена сообщениями в реальном времени.
                     </p>
@@ -557,7 +557,7 @@ function Index() {
                       href="https://gelink.vercel.app/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
+                      className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
                     >
                       <Globe className="h-4 w-4" /> Веб-версия
                     </a>
