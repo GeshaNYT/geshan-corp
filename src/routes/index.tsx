@@ -249,11 +249,11 @@ function Index() {
                         Публичные разработки, доступные для всего сообщества.
                       </p>
                       <div className="mt-4 rounded-xl border border-primary/40 bg-primary/5 p-4">
-                        <p className="text-sm">
-                          <span className="text-primary">GeNature</span>
-                          <span className="text-muted-foreground">
+                        <p className="flex items-start gap-2 text-sm">
+                          <Palette className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                          <span><span className="text-primary">GeNature</span><span className="text-muted-foreground">
                             {" "}— фирменный шейдер для кардинального преображения атмосферы игры.
-                          </span>
+                          </span></span>
                         </p>
                         <a
                           href="https://drive.google.com/drive/folders/1BM5Kx4gntsvZ7-woIfe0Mb6t5AYtlu1L?usp=sharing"
