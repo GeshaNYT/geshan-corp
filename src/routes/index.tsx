@@ -21,8 +21,7 @@ import {
   Search,
   Download,
   Globe,
-} from "@/components/icons";
-import { Search } from "lucide-react";
+} from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
