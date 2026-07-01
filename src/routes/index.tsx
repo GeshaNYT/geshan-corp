@@ -386,7 +386,8 @@ function Index() {
                       },
                     ].map((p) => (
                       <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                        <p className="text-base">
+                        <p className="flex items-center gap-2 text-base">
+                          <Gamepad2 className="h-4 w-4 text-primary" />
                           <span className="text-primary">{p.n}</span>
                         </p>
                         <p className="mt-1 text-sm text-muted-foreground">{p.d}</p>
