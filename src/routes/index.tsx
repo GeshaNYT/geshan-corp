@@ -22,6 +22,7 @@ import {
   IconDownload,
   IconGlobe,
 } from "@/components/icons";
+import { Search } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
