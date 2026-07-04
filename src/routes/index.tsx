@@ -215,7 +215,7 @@ function Index() {
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><Package className="h-6 w-6" /> Geshan Dev</DialogTitle>
+                    <DialogTitle className="flex items-center gap-2 text-2xl"><Package className="h-6 w-6 text-primary" /><span className="text-gold-gradient">Geshan Dev</span></DialogTitle>
                     <DialogDescription>
                       Профессиональная разработка для Minecraft.
                     </DialogDescription>
@@ -284,7 +284,7 @@ function Index() {
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><FlaskConical className="h-6 w-6" /> Geshan Lab</DialogTitle>
+                    <DialogTitle className="flex items-center gap-2 text-2xl"><FlaskConical className="h-6 w-6 text-primary" /><span className="text-gold-gradient">Geshan Lab</span></DialogTitle>
                     <DialogDescription>
                       Специализированные утилиты и инновационные решения, доступные для скачивания.
                     </DialogDescription>
@@ -355,7 +355,7 @@ function Index() {
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><Gamepad2 className="h-6 w-6" /> Geshan Game</DialogTitle>
+                    <DialogTitle className="flex items-center gap-2 text-2xl"><Gamepad2 className="h-6 w-6 text-primary" /><span className="text-gold-gradient">Geshan Game</span></DialogTitle>
                     <DialogDescription>
                       Игровые проекты и интерактивные разработки.
                     </DialogDescription>
@@ -428,7 +428,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><Bot className="h-6 w-6" /> Geshan AI</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl"><Bot className="h-6 w-6 text-primary" /><span className="text-gold-gradient">Geshan AI</span></DialogTitle>
                   <DialogDescription>
                     Многофункциональные нейросетевые модели для широкого спектра задач.
                   </DialogDescription>
@@ -485,7 +485,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><Box className="h-6 w-6" /> MineCube</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl"><Box className="h-6 w-6 text-primary" /><span className="text-gold-gradient">MineCube</span></DialogTitle>
                   <DialogDescription>
                     Такого гриферского сервера вы не видели даже во сне!
                   </DialogDescription>
@@ -542,7 +542,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><MessageCircle className="h-6 w-6" /> GeLink Messenger</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl"><MessageCircle className="h-6 w-6 text-primary" /><span className="text-gold-gradient">GeLink Messenger</span></DialogTitle>
                   <DialogDescription>
                     Современный и быстрый инструмент для общения.
                   </DialogDescription>
@@ -589,7 +589,7 @@ function Index() {
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-2xl text-gold-gradient"><Search className="h-6 w-6" /> Geshan Mystery</DialogTitle>
+                  <DialogTitle className="flex items-center gap-2 text-2xl"><Search className="h-6 w-6 text-primary" /><span className="text-gold-gradient">Geshan Mystery</span></DialogTitle>
                   <DialogDescription>
                     Погружение в неизвестное.
                   </DialogDescription>
