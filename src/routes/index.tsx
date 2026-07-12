@@ -20,6 +20,7 @@ import {
   MessageCircle,
   Search,
   Download,
+  ExternalLink,
   Globe,
 } from "lucide-react";
 
