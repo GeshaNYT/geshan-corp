@@ -235,6 +235,7 @@ function Index() {
                           { n: "AllowedCMDs", d: "система контроля команд для предотвращения злоупотреблений." },
                           { n: "StaffWorker", d: "инструмент автоматизации работы персонала." },
                           { n: "Granter", d: "модуль для автоматизированной выдачи наград." },
+                          { n: "Checker", d: "система вызова игроков на проверку на читы." },
                         ].map((p) => (
                           <li key={p.n} className="flex items-start gap-2 rounded-xl border border-border bg-background/40 p-3">
                             <Package className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
