@@ -538,6 +538,17 @@ function Index() {
                     <p className="text-muted-foreground">
                       Bedrock IP: <span className="font-mono text-foreground">pe.minecube.pro</span> | Port: <span className="font-mono text-foreground">25787</span>
                     </p>
+                    <p className="text-muted-foreground">
+                      Telegram-канал проекта:{" "}
+                      <a
+                        href="https://t.me/minecube_info"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-primary hover:underline"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" /> Перейти к новостям
+                      </a>
+                    </p>
                   </div>
                 </div>
               </DialogContent>
