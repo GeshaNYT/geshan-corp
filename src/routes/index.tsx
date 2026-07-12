@@ -378,6 +378,7 @@ function Index() {
                         p: "Android",
                         u: "https://t.me/cactus_click/21",
                         wip: false,
+                        tg: "https://t.me/cactus_click",
                       },
                       {
                         n: "The First Spark",
@@ -404,6 +405,19 @@ function Index() {
                         >
                           <Download className="h-4 w-4" /> СКАЧАТЬ{p.wip ? " (В разработке)" : ""}
                         </a>
+                        {p.tg && (
+                          <p className="mt-3 text-sm text-muted-foreground">
+                            Telegram-канал проекта:{" "}
+                            <a
+                              href={p.tg}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-primary hover:underline"
+                            >
+                              <ExternalLink className="h-3.5 w-3.5" /> Перейти к новостям
+                            </a>
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>
