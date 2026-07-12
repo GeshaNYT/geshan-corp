@@ -548,6 +548,7 @@ function Index() {
                       >
                         <ExternalLink className="h-3.5 w-3.5" /> Перейти к новостям
                       </a>
+                    </p>
                   </div>
                 </div>
               </DialogContent>
