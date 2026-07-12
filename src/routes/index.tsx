@@ -378,6 +378,7 @@ function Index() {
                         p: "Android",
                         u: "https://t.me/cactus_click/21",
                         wip: false,
+                        tg: "https://t.me/cactus_click",
                       },
                       {
                         n: "The First Spark",
