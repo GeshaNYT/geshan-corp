@@ -20,6 +20,7 @@ import {
   MessageCircle,
   Search,
   Download,
+  ExternalLink,
   Globe,
 } from "lucide-react";
 
@@ -462,7 +463,7 @@ function Index() {
                         rel="noopener noreferrer"
                         className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
                       >
-                        <Download className="h-4 w-4" /> СКАЧАТЬ{p.wip ? " (В разработке)" : ""}
+                        <ExternalLink className="h-4 w-4" /> ПОПРОБОВАТЬ{p.wip ? " (В разработке)" : ""}
                       </a>
                     </div>
                   ))}
