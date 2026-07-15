@@ -576,7 +576,7 @@ function Index() {
                 </DialogHeader>
                 <div className="mt-4 space-y-4 text-sm">
                   <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-2">
-                    <p className="flex items-center gap-2 text-primary"><MessageCircle className="h-4 w-4" /> GeLink Messenger</p>
+                    <p className="flex items-center gap-2 text-primary"><Globe className="h-4 w-4" /> GeLink Web</p>
                     <p className="text-muted-foreground">
                       Защищенный мессенджер с удобным интерфейсом для обмена сообщениями в реальном времени.
                     </p>
@@ -586,17 +586,51 @@ function Index() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
                     >
-                      <Globe className="h-4 w-4" /> Веб-версия
+                      <ExternalLink className="h-4 w-4" /> Открыть
+                    </a>
+                  </div>
+                  <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-2">
+                    <p className="flex items-center gap-2 text-primary"><MessageCircle className="h-4 w-4" /> GeLink Desktop</p>
+                    <p className="text-muted-foreground">
+                      Платформа: <span className="text-foreground">Windows</span>
+                    </p>
+                    <a
+                      href="https://drive.google.com/drive/folders/1jMeuI1LdwkXhmDj3cwNokii7tqaMzFWE?usp=sharing"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
+                    >
+                      <Download className="h-4 w-4" /> СКАЧАТЬ
+                    </a>
+                  </div>
+                  <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-2">
+                    <p className="flex items-center gap-2 text-primary"><MessageCircle className="h-4 w-4" /> GeLink Mobile</p>
+                    <p className="text-muted-foreground">
+                      Платформа: <span className="text-foreground">Android</span>
+                    </p>
+                    <a
+                      href="https://drive.google.com/drive/folders/1jMeuI1LdwkXhmDj3cwNokii7tqaMzFWE?usp=sharing"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground transition hover:opacity-90"
+                    >
+                      <Download className="h-4 w-4" /> СКАЧАТЬ
                     </a>
                   </div>
                   <div className="rounded-xl border border-border bg-background/40 p-4 space-y-2">
                     <p className="text-muted-foreground">
                       Telegram-канал проекта:{" "}
-                      <a href="https://t.me/GeLinkM" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                        Перейти к новостям
+                      <a
+                        href="https://t.me/GeLinkM"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-primary hover:underline"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" /> Перейти к новостям
                       </a>
                     </p>
                   </div>
+
                 </div>
               </DialogContent>
             </Dialog>
