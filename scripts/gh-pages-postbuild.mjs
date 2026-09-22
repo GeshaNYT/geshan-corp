@@ -4,7 +4,7 @@
 import { copyFile, writeFile, access } from "node:fs/promises";
 import { join } from "node:path";
 
-const outDir = join(process.cwd(), "dist", "client");
+const outDir = join(process.cwd(), ".output", "public");
 const shell = join(outDir, "_shell.html");
 
 await access(shell).catch(() => {
