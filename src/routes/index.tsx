@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/geshan-hero.jpg";
-import logoAsset from "@/assets/geshan-gc-logo.jpg.asset.json";
-const logoImg = logoAsset.url;
+import logoImg from "@/assets/geshan-gc-logo.jpg";
 import {
   Dialog,
   DialogContent,
