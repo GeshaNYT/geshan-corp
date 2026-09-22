@@ -27,6 +27,4 @@ export default defineConfig({
     // Project site → https://<user>.github.io/geshan-corp/
     base: isGitHubPages ? "/geshan-corp/" : "/",
   },
-  // Static prerender for GitHub Pages (applies only outside Lovable builds).
-  nitro: isGitHubPages ? { preset: "static" } : undefined,
 });
