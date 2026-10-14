@@ -456,6 +456,7 @@ function Index() {
                       p: "Telegram bot",
                       u: "https://t.me/GeshanAI_bot",
                       wip: false,
+                      frozen: false,
                     },
                     {
                       n: "Geshan Gemini",
@@ -463,6 +464,7 @@ function Index() {
                       p: "Telegram bot",
                       u: "https://t.me/geshan_co",
                       wip: true,
+                      frozen: true,
                     },
                     {
                       n: "Geshan GPT",
@@ -470,6 +472,7 @@ function Index() {
                       p: "Telegram bot",
                       u: "https://t.me/geshan_co",
                       wip: true,
+                      frozen: true,
                     },
                   ].map((p) => (
                     <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
@@ -484,7 +487,7 @@ function Index() {
                         rel="noopener noreferrer"
                         className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
                       >
-                        <ExternalLink className="h-4 w-4" /> ПОПРОБОВАТЬ{p.wip ? " (В разработке)" : ""}
+                        <ExternalLink className="h-4 w-4" /> ПОПРОБОВАТЬ{p.frozen ? " (Заморожен)" : p.wip ? " (В разработке)" : ""}
                       </a>
                     </div>
                   ))}
