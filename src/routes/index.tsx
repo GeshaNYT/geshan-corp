@@ -1,3 +1,4 @@
+import { GeCardsCard } from "@/components/GeCardsCard";
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/geshan-hero.jpg";
 import logoImg from "@/assets/geshan-gc-logo.jpg";
@@ -337,53 +338,7 @@ function Index() {
                         </a>
                       </div>
                     ))}
-                    <div className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                      <p className="flex items-center gap-2 text-base">
-                        <FlaskConical className="h-4 w-4 text-primary" />
-                        <span className="text-primary">GeCards</span>
-                      </p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        Карточные игры с друзьями — за одним компьютером, по локальной сети или через интернет.
-                      </p>
-                      <p className="mt-3 text-xs text-primary">Игры</p>
-                      <p className="mt-1 text-sm text-foreground">
-                        Дурак · Покер · Seka · Козёл · Тысяча · Блэкджек · Девятка · Пьяница
-                      </p>
-                      <p className="mt-1 text-sm text-muted-foreground">Боты на трёх уровнях сложности.</p>
-                      <p className="mt-3 text-xs text-primary">Возможности</p>
-                      <ul className="mt-1 space-y-1 text-sm text-muted-foreground">
-                        <li>Хосты в локальной сети находятся автоматически</li>
-                        <li>Игра через интернет: UPnP, ручной проброс портов или Tailscale / ZeroTier / Radmin VPN</li>
-                        <li>11 языков: English, Русский, Українська, ქართული, Español, Deutsch, Français, Italiano, Português, Türkçe, Polski</li>
-                        <li>Встроенный чат в комнате</li>
-                      </ul>
-                      <p className="mt-3 text-xs text-primary">Какой файл скачать</p>
-                      <div className="mt-1 overflow-hidden rounded-lg border border-border">
-                        {[
-                          { sys: "Windows 10/11", file: "GeCards-Setup-1.0.0.exe" },
-                          { sys: "Mac (Apple Silicon, M1–M4)", file: "GeCards-1.0.0-arm64.dmg" },
-                          { sys: "Mac (Intel)", file: "GeCards-1.0.0-x64.dmg" },
-                          { sys: "Linux", file: "GeCards-1.0.0-x86_64.AppImage" },
-                          { sys: "Ubuntu / Debian", file: "GeCards-1.0.0-amd64.deb" },
-                        ].map((f) => (
-                          <div
-                            key={f.file}
-                            className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-border/60 bg-background/40 px-3 py-2 last:border-b-0"
-                          >
-                            <span className="text-sm text-muted-foreground">{f.sys}</span>
-                            <span className="font-mono text-xs text-foreground">{f.file}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <a
-                        href="https://github.com/GeshaNYT/gecards/releases/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-                      >
-                        <Download className="h-4 w-4" /> СКАЧАТЬ
-                      </a>
-                    </div>
+                    <GeCardsCard />
                   </div>
                 </DialogContent>
               </Dialog>
