@@ -542,7 +542,7 @@ function Index() {
                       {" "}— правила, гайды, новости.
                     </p>
                     <p className="text-muted-foreground">
-                      Java IP: <span className="font-mono text-foreground">mc.minecube.pro</span> (Версия: 1.16.5-26.1.2)
+                      Java IP: <span className="font-mono text-foreground">mc.minecube.pro</span> (Версия: 1.16.5-26.3)
                     </p>
                     <p className="text-muted-foreground">
                       Bedrock IP: <span className="font-mono text-foreground">pe.minecube.pro</span> | Port: <span className="font-mono text-foreground">25787</span>
