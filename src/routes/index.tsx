@@ -464,6 +464,13 @@ function Index() {
                       u: "https://t.me/geshan_co",
                       wip: true,
                     },
+                    {
+                      n: "Geshan GPT",
+                      d: "Быстрая модель для повседневных задач: тексты, переводы, идеи и короткие ответы.",
+                      p: "Telegram bot",
+                      u: "https://t.me/geshan_co",
+                      wip: true,
+                    },
                   ].map((p) => (
                     <div key={p.n} className="rounded-xl border border-primary/40 bg-primary/5 p-4">
                       <p className="flex items-center gap-2 text-base"><Bot className="h-4 w-4 text-primary" /><span className="text-primary">{p.n}</span></p>
