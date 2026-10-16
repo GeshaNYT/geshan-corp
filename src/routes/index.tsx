@@ -31,6 +31,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Geshan Corporation — корпорация будущего. Официальные Telegram-каналы и контакты." },
       { property: "og:title", content: "Geshan Corporation" },
       { property: "og:description", content: "Корпорация будущего. Подписывайтесь на официальные Telegram-каналы." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
