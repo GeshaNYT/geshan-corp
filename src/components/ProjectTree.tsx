@@ -62,9 +62,11 @@ function Branch({
   open: Set<string>;
   toggle: (id: string) => void;
 }) {
-  if (node.kind === "project") return <ProjectRow node={node} site={site} root={depth === 0} />;
-
   const kids = site.childrenOf(node.id);
+  // Проект без вложенных — просто строка-ссылка; с вложенными — раскрывается как раздел
+  if (node.kind === "project" && kids.length === 0)
+    return <ProjectRow node={node} site={site} root={depth === 0} />;
+  const isProject = node.kind === "project";
   const isOpen = open.has(node.id);
   const count = site.countProjects(node.id);
   const subs = kids.filter((k) => k.kind === "section").length;
@@ -91,7 +93,8 @@ function Branch({
       >
         <span
           className={cn(
-            "grid shrink-0 place-items-center rounded-xl border border-primary/30 bg-primary/10",
+            "grid shrink-0 place-items-center rounded-xl",
+            isProject ? "bg-background/60" : "border border-primary/30 bg-primary/10",
             depth === 0 ? "h-12 w-12" : "h-10 w-10",
           )}
         >
@@ -106,8 +109,9 @@ function Branch({
           >
             {node.title}
           </span>
-          <span className="block truncate text-xs text-muted-foreground">
-            {meta || node.tagline}
+          <span className="mt-0.5 flex items-center gap-2">
+            {isProject && <StatusBadge status={node.status} />}
+            <span className="truncate text-xs text-muted-foreground">{meta || node.tagline}</span>
           </span>
         </span>
         <ChevronDown
@@ -134,7 +138,8 @@ function Branch({
             params={{ slug: node.slug }}
             className="inline-flex items-center gap-1 px-1 pt-1 text-xs text-primary hover:underline"
           >
-            Страница раздела <ChevronRight className="h-3 w-3" />
+            {isProject ? "Страница проекта" : "Страница раздела"}{" "}
+            <ChevronRight className="h-3 w-3" />
           </Link>
         </div>
       )}

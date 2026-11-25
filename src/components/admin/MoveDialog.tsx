@@ -14,7 +14,7 @@ export function useParentOptions(node?: SiteNode) {
   const out: { node: SiteNode; depth: number }[] = [];
   const walk = (pid: string | null, depth: number) => {
     for (const c of site.childrenOf(pid, { includeHidden: true })) {
-      if (c.kind !== "section" || banned.has(c.id)) continue;
+      if (banned.has(c.id)) continue;
       out.push({ node: c, depth });
       walk(c.id, depth + 1);
     }

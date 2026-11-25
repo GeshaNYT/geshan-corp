@@ -261,8 +261,8 @@ function AdminPage() {
       )}
 
       <p className="mt-4 text-xs text-muted-foreground">
-        Подсказка: «+» у раздела добавляет внутрь подраздел или проект. Стрелки меняют порядок, «⋮»
-        — перенос, дублирование, скрытие и удаление.
+        Подсказка: «+» у любого раздела или проекта добавляет внутрь подраздел или проект. Стрелки
+        меняют порядок, «⋮» — перенос, дублирование, скрытие и удаление.
       </p>
 
       {editorOpen && (
@@ -361,7 +361,7 @@ function TreeRow({
           </span>
         </button>
 
-        {isSection && (
+        {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -381,7 +381,7 @@ function TreeRow({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        )}
+        }
         <div className="hidden items-center sm:flex">
           <IconBtn label="Выше" onClick={() => actions.move(node, -1)} disabled={first}>
             <ArrowUp className="h-4 w-4" />
