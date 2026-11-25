@@ -35,7 +35,7 @@ function Resources() {
   const platforms = useMemo(() => {
     const m = new Map<string, string>();
     for (const p of items.flatMap((i) => i.platforms))
-      if (!m.has(norm(p))) m.set(norm(p), p.trim());
+      if (!m.has(norm(p))) m.set(norm(p), p.trim().charAt(0).toUpperCase() + p.trim().slice(1));
     return [...m.values()].sort((a, b) => a.localeCompare(b));
   }, [items]);
   const needle = q.trim().toLowerCase();
