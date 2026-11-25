@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Send } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
-import { CHANNELS } from "@/data/seed";
+import { useChannels } from "@/lib/content";
 
 export const Route = createFileRoute("/channels")({
   head: () => ({ meta: [{ title: "Каналы — Geshan Corporation" }] }),
@@ -9,15 +9,16 @@ export const Route = createFileRoute("/channels")({
 });
 
 function Channels() {
+  const { data: channels } = useChannels();
   return (
     <div className="mx-auto max-w-2xl">
       <PageHeader eyebrow="Telegram" title="Официальные каналы">
         Подписывайтесь, чтобы быть в курсе всех новостей и анонсов корпорации.
       </PageHeader>
       <div className="space-y-3">
-        {CHANNELS.map((c) => (
+        {(channels ?? []).map((c) => (
           <a
-            key={c.url}
+            key={c.id}
             href={c.url}
             target="_blank"
             rel="noopener noreferrer"

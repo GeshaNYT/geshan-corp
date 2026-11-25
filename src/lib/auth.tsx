@@ -6,6 +6,7 @@ export interface Profile {
   id: string;
   username: string | null;
   avatar_url: string | null;
+  bio: string;
   role: "user" | "moderator" | "admin";
 }
 
@@ -20,6 +21,12 @@ interface AuthState {
   signUp: (email: string, password: string, username: string) => Promise<{ needsConfirm: boolean }>;
   signOut: () => Promise<void>;
   setDemoAdmin: (v: boolean) => void;
+  updateProfile: (
+    patch: Partial<Pick<Profile, "username" | "bio" | "avatar_url">>,
+  ) => Promise<void>;
+  uploadAvatar: (file: File) => Promise<string>;
+  changeEmail: (email: string) => Promise<void>;
+  changePassword: (password: string) => Promise<void>;
   demoAdmin: boolean;
 }
 
@@ -32,6 +39,8 @@ function ruError(msg: string) {
   if (/password should be at least/i.test(msg))
     return "Пароль слишком короткий (минимум 6 символов)";
   if (/email not confirmed/i.test(msg)) return "Подтверди почту по ссылке из письма";
+  if (/should be different/i.test(msg)) return "Новый пароль должен отличаться от старого";
+  if (/rate limit/i.test(msg)) return "Слишком много попыток, подожди немного";
   return msg;
 }
 
@@ -89,6 +98,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     async signOut() {
       await supabase?.auth.signOut();
+    },
+    async updateProfile(patch) {
+      if (!supabase || !user) throw new Error("Нужно войти");
+      const { data, error } = await supabase
+        .from("profiles")
+        .update(patch)
+        .eq("id", user.id)
+        .select()
+        .single();
+      if (error) {
+        if (/profiles_username_len/.test(error.message))
+          throw new Error("Никнейм — от 2 до 32 символов");
+        if (/profiles_bio_len/.test(error.message))
+          throw new Error("Описание — не длиннее 300 символов");
+        throw new Error(error.message);
+      }
+      setProfile(data as Profile);
+    },
+    async uploadAvatar(file) {
+      if (!supabase || !user) throw new Error("Нужно войти");
+      if (file.size > 3 * 1024 * 1024) throw new Error("Картинка должна быть меньше 3 МБ");
+      const ext = (file.name.split(".").pop() || "png").toLowerCase().replace(/[^a-z0-9]/g, "");
+      const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { contentType: file.type });
+      if (error) throw new Error(error.message);
+      // старые аватарки удаляем, чтобы не копились
+      const { data: old } = await supabase.storage.from("avatars").list(user.id);
+      const stale = (old ?? []).map((o) => `${user.id}/${o.name}`).filter((p) => p !== path);
+      if (stale.length) await supabase.storage.from("avatars").remove(stale);
+      return supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+    },
+    async changeEmail(email) {
+      const { error } = await supabase!.auth.updateUser(
+        { email },
+        { emailRedirectTo: window.location.href },
+      );
+      if (error) throw new Error(ruError(error.message));
+    },
+    async changePassword(password) {
+      const { error } = await supabase!.auth.updateUser({ password });
+      if (error) throw new Error(ruError(error.message));
     },
     setDemoAdmin(v) {
       setDemoAdminState(v);

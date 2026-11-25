@@ -20,17 +20,21 @@ export function SiteFooter() {
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px] shadow-emerald-400/60" />
             }
             value={fmt(online)}
-            label="сейчас на сайте"
+            label="онлайн сейчас (с гостями)"
           />
           <Stat
             icon={<Users className="h-4 w-4 text-primary" />}
             value={fmt(stats?.users)}
-            label="зарегистрировано"
+            label="аккаунтов"
           />
           <Stat
             icon={<Eye className="h-4 w-4 text-primary" />}
             value={fmt(stats?.visitors_total)}
-            label={stats ? `посетителей · ${fmt(stats.visitors_today)} сегодня` : "посетителей"}
+            label={
+              stats
+                ? `посетителей всего · ${fmt(stats.visitors_today)} сегодня`
+                : "посетителей всего"
+            }
           />
           <Stat
             icon={<Download className="h-4 w-4 text-primary" />}

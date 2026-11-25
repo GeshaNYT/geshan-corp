@@ -6,7 +6,7 @@ import { NodeCard } from "@/components/NodeCards";
 import { ProjectTree } from "@/components/ProjectTree";
 import { ServerStatus } from "@/components/ServerStatus";
 import { useSite } from "@/lib/data";
-import { CHANNELS } from "@/data/seed";
+import { useChannels } from "@/lib/content";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { data: channels } = useChannels();
   const site = useSite();
   const featured = site.nodes
     .filter((n) => n.featured && !n.hidden)
@@ -77,7 +78,7 @@ function Home() {
         <SectionTitle
           icon={<Server className="h-4 w-4" />}
           title="Сервер MineCube"
-          to="/server"
+          to="/p/minecube"
           more="Подробнее"
         />
         <div className="rounded-3xl border border-border bg-card/40 p-4 backdrop-blur">
@@ -112,9 +113,9 @@ function Home() {
           more="Все каналы"
         />
         <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-4 md:px-0">
-          {CHANNELS.map((c) => (
+          {(channels ?? []).map((c) => (
             <a
-              key={c.url}
+              key={c.id}
               href={c.url}
               target="_blank"
               rel="noopener noreferrer"

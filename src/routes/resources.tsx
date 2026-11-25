@@ -6,6 +6,7 @@ import { NodeIcon } from "@/components/NodeIcon";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useSite } from "@/lib/data";
+import { orderPlatforms, useSetting } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/resources")({
@@ -30,14 +31,15 @@ function Resources() {
       ),
     [site],
   );
+  const platformOrder = useSetting<string[]>("platform_order", []);
   // Одинаковые платформы объединяются в один фильтр, даже если написаны с разным регистром
   const norm = (p: string) => p.trim().toLowerCase();
   const platforms = useMemo(() => {
     const m = new Map<string, string>();
     for (const p of items.flatMap((i) => i.platforms))
       if (!m.has(norm(p))) m.set(norm(p), p.trim().charAt(0).toUpperCase() + p.trim().slice(1));
-    return [...m.values()].sort((a, b) => a.localeCompare(b));
-  }, [items]);
+    return orderPlatforms([...m.values()], platformOrder);
+  }, [items, platformOrder]);
   const needle = q.trim().toLowerCase();
   const shown = items.filter(
     (i) =>

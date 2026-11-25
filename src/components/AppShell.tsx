@@ -153,7 +153,7 @@ function MenuSheet({
         </SheetHeader>
         <div className="space-y-6 p-4">
           <div className="space-y-1">
-            <MenuLink to="/server" icon={<Server className="h-4 w-4" />} onClick={close}>
+            <MenuLink to="/p/minecube" icon={<Server className="h-4 w-4" />} onClick={close}>
               Сервер MineCube
             </MenuLink>
             <MenuLink to="/channels" icon={<Send className="h-4 w-4" />} onClick={close}>

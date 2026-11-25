@@ -31,6 +31,8 @@ import { NodeIcon } from "@/components/NodeIcon";
 import { StatusBadge } from "@/components/StatusBadge";
 import { NodeEditor } from "@/components/admin/NodeEditor";
 import { MoveDialog } from "@/components/admin/MoveDialog";
+import { ChannelsAdmin } from "@/components/admin/ChannelsAdmin";
+import { PlatformsAdmin } from "@/components/admin/PlatformsAdmin";
 import { useAuth } from "@/lib/auth";
 import { useRefreshSite, useSite, type SiteIndex } from "@/lib/data";
 import { repo, resetDemo } from "@/lib/repo";
@@ -60,6 +62,7 @@ function AdminPage() {
   const [q, setQ] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [moving, setMoving] = useState<SiteNode | null>(null);
+  const [tab, setTab] = useState<"tree" | "channels" | "platforms">("tree");
 
   const editorOpen = Boolean(search.edit || search.kind);
   const editing = search.edit ? site.byId.get(search.edit) : undefined;
@@ -221,7 +224,7 @@ function AdminPage() {
           <p className="mb-1 text-xs uppercase tracking-[0.3em] text-primary">Управление</p>
           <h1 className="font-display text-4xl">Админ-панель</h1>
         </div>
-        <div className="flex gap-2">
+        <div className={cn("flex gap-2", tab !== "tree" && "hidden")}>
           <button
             type="button"
             onClick={() => void openNew("section", null)}
@@ -239,72 +242,100 @@ function AdminPage() {
         </div>
       </div>
 
-      <ModeBanner site={site} onImported={refresh} />
+      <div className="mb-4 grid grid-cols-3 gap-1 rounded-xl border border-border p-1">
+        {(
+          [
+            ["tree", "Проекты"],
+            ["channels", "Каналы"],
+            ["platforms", "Платформы"],
+          ] as const
+        ).map(([k, label]) => (
+          <button
+            key={k}
+            type="button"
+            onClick={() => setTab(k)}
+            className={cn(
+              "rounded-lg py-2 text-sm transition",
+              tab === k ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+            )}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-      <label className="mb-4 flex items-center gap-2 rounded-xl border border-border bg-card/50 px-3">
-        <Search className="h-4 w-4 text-muted-foreground" />
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Поиск по всем разделам и проектам"
-          className="h-11 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-        />
-      </label>
+      {tab === "channels" && <ChannelsAdmin />}
+      {tab === "platforms" && <PlatformsAdmin />}
+      {tab === "tree" && (
+        <>
+          <ModeBanner site={site} onImported={refresh} />
 
-      {needle ? (
-        <div className="space-y-1.5">
-          {matches.map((n) => (
-            <button
-              key={n.id}
-              type="button"
-              onClick={() => actions.edit(n.id)}
-              className="flex w-full items-center gap-3 rounded-xl border border-border bg-card/40 p-3 text-left hover:border-primary"
-            >
-              <NodeIcon name={n.icon} className="h-4 w-4 text-primary" />
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm">{n.title}</span>
-                <span className="block truncate text-xs text-muted-foreground">
-                  {site
-                    .pathOf(n.id)
-                    .slice(0, -1)
-                    .map((p) => p.title)
-                    .join(" / ") || "Корень"}
-                </span>
-              </span>
-              <Pencil className="h-4 w-4 text-muted-foreground" />
-            </button>
-          ))}
-          {matches.length === 0 && (
-            <p className="py-8 text-center text-sm text-muted-foreground">Ничего не найдено</p>
-          )}
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-border bg-card/30 p-1.5">
-          {roots.map((n, i) => (
-            <TreeRow
-              key={n.id}
-              node={n}
-              depth={0}
-              site={site}
-              expanded={expanded}
-              focusId={focusId}
-              actions={actions}
-              first={i === 0}
-              last={i === roots.length - 1}
+          <label className="mb-4 flex items-center gap-2 rounded-xl border border-border bg-card/50 px-3">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Поиск по всем разделам и проектам"
+              className="h-11 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
-          ))}
-          {roots.length === 0 && (
-            <p className="p-8 text-center text-sm text-muted-foreground">
-              Пока пусто — добавь первый раздел.
-            </p>
-          )}
-        </div>
-      )}
+          </label>
 
-      <p className="mt-4 text-xs text-muted-foreground">
-        Подсказка: «+» у любого раздела или проекта добавляет внутрь подраздел или проект. Стрелки
-        меняют порядок, «⋮» — перенос, дублирование, скрытие и удаление.
-      </p>
+          {needle ? (
+            <div className="space-y-1.5">
+              {matches.map((n) => (
+                <button
+                  key={n.id}
+                  type="button"
+                  onClick={() => actions.edit(n.id)}
+                  className="flex w-full items-center gap-3 rounded-xl border border-border bg-card/40 p-3 text-left hover:border-primary"
+                >
+                  <NodeIcon name={n.icon} className="h-4 w-4 text-primary" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm">{n.title}</span>
+                    <span className="block truncate text-xs text-muted-foreground">
+                      {site
+                        .pathOf(n.id)
+                        .slice(0, -1)
+                        .map((p) => p.title)
+                        .join(" / ") || "Корень"}
+                    </span>
+                  </span>
+                  <Pencil className="h-4 w-4 text-muted-foreground" />
+                </button>
+              ))}
+              {matches.length === 0 && (
+                <p className="py-8 text-center text-sm text-muted-foreground">Ничего не найдено</p>
+              )}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-border bg-card/30 p-1.5">
+              {roots.map((n, i) => (
+                <TreeRow
+                  key={n.id}
+                  node={n}
+                  depth={0}
+                  site={site}
+                  expanded={expanded}
+                  focusId={focusId}
+                  actions={actions}
+                  first={i === 0}
+                  last={i === roots.length - 1}
+                />
+              ))}
+              {roots.length === 0 && (
+                <p className="p-8 text-center text-sm text-muted-foreground">
+                  Пока пусто — добавь первый раздел.
+                </p>
+              )}
+            </div>
+          )}
+
+          <p className="mt-4 text-xs text-muted-foreground">
+            Подсказка: «+» у любого раздела или проекта добавляет внутрь подраздел или проект.
+            Стрелки меняют порядок, «⋮» — перенос, дублирование, скрытие и удаление.
+          </p>
+        </>
+      )}
 
       {editorOpen && (
         <NodeEditor

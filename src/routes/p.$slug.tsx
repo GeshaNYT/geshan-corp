@@ -108,6 +108,24 @@ function NodePage() {
       )}
 
       <div className="mt-6 space-y-6">
+        {node.slug === "minecube" && (
+          <section>
+            <h2 className="mb-3 font-display text-2xl">Статус серверов</h2>
+            <ServerStatus detailed />
+            <div className="mt-3 space-y-2 rounded-2xl border border-border bg-card/40 p-4 text-sm text-muted-foreground">
+              <p>
+                <span className="text-foreground">Java:</span> «Сетевая игра» → «Добавить», адрес{" "}
+                <span className="font-mono text-primary">mc.minecube.pro</span>.
+              </p>
+              <p>
+                <span className="text-foreground">Bedrock:</span> «Серверы» → «Добавить сервер»,
+                адрес <span className="font-mono text-primary">pe.minecube.pro</span>, порт{" "}
+                <span className="font-mono text-primary">25787</span>.
+              </p>
+            </div>
+          </section>
+        )}
+
         {(files.length > 0 || node.links.length > 0) && (
           <section className="space-y-3">
             <FileList files={files} />
@@ -122,13 +140,6 @@ function NodePage() {
                 {p}
               </p>
             ))}
-          </section>
-        )}
-
-        {node.slug === "minecube" && (
-          <section>
-            <h2 className="mb-3 font-display text-2xl">Статус серверов</h2>
-            <ServerStatus detailed />
           </section>
         )}
 

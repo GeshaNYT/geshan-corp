@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { LogOut, MessageCircle, Shield } from "lucide-react";
+import { Camera, Loader2, LogOut, MessageCircle, Shield } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -17,41 +18,227 @@ function ProfilePage() {
   if (!auth.ready) return <p className="py-20 text-center text-muted-foreground">Загрузка…</p>;
   if (!auth.user) return <AuthForm />;
 
-  const name = auth.profile?.username || auth.user.email;
+  return <Account key={auth.profile?.id ?? "loading"} />;
+}
+
+function Account() {
+  const auth = useAuth();
+  const user = auth.user!;
+  const profile = auth.profile;
+  const [username, setUsername] = useState(profile?.username ?? "");
+  const [bio, setBio] = useState(profile?.bio ?? "");
+  const [email, setEmail] = useState(user.email ?? "");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const run = async (key: string, fn: () => Promise<unknown>, ok: string) => {
+    setBusy(key);
+    try {
+      await fn();
+      toast.success(ok);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const name = profile?.username || user.email || "Профиль";
+  const role =
+    profile?.role === "admin"
+      ? "Администратор"
+      : profile?.role === "moderator"
+        ? "Модератор"
+        : "Пользователь";
+  const changed =
+    username.trim() !== (profile?.username ?? "") || bio.trim() !== (profile?.bio ?? "");
+
   return (
-    <div className="mx-auto max-w-md">
-      <PageHeader eyebrow="Профиль" title={name ?? "Профиль"} />
-      <div className="space-y-3 rounded-3xl border border-border bg-card/40 p-5">
-        <Row label="Почта" value={auth.user.email ?? "—"} />
-        <Row
-          label="Роль"
-          value={
-            auth.profile?.role === "admin"
-              ? "Администратор"
-              : auth.profile?.role === "moderator"
-                ? "Модератор"
-                : "Пользователь"
-          }
-        />
-      </div>
-      <div className="mt-4 space-y-2">
-        {auth.isAdmin && (
-          <Link
-            to="/admin"
-            className="flex items-center justify-center gap-2 rounded-xl border border-primary/50 bg-primary/10 py-3 text-sm text-primary"
-          >
-            <Shield className="h-4 w-4" /> Админ-панель
-          </Link>
-        )}
+    <div className="mx-auto max-w-md space-y-4">
+      {/* Шапка профиля */}
+      <div className="flex items-center gap-4 rounded-3xl border border-border bg-card/40 p-5">
         <button
           type="button"
-          onClick={() => void auth.signOut()}
-          className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm hover:border-red-400 hover:text-red-300"
+          onClick={() => fileRef.current?.click()}
+          className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-primary/50 bg-background"
+          aria-label="Сменить аватарку"
         >
-          <LogOut className="h-4 w-4" /> Выйти
+          {profile?.avatar_url ? (
+            <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <span className="grid h-full w-full place-items-center font-display text-3xl text-primary">
+              {name.charAt(0).toUpperCase()}
+            </span>
+          )}
+          <span className="absolute inset-0 grid place-items-center bg-black/50 opacity-0 transition group-hover:opacity-100">
+            {busy === "avatar" ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Camera className="h-5 w-5" />
+            )}
+          </span>
         </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            e.target.value = "";
+            if (f)
+              void run(
+                "avatar",
+                async () => auth.updateProfile({ avatar_url: await auth.uploadAvatar(f) }),
+                "Аватарка обновлена",
+              );
+          }}
+        />
+        <div className="min-w-0">
+          <p className="truncate font-display text-3xl">{name}</p>
+          <p className="text-xs text-primary">{role}</p>
+          {profile?.bio && (
+            <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{profile.bio}</p>
+          )}
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            className="mt-1 text-xs text-muted-foreground hover:text-primary"
+          >
+            {profile?.avatar_url ? "Сменить аватарку" : "Добавить аватарку"}
+          </button>
+        </div>
       </div>
+
+      {auth.isAdmin && (
+        <Link
+          to="/admin"
+          className="flex items-center justify-center gap-2 rounded-xl border border-primary/50 bg-primary/10 py-3 text-sm text-primary"
+        >
+          <Shield className="h-4 w-4" /> Админ-панель
+        </Link>
+      )}
+
+      {/* Имя и описание */}
+      <Card title="Имя и описание">
+        <Field label="Никнейм" value={username} onChange={setUsername} maxLength={32} />
+        <label className="block">
+          <span className="mb-1.5 flex justify-between text-xs text-muted-foreground">
+            <span>О себе</span>
+            <span>{bio.length}/300</span>
+          </span>
+          <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value.slice(0, 300))}
+            rows={3}
+            placeholder="Пара слов о себе"
+            className="w-full rounded-xl border border-border bg-card/50 p-3 text-sm outline-none focus:border-primary"
+          />
+        </label>
+        <SaveBtn
+          disabled={!changed}
+          busy={busy === "profile"}
+          onClick={() =>
+            void run(
+              "profile",
+              () => auth.updateProfile({ username: username.trim(), bio: bio.trim() }),
+              "Сохранено",
+            )
+          }
+        />
+      </Card>
+
+      {/* Почта */}
+      <Card title="Почта">
+        <Field label="Почта" type="email" value={email} onChange={setEmail} autoComplete="email" />
+        <p className="text-xs text-muted-foreground">
+          Придут письма на старую и новую почту — нужно подтвердить смену по ссылкам в обоих.
+        </p>
+        <SaveBtn
+          label="Сменить почту"
+          disabled={
+            !email.trim() || email.trim().toLowerCase() === (user.email ?? "").toLowerCase()
+          }
+          busy={busy === "email"}
+          onClick={() =>
+            void run(
+              "email",
+              () => auth.changeEmail(email.trim()),
+              "Письма отправлены — проверь почту",
+            )
+          }
+        />
+      </Card>
+
+      {/* Пароль */}
+      <Card title="Пароль">
+        <Field
+          label="Новый пароль"
+          type="password"
+          value={password}
+          onChange={setPassword}
+          minLength={6}
+          autoComplete="new-password"
+        />
+        <SaveBtn
+          label="Сменить пароль"
+          disabled={password.length < 6}
+          busy={busy === "password"}
+          onClick={() =>
+            void run(
+              "password",
+              async () => {
+                await auth.changePassword(password);
+                setPassword("");
+              },
+              "Пароль изменён",
+            )
+          }
+        />
+      </Card>
+
+      <button
+        type="button"
+        onClick={() => void auth.signOut()}
+        className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm hover:border-red-400 hover:text-red-300"
+      >
+        <LogOut className="h-4 w-4" /> Выйти
+      </button>
     </div>
+  );
+}
+
+function Card({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="space-y-3 rounded-3xl border border-border bg-card/40 p-5">
+      <h2 className="font-sans text-sm font-semibold tracking-normal">{title}</h2>
+      {children}
+    </section>
+  );
+}
+
+function SaveBtn({
+  label = "Сохранить",
+  disabled,
+  busy,
+  onClick,
+}: {
+  label?: string;
+  disabled?: boolean;
+  busy?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled || busy}
+      onClick={onClick}
+      className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-medium text-primary-foreground transition disabled:opacity-40"
+    >
+      {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+      {label}
+    </button>
   );
 }
 
