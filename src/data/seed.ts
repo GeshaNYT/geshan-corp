@@ -79,11 +79,18 @@ const TREE: Seed[] = [
             ],
           },
           {
-            slug: "visual",
-            title: "Визуальные проекты",
+            slug: "mods",
+            title: "Моды",
             kind: "section",
-            icon: "Palette",
-            tagline: "Публичные разработки, доступные для всего сообщества.",
+            icon: "Wrench",
+            tagline: "Моды для Minecraft от Geshan Dev.",
+          },
+          {
+            slug: "shaders",
+            title: "Шейдеры",
+            kind: "section",
+            icon: "Sparkles",
+            tagline: "Шейдеры для Minecraft, доступные всему сообществу.",
             children: [
               project(
                 "genature",
@@ -164,7 +171,11 @@ const TREE: Seed[] = [
               description:
                 "Игры: Дурак · Покер · Seka · Козёл · Тысяча · Блэкджек · Девятка · Пьяница — с ботами трёх уровней сложности.\n\nИгра по локальной сети (хосты находятся автоматически) и через интернет (UPnP, проброс портов, Tailscale / ZeroTier / Radmin VPN).\n\n11 языков и встроенный чат в комнате.",
               links: [
-                link("Скачать (все платформы)", GECARDS, "download"),
+                link("Скачать для Windows", GECARDS, "download"),
+                link("Скачать для macOS (Apple Silicon)", GECARDS, "download"),
+                link("Скачать для macOS (Intel)", GECARDS, "download"),
+                link("Скачать для Linux (AppImage)", GECARDS, "download"),
+                link("Скачать для Ubuntu / Debian (.deb)", GECARDS, "download"),
                 link("GitHub", "https://github.com/GeshaNYT/gecards", "github"),
               ],
             },
