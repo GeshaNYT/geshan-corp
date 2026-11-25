@@ -126,3 +126,48 @@ create policy "resources admin delete" on storage.objects for delete using (buck
 -- ───────────── Сделать себя админом ─────────────
 -- 1) Зарегистрируйся на сайте. 2) Выполни строку ниже, подставив свою почту:
 -- update public.profiles set role = 'admin' where id = (select id from auth.users where email = 'ТВОЯ@ПОЧТА');
+
+-- ───────────── Статистика сайта ─────────────
+create table if not exists public.visits (
+  visitor_id text not null check (char_length(visitor_id) between 8 and 64),
+  day date not null default (now() at time zone 'Europe/Moscow')::date,
+  primary key (visitor_id, day)
+);
+alter table public.visits enable row level security;
+
+create table if not exists public.link_clicks (
+  node_id uuid not null references public.nodes (id) on delete cascade,
+  link_id text not null check (char_length(link_id) <= 64),
+  clicks integer not null default 0,
+  primary key (node_id, link_id)
+);
+alter table public.link_clicks enable row level security;
+drop policy if exists "link clicks public read" on public.link_clicks;
+create policy "link clicks public read" on public.link_clicks for select using (true);
+
+create or replace function public.track_visit(vid text)
+returns void language sql security definer set search_path = public as $$
+  insert into public.visits (visitor_id) values (left(vid, 64)) on conflict do nothing;
+$$;
+
+create or replace function public.count_link(nid uuid, lid text)
+returns void language sql security definer set search_path = public as $$
+  insert into public.link_clicks (node_id, link_id, clicks)
+  select nid, left(lid, 64), 1 where exists (select 1 from public.nodes where id = nid)
+  on conflict (node_id, link_id) do update set clicks = public.link_clicks.clicks + 1;
+$$;
+
+create or replace function public.site_stats()
+returns json language sql stable security definer set search_path = public as $$
+  select json_build_object(
+    'users', (select count(*) from public.profiles),
+    'visitors_total', (select count(distinct visitor_id) from public.visits),
+    'visitors_today', (select count(*) from public.visits where day = (now() at time zone 'Europe/Moscow')::date),
+    'downloads', (select coalesce(sum(downloads), 0) from public.node_files)
+                 + (select coalesce(sum(clicks), 0) from public.link_clicks)
+  );
+$$;
+
+grant execute on function public.track_visit(text) to anon, authenticated;
+grant execute on function public.count_link(uuid, text) to anon, authenticated;
+grant execute on function public.site_stats() to anon, authenticated;

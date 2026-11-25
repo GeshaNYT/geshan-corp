@@ -101,6 +101,7 @@ function Resources() {
               <div className="mt-3 space-y-3">
                 <FileList files={site.filesOf(n.id)} />
                 <LinkButtons
+                  nodeId={n.id}
                   links={n.links.filter(
                     (l) => l.kind === "download" || l.kind === "open" || l.kind === "drive",
                   )}

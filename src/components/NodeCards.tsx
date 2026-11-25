@@ -19,6 +19,7 @@ import { NodeIcon } from "@/components/NodeIcon";
 import { StatusBadge } from "@/components/StatusBadge";
 import { formatSize, useRefreshSite, useSite } from "@/lib/data";
 import { repo } from "@/lib/repo";
+import { countLinkClick } from "@/lib/stats";
 import type { NodeFile, NodeLink, SiteNode } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -100,7 +101,7 @@ const LINK_ICONS: Record<string, typeof Download> = {
   other: Link2,
 };
 
-export function LinkButtons({ links }: { links: NodeLink[] }) {
+export function LinkButtons({ links, nodeId }: { links: NodeLink[]; nodeId: string }) {
   if (!links.length) return null;
   return (
     <div className="flex flex-wrap gap-2">
@@ -113,6 +114,9 @@ export function LinkButtons({ links }: { links: NodeLink[] }) {
             href={l.url}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => {
+              if (l.kind === "download" || l.kind === "drive") countLinkClick(nodeId, l.id);
+            }}
             className={cn(
               "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition",
               primary

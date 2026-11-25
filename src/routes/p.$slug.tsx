@@ -111,7 +111,7 @@ function NodePage() {
         {(files.length > 0 || node.links.length > 0) && (
           <section className="space-y-3">
             <FileList files={files} />
-            <LinkButtons links={node.links} />
+            <LinkButtons links={node.links} nodeId={node.id} />
           </section>
         )}
 

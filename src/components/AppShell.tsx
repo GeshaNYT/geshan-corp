@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { NodeIcon } from "@/components/NodeIcon";
+import { SiteFooter } from "@/components/SiteFooter";
 import logoImg from "@/assets/geshan-gc-logo.jpg";
 import { useSite } from "@/lib/data";
 import { useAuth } from "@/lib/auth";
@@ -87,7 +88,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-5 md:pb-16">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 pb-10 pt-5">{children}</main>
+      <SiteFooter />
 
       {/* Нижняя панель (телефон) */}
       <nav
