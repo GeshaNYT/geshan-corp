@@ -19,6 +19,7 @@ import { formatSize, slugify, useRefreshSite, useSite } from "@/lib/data";
 import { repo } from "@/lib/repo";
 import {
   LINK_KIND_LABELS,
+  guessLinkKind,
   PLATFORM_PRESETS,
   STATUS_HINTS,
   STATUS_LABELS,
@@ -113,6 +114,15 @@ export function NodeEditor({
       d.links.map((l) => {
         if (l.id !== id) return l;
         const next = { ...l, ...patch };
+        // Вставили ссылку — сами подбираем тип кнопки (Telegram, Диск, Discord…), если тип ещё общий
+        if (patch.url !== undefined && (l.kind === "other" || l.kind === "site")) {
+          const g = guessLinkKind(patch.url);
+          if (g) {
+            next.kind = g;
+            if (!l.label || Object.values(LINK_KIND_LABELS).includes(l.label))
+              next.label = LINK_KIND_LABELS[g];
+          }
+        }
         // При смене типа меняем подпись, если она была стандартной
         if (patch.kind && Object.values(LINK_KIND_LABELS).includes(l.label))
           next.label = LINK_KIND_LABELS[patch.kind];
@@ -451,18 +461,16 @@ export function NodeEditor({
               ))}
             </div>
             <div className="flex flex-wrap gap-2">
-              {(["download", "open", "telegram", "github", "youtube", "site"] as LinkKind[]).map(
-                (k) => (
-                  <button
-                    key={k}
-                    type="button"
-                    onClick={() => addLink(k)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary"
-                  >
-                    <Plus className="h-3 w-3" /> {LINK_KIND_LABELS[k]}
-                  </button>
-                ),
-              )}
+              {(Object.keys(LINK_KIND_LABELS) as LinkKind[]).map((k) => (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => addLink(k)}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary"
+                >
+                  <Plus className="h-3 w-3" /> {LINK_KIND_LABELS[k]}
+                </button>
+              ))}
             </div>
           </Group>
 

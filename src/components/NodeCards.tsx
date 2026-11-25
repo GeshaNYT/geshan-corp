@@ -6,7 +6,14 @@ import {
   FileDown,
   Github,
   Globe,
+  HardDrive,
+  Heart,
+  Link2,
+  MessageCircle,
+  MessagesSquare,
+  Music2,
   Send,
+  Users,
   Youtube,
 } from "lucide-react";
 import { NodeIcon } from "@/components/NodeIcon";
@@ -22,7 +29,8 @@ export function NodeCard({ node, compact }: { node: SiteNode; compact?: boolean 
   const count = isSection ? site.countProjects(node.id) : 0;
   const downloads =
     !isSection &&
-    (site.filesOf(node.id).length > 0 || node.links.some((l) => l.kind === "download"));
+    (site.filesOf(node.id).length > 0 ||
+      node.links.some((l) => l.kind === "download" || l.kind === "drive"));
 
   return (
     <Link
@@ -78,14 +86,20 @@ export function plural(n: number, one: string, few: string, many: string) {
   return many;
 }
 
-const LINK_ICONS = {
+const LINK_ICONS: Record<string, typeof Download> = {
   download: Download,
   open: ExternalLink,
+  drive: HardDrive,
   telegram: Send,
+  gelink: MessageCircle,
+  discord: MessagesSquare,
+  vk: Users,
   github: Github,
   youtube: Youtube,
+  tiktok: Music2,
+  donate: Heart,
   site: Globe,
-  other: ExternalLink,
+  other: Link2,
 };
 
 export function LinkButtons({ links }: { links: NodeLink[] }) {
@@ -94,7 +108,7 @@ export function LinkButtons({ links }: { links: NodeLink[] }) {
     <div className="flex flex-wrap gap-2">
       {links.map((l) => {
         const Icon = LINK_ICONS[l.kind] ?? ExternalLink;
-        const primary = l.kind === "download" || l.kind === "open";
+        const primary = l.kind === "download" || l.kind === "open" || l.kind === "drive";
         return (
           <a
             key={l.id}

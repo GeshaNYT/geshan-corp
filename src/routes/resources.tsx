@@ -26,7 +26,7 @@ function Resources() {
           n.kind === "project" &&
           !n.hidden &&
           (site.filesOf(n.id).length > 0 ||
-            n.links.some((l) => l.kind === "download" || l.kind === "open")),
+            n.links.some((l) => l.kind === "download" || l.kind === "open" || l.kind === "drive")),
       ),
     [site],
   );
@@ -94,7 +94,9 @@ function Resources() {
               <div className="mt-3 space-y-3">
                 <FileList files={site.filesOf(n.id)} />
                 <LinkButtons
-                  links={n.links.filter((l) => l.kind === "download" || l.kind === "open")}
+                  links={n.links.filter(
+                    (l) => l.kind === "download" || l.kind === "open" || l.kind === "drive",
+                  )}
                 />
               </div>
             </div>

@@ -4,7 +4,20 @@ export type NodeKind = "section" | "project";
 
 export type NodeStatus = "released" | "wip" | "frozen" | "soon" | "internal";
 
-export type LinkKind = "download" | "open" | "telegram" | "github" | "youtube" | "site" | "other";
+export type LinkKind =
+  | "download"
+  | "open"
+  | "drive"
+  | "telegram"
+  | "gelink"
+  | "discord"
+  | "vk"
+  | "github"
+  | "youtube"
+  | "tiktok"
+  | "donate"
+  | "site"
+  | "other";
 
 export interface NodeLink {
   id: string;
@@ -72,12 +85,38 @@ export const STATUS_HINTS: Record<NodeStatus, string> = {
 export const LINK_KIND_LABELS: Record<LinkKind, string> = {
   download: "Скачать",
   open: "Открыть / Попробовать",
+  drive: "Облако (Диск)",
   telegram: "Telegram",
+  gelink: "GeLink",
+  discord: "Discord",
+  vk: "ВКонтакте",
   github: "GitHub",
   youtube: "YouTube",
+  tiktok: "TikTok",
+  donate: "Поддержать",
   site: "Сайт",
-  other: "Другое",
+  other: "Своя кнопка",
 };
+
+/** Определяет тип ссылки по адресу — чтобы при вставке ссылки кнопка сама получила иконку */
+export function guessLinkKind(url: string): LinkKind | null {
+  const u = url.toLowerCase();
+  if (/t\.me\/|telegram\./.test(u)) return "telegram";
+  if (/gelink/.test(u)) return "gelink";
+  if (/discord\.(gg|com)/.test(u)) return "discord";
+  if (/vk\.(com|ru)/.test(u)) return "vk";
+  if (/github\.com/.test(u)) return "github";
+  if (/youtube\.com|youtu\.be/.test(u)) return "youtube";
+  if (/tiktok\.com/.test(u)) return "tiktok";
+  if (/boosty\.to|donationalerts|patreon\.com|ko-fi\.com/.test(u)) return "donate";
+  if (
+    /drive\.google|disk\.yandex|yadi\.sk|mega\.nz|dropbox\.com|mediafire\.com|cloud\.mail\.ru|onedrive/.test(
+      u,
+    )
+  )
+    return "drive";
+  return null;
+}
 
 export const PLATFORM_PRESETS = [
   "Windows",

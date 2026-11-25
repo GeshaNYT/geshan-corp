@@ -150,7 +150,7 @@ function Branch({
 function ProjectRow({ node, site, root }: { node: SiteNode; site: SiteIndex; root: boolean }) {
   const canDownload =
     site.filesOf(node.id).length > 0 ||
-    node.links.some((l) => l.kind === "download" || l.kind === "open");
+    node.links.some((l) => l.kind === "download" || l.kind === "open" || l.kind === "drive");
   return (
     <Link
       to="/p/$slug"
