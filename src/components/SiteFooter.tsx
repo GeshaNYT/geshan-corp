@@ -1,13 +1,16 @@
 import { useEffect } from "react";
 import { Download, Eye, Users } from "lucide-react";
 import { trackVisit, useOnlineCount, useSiteStats } from "@/lib/stats";
+import { useAuth } from "@/lib/auth";
+import { plural } from "@/components/NodeCards";
 
 const fmt = (n: number | undefined | null) => (n == null ? "—" : n.toLocaleString("ru-RU"));
 
 export function SiteFooter() {
   const statsQ = useSiteStats();
   const stats = statsQ.data;
-  const online = useOnlineCount();
+  const { user } = useAuth();
+  const online = useOnlineCount(user?.id ?? null);
   const { refetch } = statsQ;
   useEffect(() => trackVisit(() => void refetch()), [refetch]);
 
@@ -19,13 +22,17 @@ export function SiteFooter() {
             icon={
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px] shadow-emerald-400/60" />
             }
-            value={fmt(online)}
-            label="онлайн сейчас (с гостями)"
+            value={fmt(online?.total)}
+            label={
+              online
+                ? `онлайн: ${online.members} ${plural(online.members, "участник", "участника", "участников")} · ${online.guests} ${plural(online.guests, "гость", "гостя", "гостей")}`
+                : "онлайн сейчас"
+            }
           />
           <Stat
             icon={<Users className="h-4 w-4 text-primary" />}
             value={fmt(stats?.users)}
-            label="аккаунтов"
+            label="участников всего"
           />
           <Stat
             icon={<Eye className="h-4 w-4 text-primary" />}

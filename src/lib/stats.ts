@@ -54,23 +54,46 @@ export function useSiteStats() {
   });
 }
 
-/** Сколько человек сейчас на сайте — через Supabase Realtime Presence */
-export function useOnlineCount() {
-  const [count, setCount] = useState<number | null>(null);
+export interface OnlineCount {
+  total: number;
+  members: number;
+  guests: number;
+}
+
+/** Кто сейчас на сайте — через Supabase Realtime Presence. Участники = вошедшие в аккаунт, гости = без аккаунта */
+export function useOnlineCount(userId: string | null) {
+  const [count, setCount] = useState<OnlineCount | null>(null);
+  const [channel, setChannel] = useState<ReturnType<
+    NonNullable<typeof supabase>["channel"]
+  > | null>(null);
+
   useEffect(() => {
     if (!supabase) return;
     const key = visitorId() ?? crypto.randomUUID();
-    const channel = supabase.channel("online", { config: { presence: { key } } });
-    channel
-      .on("presence", { event: "sync" }, () => {
-        setCount(Object.keys(channel.presenceState()).length);
-      })
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") void channel.track({ at: Date.now() });
-      });
+    const ch = supabase.channel("online", { config: { presence: { key } } });
+    ch.on("presence", { event: "sync" }, () => {
+      const state = ch.presenceState<{ member?: boolean }>();
+      let members = 0;
+      let guests = 0;
+      for (const metas of Object.values(state)) {
+        // один браузер = один человек; если хоть в одной вкладке вошёл — он участник
+        if (metas.some((m) => m.member)) members++;
+        else guests++;
+      }
+      setCount({ total: members + guests, members, guests });
+    }).subscribe((status) => {
+      if (status === "SUBSCRIBED") setChannel(ch);
+    });
     return () => {
-      void supabase?.removeChannel(channel);
+      setChannel(null);
+      void supabase?.removeChannel(ch);
     };
   }, []);
+
+  // Сообщаем, вошёл ли человек — и обновляем при входе/выходе
+  useEffect(() => {
+    if (channel) void channel.track({ member: Boolean(userId), at: Date.now() });
+  }, [channel, userId]);
+
   return count;
 }
