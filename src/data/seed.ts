@@ -22,20 +22,6 @@ const project = (
 
 const TREE: Seed[] = [
   {
-    slug: "community",
-    title: "Geshan's Community",
-    kind: "section",
-    icon: "Users",
-    featured: true,
-    tagline: "Главный актив — сообщество вокруг наших медиа-ресурсов.",
-    description:
-      "Огромное объединение людей вокруг наших медиа-ресурсов — YouTube-каналов разных тематик и других площадок. Каждый находит здесь что-то для себя, независимо от интересов.",
-    links: [
-      link("Geshan Corporation", "https://t.me/geshan_co", "telegram"),
-      link("GeshaN", "https://t.me/Geshan_N", "telegram"),
-    ],
-  },
-  {
     slug: "studio",
     title: "Geshan Studio",
     kind: "section",

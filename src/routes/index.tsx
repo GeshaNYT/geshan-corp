@@ -3,6 +3,7 @@ import { Download, FolderTree, Send, Server } from "lucide-react";
 import { SectionTitle } from "@/components/PageHeader";
 import heroImg from "@/assets/geshan-hero.jpg";
 import { NodeCard } from "@/components/NodeCards";
+import { ProjectTree } from "@/components/ProjectTree";
 import { ServerStatus } from "@/components/ServerStatus";
 import { useSite } from "@/lib/data";
 import { CHANNELS } from "@/data/seed";
@@ -26,10 +27,6 @@ function Home() {
   const featured = site.nodes
     .filter((n) => n.featured && !n.hidden)
     .sort((a, b) => a.sort - b.sort);
-  const latest = [...site.nodes]
-    .filter((n) => n.kind === "project" && !n.hidden && n.status !== "internal")
-    .sort((a, b) => b.updated_at.localeCompare(a.updated_at) || a.sort - b.sort)
-    .slice(0, 6);
   const totalProjects = site.nodes.filter((n) => n.kind === "project" && !n.hidden).length;
   const totalSections = site.nodes.filter((n) => n.kind === "section" && !n.hidden).length;
 
@@ -100,14 +97,10 @@ function Home() {
         </section>
       )}
 
-      {/* Свежие проекты */}
+      {/* Проекты деревом */}
       <section>
         <SectionTitle title="Проекты" to="/resources" more="Ресурсы" />
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {latest.map((n) => (
-            <NodeCard key={n.id} node={n} compact />
-          ))}
-        </div>
+        <ProjectTree />
       </section>
 
       {/* Каналы */}
