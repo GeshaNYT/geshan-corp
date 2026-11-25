@@ -27,6 +27,10 @@ interface AuthState {
   uploadAvatar: (file: File) => Promise<string>;
   changeEmail: (email: string) => Promise<void>;
   changePassword: (password: string) => Promise<void>;
+  /** Пользователь пришёл по ссылке «сбросить пароль» из письма */
+  recovery: boolean;
+  finishRecovery: () => void;
+  sendPasswordReset: (email: string) => Promise<void>;
   demoAdmin: boolean;
 }
 
@@ -49,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [demoAdmin, setDemoAdminState] = useState(false);
+  const [recovery, setRecovery] = useState(false);
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -70,7 +75,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await loadProfile(data.session?.user ?? null);
       setReady(true);
     });
-    const { data: sub } = client.auth.onAuthStateChange((_e, session) => {
+    const { data: sub } = client.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") setRecovery(true);
       void loadProfile(session?.user ?? null);
     });
     return () => sub.subscription.unsubscribe();
@@ -136,6 +142,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         { email },
         { emailRedirectTo: window.location.href },
       );
+      if (error) throw new Error(ruError(error.message));
+    },
+    recovery,
+    finishRecovery: () => setRecovery(false),
+    async sendPasswordReset(email) {
+      const { error } = await supabase!.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}profile`,
+      });
       if (error) throw new Error(ruError(error.message));
     },
     async changePassword(password) {

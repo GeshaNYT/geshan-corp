@@ -33,6 +33,7 @@ import { NodeEditor } from "@/components/admin/NodeEditor";
 import { MoveDialog } from "@/components/admin/MoveDialog";
 import { ChannelsAdmin } from "@/components/admin/ChannelsAdmin";
 import { PlatformsAdmin } from "@/components/admin/PlatformsAdmin";
+import { UsersAdmin } from "@/components/admin/UsersAdmin";
 import { useAuth } from "@/lib/auth";
 import { useRefreshSite, useSite, type SiteIndex } from "@/lib/data";
 import { repo, resetDemo } from "@/lib/repo";
@@ -62,7 +63,7 @@ function AdminPage() {
   const [q, setQ] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [moving, setMoving] = useState<SiteNode | null>(null);
-  const [tab, setTab] = useState<"tree" | "channels" | "platforms">("tree");
+  const [tab, setTab] = useState<"tree" | "channels" | "platforms" | "users">("tree");
 
   const editorOpen = Boolean(search.edit || search.kind);
   const editing = search.edit ? site.byId.get(search.edit) : undefined;
@@ -242,12 +243,13 @@ function AdminPage() {
         </div>
       </div>
 
-      <div className="mb-4 grid grid-cols-3 gap-1 rounded-xl border border-border p-1">
+      <div className="mb-4 grid grid-cols-4 gap-1 rounded-xl border border-border p-1">
         {(
           [
             ["tree", "Проекты"],
             ["channels", "Каналы"],
             ["platforms", "Платформы"],
+            ["users", "Люди"],
           ] as const
         ).map(([k, label]) => (
           <button
@@ -255,7 +257,7 @@ function AdminPage() {
             type="button"
             onClick={() => setTab(k)}
             className={cn(
-              "rounded-lg py-2 text-sm transition",
+              "rounded-lg py-2 text-xs transition sm:text-sm",
               tab === k ? "bg-primary text-primary-foreground" : "text-muted-foreground",
             )}
           >
@@ -266,6 +268,7 @@ function AdminPage() {
 
       {tab === "channels" && <ChannelsAdmin />}
       {tab === "platforms" && <PlatformsAdmin />}
+      {tab === "users" && <UsersAdmin />}
       {tab === "tree" && (
         <>
           <ModeBanner site={site} onImported={refresh} />

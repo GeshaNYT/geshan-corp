@@ -16,6 +16,7 @@ function ProfilePage() {
 
   if (auth.demo) return <DemoProfile />;
   if (!auth.ready) return <p className="py-20 text-center text-muted-foreground">Загрузка…</p>;
+  if (auth.recovery && auth.user) return <NewPassword />;
   if (!auth.user) return <AuthForm />;
 
   return <Account key={auth.profile?.id ?? "loading"} />;
@@ -209,6 +210,58 @@ function Account() {
   );
 }
 
+function NewPassword() {
+  const auth = useAuth();
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [busy, setBusy] = useState(false);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== password2) return toast.error("Пароли не совпадают");
+    setBusy(true);
+    try {
+      await auth.changePassword(password);
+      toast.success("Пароль изменён — ты вошёл в аккаунт");
+      auth.finishRecovery();
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <div className="mx-auto max-w-md">
+      <PageHeader eyebrow="Аккаунт" title="Новый пароль" />
+      <form onSubmit={submit} className="space-y-3">
+        <Field
+          label="Новый пароль"
+          type="password"
+          value={password}
+          onChange={setPassword}
+          required
+          minLength={6}
+          autoComplete="new-password"
+        />
+        <Field
+          label="Повтори пароль"
+          type="password"
+          value={password2}
+          onChange={setPassword2}
+          required
+          minLength={6}
+          autoComplete="new-password"
+        />
+        <button
+          disabled={busy}
+          className="w-full rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
+        >
+          {busy ? "Подожди…" : "Сохранить пароль"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-3 rounded-3xl border border-border bg-card/40 p-5">
@@ -253,7 +306,7 @@ function Row({ label, value }: { label: string; value: string }) {
 
 function AuthForm() {
   const auth = useAuth();
-  const [mode, setMode] = useState<"in" | "up">("in");
+  const [mode, setMode] = useState<"in" | "up" | "reset">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -265,7 +318,13 @@ function AuthForm() {
     setBusy(true);
     setMsg(null);
     try {
-      if (mode === "in") await auth.signIn(email, password);
+      if (mode === "reset") {
+        await auth.sendPasswordReset(email);
+        setMsg({
+          ok: true,
+          text: "Если такой аккаунт есть, мы отправили письмо со ссылкой для сброса пароля.",
+        });
+      } else if (mode === "in") await auth.signIn(email, password);
       else {
         const r = await auth.signUp(email, password, username);
         if (r.needsConfirm)
@@ -280,16 +339,24 @@ function AuthForm() {
 
   return (
     <div className="mx-auto max-w-md">
-      <PageHeader eyebrow="Аккаунт" title={mode === "in" ? "Вход" : "Регистрация"} />
+      <PageHeader
+        eyebrow="Аккаунт"
+        title={mode === "in" ? "Вход" : mode === "up" ? "Регистрация" : "Сброс пароля"}
+      />
       <div className="mb-4 grid grid-cols-2 rounded-xl border border-border p-1">
         {(["in", "up"] as const).map((m) => (
           <button
             key={m}
             type="button"
-            onClick={() => setMode(m)}
+            onClick={() => {
+              setMode(m);
+              setMsg(null);
+            }}
             className={cn(
               "rounded-lg py-2 text-sm transition",
-              mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+              mode === m || (m === "in" && mode === "reset")
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground",
             )}
           >
             {m === "in" ? "Вход" : "Регистрация"}
@@ -308,15 +375,33 @@ function AuthForm() {
           required
           autoComplete="email"
         />
-        <Field
-          label="Пароль"
-          type="password"
-          value={password}
-          onChange={setPassword}
-          required
-          minLength={6}
-          autoComplete={mode === "in" ? "current-password" : "new-password"}
-        />
+        {mode === "reset" ? (
+          <p className="text-sm text-muted-foreground">
+            Введи почту аккаунта — пришлём ссылку, по которой можно задать новый пароль.
+          </p>
+        ) : (
+          <Field
+            label="Пароль"
+            type="password"
+            value={password}
+            onChange={setPassword}
+            required
+            minLength={6}
+            autoComplete={mode === "in" ? "current-password" : "new-password"}
+          />
+        )}
+        {mode !== "up" && (
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "reset" ? "in" : "reset");
+              setMsg(null);
+            }}
+            className="text-xs text-primary hover:underline"
+          >
+            {mode === "reset" ? "← Назад ко входу" : "Забыли пароль?"}
+          </button>
+        )}
         {msg && (
           <p
             className={cn(
@@ -331,7 +416,13 @@ function AuthForm() {
           disabled={busy}
           className="w-full rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
         >
-          {busy ? "Подожди…" : mode === "in" ? "Войти" : "Создать аккаунт"}
+          {busy
+            ? "Подожди…"
+            : mode === "in"
+              ? "Войти"
+              : mode === "up"
+                ? "Создать аккаунт"
+                : "Отправить ссылку"}
         </button>
       </form>
       <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
