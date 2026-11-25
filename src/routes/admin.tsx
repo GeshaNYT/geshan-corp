@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import {
@@ -67,7 +67,47 @@ function AdminPage() {
   const openNew = (kind: NodeKind, parent: string | null) =>
     navigate({ search: { kind, parent: parent ?? undefined } });
   const openEdit = (id: string) => navigate({ search: { edit: id } });
-  const closeEditor = () => navigate({ search: {} });
+  const scrolled = useRef<string | null>(null);
+  // Узел, с которым работали последним: дерево раскрывается до него и прокручивается к нему
+  const [focusId, setFocusId] = useState<string | null>(null);
+  const target = search.edit ?? search.parent ?? null;
+  useEffect(() => {
+    if (!target) return;
+    setFocusId(target);
+    scrolled.current = null;
+    // при добавлении внутрь раскрываем и сам родитель
+    if (search.parent) setExpanded((s) => new Set(s).add(search.parent!));
+  }, [target, search.parent]);
+  // Раскрываем все ветки над выбранным узлом
+  useEffect(() => {
+    if (!focusId) return;
+    const anc = site.pathOf(focusId); // включая сам узел — видно, что внутри
+    if (anc.every((p) => expanded.has(p.id))) return;
+    setExpanded((s) => {
+      const n = new Set(s);
+      for (const p of anc) n.add(p.id);
+      return n;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusId, site.nodes]);
+  const closeEditor = (savedId?: string) => {
+    if (savedId) {
+      setFocusId(savedId);
+      scrolled.current = null;
+    }
+    void navigate({ search: {} });
+  };
+  useEffect(() => {
+    if (editorOpen || !focusId || scrolled.current === focusId) return;
+    const t = window.setTimeout(() => {
+      const el = document.querySelector(`[data-node-row="${focusId}"]`);
+      if (el) {
+        el.scrollIntoView({ block: "center", behavior: "smooth" });
+        scrolled.current = focusId;
+      }
+    }, 150);
+    return () => window.clearTimeout(t);
+  }, [editorOpen, focusId, site.nodes, expanded]);
 
   const needle = q.trim().toLowerCase();
   const matches = useMemo(
@@ -247,6 +287,7 @@ function AdminPage() {
               depth={0}
               site={site}
               expanded={expanded}
+              focusId={focusId}
               actions={actions}
               first={i === 0}
               last={i === roots.length - 1}
@@ -296,6 +337,7 @@ function TreeRow({
   depth,
   site,
   expanded,
+  focusId,
   actions,
   first,
   last,
@@ -304,6 +346,7 @@ function TreeRow({
   depth: number;
   site: SiteIndex;
   expanded: Set<string>;
+  focusId: string | null;
   actions: RowActions;
   first: boolean;
   last: boolean;
@@ -316,9 +359,11 @@ function TreeRow({
   return (
     <div>
       <div
+        data-node-row={node.id}
         className={cn(
           "group flex items-center gap-1 rounded-xl py-1.5 pr-1 hover:bg-card/70",
           node.hidden && "opacity-55",
+          focusId === node.id && "bg-primary/10 ring-1 ring-primary/40",
         )}
         style={{ paddingLeft: 4 + depth * 16 }}
       >
@@ -454,6 +499,7 @@ function TreeRow({
             depth={depth + 1}
             site={site}
             expanded={expanded}
+            focusId={focusId}
             actions={actions}
             first={i === 0}
             last={i === kids.length - 1}

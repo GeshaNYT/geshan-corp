@@ -74,7 +74,7 @@ export function NodeEditor({
   node?: SiteNode;
   initialKind: NodeKind;
   initialParent: string | null;
-  onClose: () => void;
+  onClose: (savedId?: string) => void;
 }) {
   const site = useSite();
   const refresh = useRefreshSite();
@@ -206,7 +206,7 @@ export function NodeEditor({
       }
       await refresh();
       toast.success(isNew ? (isProject ? "Проект добавлен" : "Раздел добавлен") : "Сохранено");
-      onClose();
+      onClose(saved.id);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -732,7 +732,7 @@ export function NodeEditor({
         >
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => onClose()}
             disabled={saving}
             className="flex-1 rounded-xl border border-border py-3 text-sm"
           >
