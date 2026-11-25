@@ -5,9 +5,11 @@ import { trackVisit, useOnlineCount, useSiteStats } from "@/lib/stats";
 const fmt = (n: number | undefined | null) => (n == null ? "—" : n.toLocaleString("ru-RU"));
 
 export function SiteFooter() {
-  const stats = useSiteStats().data;
+  const statsQ = useSiteStats();
+  const stats = statsQ.data;
   const online = useOnlineCount();
-  useEffect(() => trackVisit(), []);
+  const { refetch } = statsQ;
+  useEffect(() => trackVisit(() => void refetch()), [refetch]);
 
   return (
     <footer className="mx-auto max-w-6xl px-4 pb-28 md:pb-10">

@@ -26,16 +26,17 @@ function visitorId() {
 }
 
 let tracked = false;
-export function trackVisit() {
+export function trackVisit(onTracked?: () => void) {
   if (tracked || !supabase) return;
   tracked = true;
   const vid = visitorId();
-  if (vid) void supabase.rpc("track_visit", { vid });
+  // Запрос supabase-js отправляется только при .then() — без него ничего не уходит
+  if (vid) supabase.rpc("track_visit", { vid }).then(() => onTracked?.());
 }
 
 export function countLinkClick(nodeId: string, linkId: string) {
   if (!supabase || nodeId.startsWith("seed-")) return;
-  void supabase.rpc("count_link", { nid: nodeId, lid: linkId });
+  supabase.rpc("count_link", { nid: nodeId, lid: linkId }).then(() => undefined);
 }
 
 export function useSiteStats() {
