@@ -5,6 +5,7 @@ import { NodeIcon } from "@/components/NodeIcon";
 import { StatusBadge } from "@/components/StatusBadge";
 import { plural } from "@/components/NodeCards";
 import { useSite, type SiteIndex } from "@/lib/data";
+import { useLinkTypes } from "@/lib/linkTypes";
 import type { SiteNode } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -148,9 +149,9 @@ function Branch({
 }
 
 function ProjectRow({ node, site, root }: { node: SiteNode; site: SiteIndex; root: boolean }) {
+  const types = useLinkTypes();
   const canDownload =
-    site.filesOf(node.id).length > 0 ||
-    node.links.some((l) => l.kind === "download" || l.kind === "open" || l.kind === "drive");
+    site.filesOf(node.id).length > 0 || node.links.some((l) => types.isDownload(l.kind));
   return (
     <Link
       to="/p/$slug"

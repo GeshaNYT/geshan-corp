@@ -19,13 +19,11 @@ import { ICONS, NodeIcon } from "@/components/NodeIcon";
 import { useParentOptions } from "@/components/admin/MoveDialog";
 import { formatSize, slugify, useRefreshSite, useSite } from "@/lib/data";
 import { repo } from "@/lib/repo";
+import { useLinkTypes } from "@/lib/linkTypes";
 import {
-  LINK_KIND_LABELS,
-  guessLinkKind,
   PLATFORM_PRESETS,
   STATUS_HINTS,
   STATUS_LABELS,
-  type LinkKind,
   type NodeFile,
   type NodeInput,
   type NodeKind,
@@ -108,8 +106,10 @@ export function NodeEditor({
   const parentTitle = d.parent_id ? site.byId.get(d.parent_id)?.title : null;
 
   /* ── ссылки ── */
-  const addLink = (kind: LinkKind = "download") =>
-    set("links", [...d.links, { id: rid(), kind, label: LINK_KIND_LABELS[kind], url: "" }]);
+  const types = useLinkTypes();
+  const typeLabels = types.all.map((t) => t.label);
+  const addLink = (kind = "download") =>
+    set("links", [...d.links, { id: rid(), kind, label: types.get(kind).label, url: "" }]);
   const moveLink = (i: number, dir: -1 | 1) => {
     const j = i + dir;
     if (j < 0 || j >= d.links.length) return;
@@ -125,16 +125,14 @@ export function NodeEditor({
         const next = { ...l, ...patch };
         // Вставили ссылку — сами подбираем тип кнопки (Telegram, Диск, Discord…), если тип ещё общий
         if (patch.url !== undefined && (l.kind === "other" || l.kind === "site")) {
-          const g = guessLinkKind(patch.url);
+          const g = types.guess(patch.url);
           if (g) {
-            next.kind = g;
-            if (!l.label || Object.values(LINK_KIND_LABELS).includes(l.label))
-              next.label = LINK_KIND_LABELS[g];
+            next.kind = g.id;
+            if (!l.label || typeLabels.includes(l.label)) next.label = g.label;
           }
         }
         // При смене типа меняем подпись, если она была стандартной
-        if (patch.kind && Object.values(LINK_KIND_LABELS).includes(l.label))
-          next.label = LINK_KIND_LABELS[patch.kind];
+        if (patch.kind && typeLabels.includes(l.label)) next.label = types.get(patch.kind).label;
         return next;
       }),
     );
@@ -430,12 +428,15 @@ export function NodeEditor({
                   <div className="flex items-center gap-2">
                     <select
                       value={l.kind}
-                      onChange={(e) => updLink(l.id, { kind: e.target.value as LinkKind })}
+                      onChange={(e) => updLink(l.id, { kind: e.target.value })}
                       className="h-9 rounded-lg border border-border bg-background px-2 text-sm outline-none"
                     >
-                      {(Object.keys(LINK_KIND_LABELS) as LinkKind[]).map((k) => (
-                        <option key={k} value={k}>
-                          {LINK_KIND_LABELS[k]}
+                      {[
+                        ...types.visible,
+                        ...(types.visible.some((t) => t.id === l.kind) ? [] : [types.get(l.kind)]),
+                      ].map((t) => (
+                        <option key={t.id} value={t.id}>
+                          {t.label}
                         </option>
                       ))}
                     </select>
@@ -488,14 +489,14 @@ export function NodeEditor({
               ))}
             </div>
             <div className="flex flex-wrap gap-2">
-              {(Object.keys(LINK_KIND_LABELS) as LinkKind[]).map((k) => (
+              {types.visible.map((t) => (
                 <button
-                  key={k}
+                  key={t.id}
                   type="button"
-                  onClick={() => addLink(k)}
+                  onClick={() => addLink(t.id)}
                   className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary"
                 >
-                  <Plus className="h-3 w-3" /> {LINK_KIND_LABELS[k]}
+                  <Plus className="h-3 w-3" /> {t.label}
                 </button>
               ))}
             </div>

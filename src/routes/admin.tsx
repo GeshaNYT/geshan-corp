@@ -34,6 +34,7 @@ import { MoveDialog } from "@/components/admin/MoveDialog";
 import { ChannelsAdmin } from "@/components/admin/ChannelsAdmin";
 import { PlatformsAdmin } from "@/components/admin/PlatformsAdmin";
 import { UsersAdmin } from "@/components/admin/UsersAdmin";
+import { LinkTypesAdmin } from "@/components/admin/LinkTypesAdmin";
 import { useAuth } from "@/lib/auth";
 import { useRefreshSite, useSite, type SiteIndex } from "@/lib/data";
 import { repo, resetDemo } from "@/lib/repo";
@@ -63,7 +64,7 @@ function AdminPage() {
   const [q, setQ] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [moving, setMoving] = useState<SiteNode | null>(null);
-  const [tab, setTab] = useState<"tree" | "channels" | "platforms" | "users">("tree");
+  const [tab, setTab] = useState<"tree" | "channels" | "buttons" | "platforms" | "users">("tree");
 
   const editorOpen = Boolean(search.edit || search.kind);
   const editing = search.edit ? site.byId.get(search.edit) : undefined;
@@ -243,11 +244,12 @@ function AdminPage() {
         </div>
       </div>
 
-      <div className="mb-4 grid grid-cols-4 gap-1 rounded-xl border border-border p-1">
+      <div className="-mx-4 mb-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:px-0">
         {(
           [
             ["tree", "Проекты"],
             ["channels", "Каналы"],
+            ["buttons", "Кнопки"],
             ["platforms", "Платформы"],
             ["users", "Люди"],
           ] as const
@@ -257,8 +259,10 @@ function AdminPage() {
             type="button"
             onClick={() => setTab(k)}
             className={cn(
-              "rounded-lg py-2 text-xs transition sm:text-sm",
-              tab === k ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+              "shrink-0 rounded-full border px-4 py-2 text-sm transition",
+              tab === k
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border text-muted-foreground",
             )}
           >
             {label}
@@ -267,6 +271,7 @@ function AdminPage() {
       </div>
 
       {tab === "channels" && <ChannelsAdmin />}
+      {tab === "buttons" && <LinkTypesAdmin />}
       {tab === "platforms" && <PlatformsAdmin />}
       {tab === "users" && <UsersAdmin />}
       {tab === "tree" && (

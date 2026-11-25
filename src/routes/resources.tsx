@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useSite } from "@/lib/data";
 import { orderPlatforms, useSetting } from "@/lib/content";
+import { useLinkTypes } from "@/lib/linkTypes";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/resources")({
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/resources")({
 
 function Resources() {
   const site = useSite();
+  const types = useLinkTypes();
   const [q, setQ] = useState("");
   const [platform, setPlatform] = useState<string | null>(null);
 
@@ -26,10 +28,9 @@ function Resources() {
         (n) =>
           n.kind === "project" &&
           !n.hidden &&
-          (site.filesOf(n.id).length > 0 ||
-            n.links.some((l) => l.kind === "download" || l.kind === "open" || l.kind === "drive")),
+          (site.filesOf(n.id).length > 0 || n.links.some((l) => types.isDownload(l.kind))),
       ),
-    [site],
+    [site, types],
   );
   const platformOrder = useSetting<string[]>("platform_order", []);
   // Одинаковые платформы объединяются в один фильтр, даже если написаны с разным регистром
@@ -104,9 +105,7 @@ function Resources() {
                 <FileList files={site.filesOf(n.id)} />
                 <LinkButtons
                   nodeId={n.id}
-                  links={n.links.filter(
-                    (l) => l.kind === "download" || l.kind === "open" || l.kind === "drive",
-                  )}
+                  links={n.links.filter((l) => types.isDownload(l.kind))}
                 />
               </div>
             </div>

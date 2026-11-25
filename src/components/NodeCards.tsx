@@ -20,17 +20,18 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { formatSize, useRefreshSite, useSite } from "@/lib/data";
 import { repo } from "@/lib/repo";
 import { countLinkClick } from "@/lib/stats";
+import { useLinkTypes } from "@/lib/linkTypes";
 import type { NodeFile, NodeLink, SiteNode } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export function NodeCard({ node, compact }: { node: SiteNode; compact?: boolean }) {
   const site = useSite();
+  const types = useLinkTypes();
   const isSection = node.kind === "section";
   const count = isSection ? site.countProjects(node.id) : 0;
   const downloads =
     !isSection &&
-    (site.filesOf(node.id).length > 0 ||
-      node.links.some((l) => l.kind === "download" || l.kind === "drive"));
+    (site.filesOf(node.id).length > 0 || node.links.some((l) => types.isDownload(l.kind)));
 
   return (
     <Link
@@ -86,28 +87,20 @@ export function plural(n: number, one: string, few: string, many: string) {
   return many;
 }
 
-const LINK_ICONS: Record<string, typeof Download> = {
-  download: Download,
-  open: ExternalLink,
-  drive: HardDrive,
-  telegram: Send,
-  gelink: MessageCircle,
-  discord: MessagesSquare,
-  github: Github,
-  youtube: Youtube,
-  tiktok: Music2,
-  donate: Heart,
-  site: Globe,
-  other: Link2,
-};
-
 export function LinkButtons({ links, nodeId }: { links: NodeLink[]; nodeId: string }) {
+  const types = useLinkTypes();
   if (!links.length) return null;
+  const ordered = types.setting.sortByType
+    ? links
+        .map((l, i) => ({ l, i }))
+        .sort((a, b) => types.rank(a.l.kind) - types.rank(b.l.kind) || a.i - b.i)
+        .map((x) => x.l)
+    : links;
   return (
     <div className="flex flex-wrap gap-2">
-      {links.map((l) => {
-        const Icon = LINK_ICONS[l.kind] ?? ExternalLink;
-        const primary = l.kind === "download" || l.kind === "open" || l.kind === "drive";
+      {ordered.map((l) => {
+        const Icon = types.icon(l.kind);
+        const primary = types.get(l.kind).primary;
         return (
           <a
             key={l.id}
@@ -115,7 +108,7 @@ export function LinkButtons({ links, nodeId }: { links: NodeLink[]; nodeId: stri
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              if (l.kind === "download" || l.kind === "drive") countLinkClick(nodeId, l.id);
+              if (types.isDownload(l.kind)) countLinkClick(nodeId, l.id);
             }}
             className={cn(
               "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition",
