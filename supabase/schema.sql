@@ -26,6 +26,7 @@ end $$;
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created after insert on auth.users
   for each row execute function public.handle_new_user();
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
 
 create or replace function public.is_admin()
 returns boolean language sql stable security definer set search_path = public as $$
@@ -111,8 +112,10 @@ insert into storage.buckets (id, name, public)
 values ('resources', 'resources', true)
 on conflict (id) do nothing;
 
+-- Бакет публичный: файлы скачиваются по прямой ссылке, а просматривать список файлов может только админ
 drop policy if exists "resources public read" on storage.objects;
-create policy "resources public read" on storage.objects for select using (bucket_id = 'resources');
+drop policy if exists "resources admin read" on storage.objects;
+create policy "resources admin read" on storage.objects for select using (bucket_id = 'resources' and public.is_admin());
 drop policy if exists "resources admin write" on storage.objects;
 create policy "resources admin write" on storage.objects for insert with check (bucket_id = 'resources' and public.is_admin());
 drop policy if exists "resources admin update" on storage.objects;
