@@ -11,7 +11,6 @@ export type LinkKind =
   | "telegram"
   | "gelink"
   | "discord"
-  | "vk"
   | "github"
   | "youtube"
   | "tiktok"
@@ -89,7 +88,6 @@ export const LINK_KIND_LABELS: Record<LinkKind, string> = {
   telegram: "Telegram",
   gelink: "GeLink",
   discord: "Discord",
-  vk: "ВКонтакте",
   github: "GitHub",
   youtube: "YouTube",
   tiktok: "TikTok",
@@ -104,7 +102,6 @@ export function guessLinkKind(url: string): LinkKind | null {
   if (/t\.me\/|telegram\./.test(u)) return "telegram";
   if (/gelink/.test(u)) return "gelink";
   if (/discord\.(gg|com)/.test(u)) return "discord";
-  if (/vk\.(com|ru)/.test(u)) return "vk";
   if (/github\.com/.test(u)) return "github";
   if (/youtube\.com|youtu\.be/.test(u)) return "youtube";
   if (/tiktok\.com/.test(u)) return "tiktok";

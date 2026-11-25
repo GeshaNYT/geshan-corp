@@ -1,6 +1,8 @@
 import { useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import {
+  ArrowDown,
+  ArrowUp,
   FileUp,
   Folder,
   ImagePlus,
@@ -108,6 +110,13 @@ export function NodeEditor({
   /* ── ссылки ── */
   const addLink = (kind: LinkKind = "download") =>
     set("links", [...d.links, { id: rid(), kind, label: LINK_KIND_LABELS[kind], url: "" }]);
+  const moveLink = (i: number, dir: -1 | 1) => {
+    const j = i + dir;
+    if (j < 0 || j >= d.links.length) return;
+    const next = [...d.links];
+    [next[i], next[j]] = [next[j], next[i]];
+    set("links", next);
+  };
   const updLink = (id: string, patch: Partial<NodeLink>) =>
     set(
       "links",
@@ -410,10 +419,10 @@ export function NodeEditor({
           {/* Ссылки */}
           <Group
             title="Кнопки и ссылки"
-            hint="Скачать с Google Drive, Telegram, GitHub, «Попробовать» — сколько угодно"
+            hint="Сколько угодно. Показываются на странице в этом порядке — стрелками можно поменять"
           >
             <div className="space-y-2">
-              {d.links.map((l) => (
+              {d.links.map((l, li) => (
                 <div
                   key={l.id}
                   className="space-y-2 rounded-xl border border-border bg-card/40 p-3"
@@ -436,6 +445,24 @@ export function NodeEditor({
                       placeholder="Текст кнопки"
                       className="h-9 min-w-0 flex-1 rounded-lg border border-border bg-background px-2 text-sm outline-none focus:border-primary"
                     />
+                    <button
+                      type="button"
+                      onClick={() => moveLink(li, -1)}
+                      disabled={li === 0}
+                      className="text-muted-foreground hover:text-foreground disabled:opacity-25"
+                      aria-label="Выше"
+                    >
+                      <ArrowUp className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveLink(li, 1)}
+                      disabled={li === d.links.length - 1}
+                      className="text-muted-foreground hover:text-foreground disabled:opacity-25"
+                      aria-label="Ниже"
+                    >
+                      <ArrowDown className="h-4 w-4" />
+                    </button>
                     <button
                       type="button"
                       onClick={() =>

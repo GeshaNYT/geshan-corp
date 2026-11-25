@@ -13,7 +13,6 @@ import {
   MessagesSquare,
   Music2,
   Send,
-  Users,
   Youtube,
 } from "lucide-react";
 import { NodeIcon } from "@/components/NodeIcon";
@@ -93,7 +92,6 @@ const LINK_ICONS: Record<string, typeof Download> = {
   telegram: Send,
   gelink: MessageCircle,
   discord: MessagesSquare,
-  vk: Users,
   github: Github,
   youtube: Youtube,
   tiktok: Music2,
