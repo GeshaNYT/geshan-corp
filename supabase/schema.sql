@@ -171,3 +171,53 @@ $$;
 grant execute on function public.track_visit(text) to anon, authenticated;
 grant execute on function public.count_link(uuid, text) to anon, authenticated;
 grant execute on function public.site_stats() to anon, authenticated;
+
+-- ───────────── Каналы, настройки, профиль ─────────────
+create table if not exists public.channels (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  handle text not null default '',
+  url text not null,
+  description text not null default '',
+  sort integer not null default 0,
+  created_at timestamptz not null default now()
+);
+create unique index if not exists channels_url_unique on public.channels (lower(rtrim(url, '/')));
+alter table public.channels enable row level security;
+drop policy if exists "channels public read" on public.channels;
+create policy "channels public read" on public.channels for select using (true);
+drop policy if exists "channels admin write" on public.channels;
+create policy "channels admin write" on public.channels for all using (public.is_admin()) with check (public.is_admin());
+
+create table if not exists public.site_settings (
+  key text primary key,
+  value jsonb not null default 'null',
+  updated_at timestamptz not null default now()
+);
+alter table public.site_settings enable row level security;
+drop policy if exists "settings public read" on public.site_settings;
+create policy "settings public read" on public.site_settings for select using (true);
+drop policy if exists "settings admin write" on public.site_settings;
+create policy "settings admin write" on public.site_settings for all using (public.is_admin()) with check (public.is_admin());
+
+alter table public.profiles add column if not exists bio text not null default '';
+alter table public.profiles drop constraint if exists profiles_bio_len;
+alter table public.profiles add constraint profiles_bio_len check (char_length(bio) <= 300);
+alter table public.profiles drop constraint if exists profiles_username_len;
+alter table public.profiles add constraint profiles_username_len check (username is null or char_length(username) between 2 and 32);
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('avatars', 'avatars', true, 3145728, array['image/png','image/jpeg','image/webp','image/gif'])
+on conflict (id) do nothing;
+drop policy if exists "avatars own insert" on storage.objects;
+create policy "avatars own insert" on storage.objects for insert to authenticated
+  with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+drop policy if exists "avatars own update" on storage.objects;
+create policy "avatars own update" on storage.objects for update to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+drop policy if exists "avatars own delete" on storage.objects;
+create policy "avatars own delete" on storage.objects for delete to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+drop policy if exists "avatars own read" on storage.objects;
+create policy "avatars own read" on storage.objects for select to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
