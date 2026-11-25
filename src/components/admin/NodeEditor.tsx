@@ -18,6 +18,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { ICONS, NodeIcon } from "@/components/NodeIcon";
 import { useParentOptions } from "@/components/admin/MoveDialog";
 import { formatSize, slugify, useRefreshSite, useSite } from "@/lib/data";
+import { useSaveSetting } from "@/lib/content";
 import { repo } from "@/lib/repo";
 import { useLinkTypes } from "@/lib/linkTypes";
 import {
@@ -97,6 +98,9 @@ export function NodeEditor({
   const [saving, setSaving] = useState(false);
   const [uploadingImg, setUploadingImg] = useState(false);
   const [customPlatform, setCustomPlatform] = useState("");
+  const [customType, setCustomType] = useState("");
+  const [addingType, setAddingType] = useState(false);
+  const saveSetting = useSaveSetting();
   const fileInput = useRef<HTMLInputElement>(null);
   const imgInput = useRef<HTMLInputElement>(null);
   const coverInput = useRef<HTMLInputElement>(null);
@@ -110,6 +114,47 @@ export function NodeEditor({
   const typeLabels = types.all.map((t) => t.label);
   const addLink = (kind = "download") =>
     set("links", [...d.links, { id: rid(), kind, label: types.get(kind).label, url: "" }]);
+  /** Добавить свой тип кнопки прямо из редактора (как «своя платформа») и сразу кнопку этого типа */
+  const addCustomType = async () => {
+    const label = customType.trim();
+    if (!label) return;
+    const existing = types.all.find((t) => t.label.toLowerCase() === label.toLowerCase());
+    if (existing) {
+      if (existing.hidden) {
+        setAddingType(true);
+        try {
+          await saveSetting("link_types", {
+            ...types.setting,
+            types: types.all.map((t) => (t.id === existing.id ? { ...t, hidden: false } : t)),
+          });
+        } finally {
+          setAddingType(false);
+        }
+      }
+      addLink(existing.id);
+      setCustomType("");
+      return;
+    }
+    const t = {
+      id: `c-${Date.now().toString(36)}`,
+      label,
+      icon: "Link2",
+      primary: false,
+      download: false,
+      domains: [],
+    };
+    setAddingType(true);
+    try {
+      await saveSetting("link_types", { ...types.setting, types: [...types.all, t] });
+      set("links", [...d.links, { id: rid(), kind: t.id, label, url: "" }]);
+      setCustomType("");
+      toast.success(`Тип «${label}» добавлен`);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setAddingType(false);
+    }
+  };
   const moveLink = (i: number, dir: -1 | 1) => {
     const j = i + dir;
     if (j < 0 || j >= d.links.length) return;
@@ -500,6 +545,32 @@ export function NodeEditor({
                 </button>
               ))}
             </div>
+            <div className="flex gap-2">
+              <input
+                value={customType}
+                onChange={(e) => setCustomType(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void addCustomType();
+                  }
+                }}
+                placeholder="Свой тип кнопки, например: Boosty"
+                className="h-9 min-w-0 flex-1 rounded-lg border border-border bg-card/50 px-3 text-sm outline-none focus:border-primary"
+              />
+              <button
+                type="button"
+                onClick={() => void addCustomType()}
+                disabled={!customType.trim() || addingType}
+                className="rounded-lg border border-border px-3 text-sm hover:border-primary disabled:opacity-40"
+              >
+                Добавить
+              </button>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              Новый тип сохранится для всех проектов. Иконку, цвет и автоопределение можно настроить
+              в админке → «Кнопки».
+            </p>
           </Group>
 
           {/* Платформы */}
