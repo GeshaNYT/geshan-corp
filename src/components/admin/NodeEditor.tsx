@@ -539,7 +539,12 @@ export function NodeEditor({
                 <button
                   type="button"
                   onClick={() => {
-                    const v = customPlatform.trim();
+                    const raw = customPlatform.trim();
+                    // «windows» → «Windows»: если такая платформа уже есть, берём её написание
+                    const v =
+                      [...PLATFORM_PRESETS, ...d.platforms].find(
+                        (p) => p.toLowerCase() === raw.toLowerCase(),
+                      ) ?? raw;
                     if (v && !d.platforms.includes(v)) set("platforms", [...d.platforms, v]);
                     setCustomPlatform("");
                   }}

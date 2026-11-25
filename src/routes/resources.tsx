@@ -30,11 +30,18 @@ function Resources() {
       ),
     [site],
   );
-  const platforms = useMemo(() => [...new Set(items.flatMap((i) => i.platforms))].sort(), [items]);
+  // Одинаковые платформы объединяются в один фильтр, даже если написаны с разным регистром
+  const norm = (p: string) => p.trim().toLowerCase();
+  const platforms = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const p of items.flatMap((i) => i.platforms))
+      if (!m.has(norm(p))) m.set(norm(p), p.trim());
+    return [...m.values()].sort((a, b) => a.localeCompare(b));
+  }, [items]);
   const needle = q.trim().toLowerCase();
   const shown = items.filter(
     (i) =>
-      (!platform || i.platforms.includes(platform)) &&
+      (!platform || i.platforms.some((p) => norm(p) === norm(platform))) &&
       (!needle || `${i.title} ${i.tagline}`.toLowerCase().includes(needle)),
   );
 
