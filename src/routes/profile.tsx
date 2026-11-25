@@ -59,24 +59,27 @@ function Account() {
     <div className="mx-auto max-w-md space-y-4">
       {/* Шапка профиля */}
       <div className="flex items-center gap-4 rounded-3xl border border-border bg-card/40 p-5">
+        {/* Аватарка: нажатие на кружок меняет её, значок камеры всегда виден (на телефоне нет наведения) */}
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
-          className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-primary/50 bg-background"
-          aria-label="Сменить аватарку"
+          className="relative h-20 w-20 shrink-0"
+          aria-label={profile?.avatar_url ? "Сменить аватарку" : "Добавить аватарку"}
         >
-          {profile?.avatar_url ? (
-            <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
-          ) : (
-            <span className="grid h-full w-full place-items-center font-display text-3xl text-primary">
-              {name.charAt(0).toUpperCase()}
-            </span>
-          )}
-          <span className="absolute inset-0 grid place-items-center bg-black/50 opacity-0 transition group-hover:opacity-100">
-            {busy === "avatar" ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+          <span className="block h-full w-full overflow-hidden rounded-full border-2 border-primary/50 bg-background">
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
             ) : (
-              <Camera className="h-5 w-5" />
+              <span className="grid h-full w-full place-items-center font-display text-3xl text-primary">
+                {name.charAt(0).toUpperCase()}
+              </span>
+            )}
+          </span>
+          <span className="absolute -bottom-0.5 -right-0.5 grid h-7 w-7 place-items-center rounded-full border-2 border-background bg-primary text-primary-foreground">
+            {busy === "avatar" ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Camera className="h-3.5 w-3.5" />
             )}
           </span>
         </button>
@@ -102,13 +105,6 @@ function Account() {
           {profile?.bio && (
             <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{profile.bio}</p>
           )}
-          <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            className="mt-1 text-xs text-muted-foreground hover:text-primary"
-          >
-            {profile?.avatar_url ? "Сменить аватарку" : "Добавить аватарку"}
-          </button>
         </div>
       </div>
 
