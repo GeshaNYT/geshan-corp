@@ -17,18 +17,19 @@ export function fmtDate(d: string | null) {
     : dt.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
 }
 
-/** Дата версии: точный момент — в часовом поясе посетителя, иначе просто дата (она не сдвигается) */
+/** Дата версии: всегда по Москве; если указано время — «…, 18:30 МСК» */
 export function fmtRelease(v: { released_at: string | null; released_ts?: string | null }) {
   if (v.released_ts) {
     const dt = new Date(v.released_ts);
     if (!Number.isNaN(dt.getTime()))
-      return dt.toLocaleString("ru-RU", {
+      return `${dt.toLocaleString("ru-RU", {
+        timeZone: "Europe/Moscow",
         day: "numeric",
         month: "long",
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-      });
+      })} МСК`;
   }
   return fmtDate(v.released_at);
 }

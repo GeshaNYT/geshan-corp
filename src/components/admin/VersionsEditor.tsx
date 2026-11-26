@@ -6,24 +6,35 @@ import { useRefreshSite, useSite } from "@/lib/data";
 import { versionsApi } from "@/lib/repo";
 import type { NodeVersion } from "@/lib/types";
 
-/** when: "YYYY-MM-DDTHH:mm" (дата и время по часам админа) или "YYYY-MM-DD" (только дата) */
-type Draft = { id?: string; version: string; when: string; url: string; notes: string };
-const pad = (n: number) => String(n).padStart(2, "0");
+/** date — YYYY-MM-DD по Москве, time — HH:mm по Москве или пусто */
+type Draft = {
+  id?: string;
+  version: string;
+  date: string;
+  time: string;
+  url: string;
+  notes: string;
+};
 /** Сегодняшняя дата по Москве — версии датируются по МСК, без времени */
 const todayMsk = () =>
   new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Moscow" }).format(new Date());
-const toLocalInput = (iso: string) => {
-  const d = new Date(iso);
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-};
-/** Превращаем поле формы в то, что хранится в базе */
-function whenToDb(when: string) {
-  if (!when) return { released_at: null, released_ts: null };
-  if (when.includes("T")) {
-    const d = new Date(when); // читается в часовом поясе админа
-    return { released_at: when.slice(0, 10), released_ts: d.toISOString() };
-  }
-  return { released_at: when, released_ts: null };
+/** Момент из базы → дата и время по Москве для формы */
+function fromDb(v: NodeVersion) {
+  if (!v.released_ts) return { date: v.released_at ?? "", time: "" };
+  const d = new Date(v.released_ts);
+  const date = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Moscow" }).format(d);
+  const time = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Moscow",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
+  return { date, time };
+}
+/** Форма → база. Время вводится по Москве (UTC+3) */
+function toDb(date: string, time: string) {
+  if (!date) return { released_at: null, released_ts: null };
+  if (!time) return { released_at: date, released_ts: null };
+  return { released_at: date, released_ts: new Date(`${date}T${time}:00+03:00`).toISOString() };
 }
 
 /** Версии проекта в редакторе: сохраняются сразу, отдельно от кнопки «Сохранить» проекта */
@@ -63,7 +74,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
             version: draft.version,
             url: draft.url,
             notes: draft.notes,
-            ...whenToDb(draft.when),
+            ...toDb(draft.date, draft.time),
             sort: 0,
           });
         } else {
@@ -73,7 +84,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
             version: draft.version,
             url: draft.url,
             notes: draft.notes,
-            ...whenToDb(draft.when),
+            ...toDb(draft.date, draft.time),
           });
         }
       },
@@ -94,7 +105,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
     setDraft({
       id: v.id,
       version: v.version,
-      when: v.released_ts ? toLocalInput(v.released_ts) : (v.released_at ?? ""),
+      ...fromDb(v),
       url: v.url,
       notes: v.notes,
     });
@@ -154,7 +165,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
       {!draft && (
         <button
           type="button"
-          onClick={() => setDraft({ version: "", when: todayMsk(), url: "", notes: "" })}
+          onClick={() => setDraft({ version: "", date: todayMsk(), time: "", url: "", notes: "" })}
           className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border py-3 text-sm text-muted-foreground transition hover:border-primary hover:text-primary"
         >
           <Plus className="h-4 w-4" /> Новая версия
@@ -188,15 +199,24 @@ function Form({
           autoFocus
         />
         <input
-          type={draft.when.includes("T") ? "datetime-local" : "date"}
+          type="date"
           className={field}
-          value={draft.when}
-          onChange={(e) => setDraft({ ...draft, when: e.target.value })}
+          value={draft.date}
+          onChange={(e) => setDraft({ ...draft, date: e.target.value })}
         />
       </div>
-      <p className="text-[11px] text-muted-foreground">
-        Дата выхода по Москве — у всех посетителей она одинаковая.
-      </p>
+      <div className="flex items-center gap-2">
+        <input
+          type="time"
+          className={`${field} w-32`}
+          value={draft.time}
+          onChange={(e) => setDraft({ ...draft, time: e.target.value })}
+          aria-label="Время по Москве"
+        />
+        <span className="text-[11px] text-muted-foreground">
+          Время по МСК — необязательно. Дата и время у всех посетителей одинаковые (по Москве).
+        </span>
+      </div>
       <input
         className={`${field} font-mono text-xs`}
         placeholder="Ссылка на пост с обновлением (https://t.me/...)"
