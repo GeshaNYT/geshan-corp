@@ -10,9 +10,16 @@ export interface Channel {
   url: string;
   description: string;
   sort: number;
+  /** Показывать на главной */
+  featured: boolean;
 }
 
-const FALLBACK: Channel[] = CHANNELS.map((c, i) => ({ ...c, id: `seed-ch-${i}`, sort: i }));
+const FALLBACK: Channel[] = CHANNELS.map((c, i) => ({
+  ...c,
+  id: `seed-ch-${i}`,
+  sort: i,
+  featured: true,
+}));
 
 function check<T>(res: { data: T; error: { message: string; code?: string } | null }): T {
   if (res.error) {

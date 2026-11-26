@@ -24,6 +24,8 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { data: channels } = useChannels();
+  const homeChannels = (channels ?? []).filter((c) => c.featured !== false);
+  const hasMoreChannels = homeChannels.length < (channels ?? []).length;
   const site = useSite();
   const featured = site.nodes
     .filter((n) => n.featured && !n.hidden)
@@ -93,7 +95,7 @@ function Home() {
             других площадок. Здесь выходят все новости, релизы и анонсы проектов.
           </p>
           <div className="no-scrollbar mt-5 flex snap-x gap-3 overflow-x-auto pb-1 md:grid md:grid-cols-4">
-            {(channels ?? []).map((c) => (
+            {homeChannels.map((c) => (
               <a
                 key={c.id}
                 href={c.url}
@@ -110,12 +112,15 @@ function Home() {
               </a>
             ))}
           </div>
-          <Link
-            to="/channels"
-            className="mt-3 inline-flex items-center gap-1 text-sm text-primary hover:underline"
-          >
-            Все каналы <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          {/* «Все каналы» — только если часть каналов не показана на главной */}
+          {hasMoreChannels && (
+            <Link
+              to="/channels"
+              className="mt-3 inline-flex items-center gap-1 text-sm text-primary hover:underline"
+            >
+              Все каналы ({(channels ?? []).length}) <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          )}
         </div>
       </section>
 

@@ -1,7 +1,19 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ArrowDown, ArrowUp, Check, Pencil, Plus, Send, Trash2, X } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Check,
+  EyeOff,
+  Home,
+  Pencil,
+  Plus,
+  Send,
+  Trash2,
+  X,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   channelsApi,
   handleFromUrl,
@@ -10,8 +22,8 @@ import {
   type Channel,
 } from "@/lib/content";
 
-type Draft = { id?: string; name: string; url: string; description: string };
-const EMPTY: Draft = { name: "", url: "", description: "" };
+type Draft = { id?: string; name: string; url: string; description: string; featured: boolean };
+const EMPTY: Draft = { name: "", url: "", description: "", featured: true };
 
 export function ChannelsAdmin() {
   const qc = useQueryClient();
@@ -51,6 +63,7 @@ export function ChannelsAdmin() {
           url,
           handle: handleFromUrl(url),
           description: draft.description.trim(),
+          featured: draft.featured,
           ...(draft.id ? {} : { sort: channels.length }),
         }),
       draft.id ? "Канал сохранён" : "Канал добавлен",
@@ -69,8 +82,9 @@ export function ChannelsAdmin() {
   return (
     <div>
       <p className="mb-3 text-sm text-muted-foreground">
-        Каналы показываются на главной и на странице «Каналы». Можно вставить ссылку или просто @имя
-        — повторно один и тот же канал добавить нельзя.
+        Каналы со значком 🏠 показываются на главной. Если какой-то канал убрать с главной, там
+        появится ссылка «Все каналы», где видны все. Можно вставить ссылку или просто @имя —
+        повторно один и тот же канал добавить нельзя.
       </p>
 
       <div className="space-y-2">
@@ -86,7 +100,27 @@ export function ChannelsAdmin() {
               onUp={() => move(i, -1)}
               onDown={() => move(i, 1)}
               onEdit={() =>
-                setDraft({ id: c.id, name: c.name, url: c.url, description: c.description })
+                setDraft({
+                  id: c.id,
+                  name: c.name,
+                  url: c.url,
+                  description: c.description,
+                  featured: c.featured !== false,
+                })
+              }
+              onToggleHome={() =>
+                void run(
+                  () =>
+                    channelsApi.save({
+                      id: c.id,
+                      name: c.name,
+                      url: c.url,
+                      featured: c.featured === false,
+                    }),
+                  c.featured === false
+                    ? "Теперь на главной"
+                    : "Убран с главной (остался во «Всех каналах»)",
+                )
               }
               onDelete={() => {
                 if (window.confirm(`Удалить канал «${c.name}»?`))
@@ -122,8 +156,10 @@ function Row({
   onDown,
   onEdit,
   onDelete,
+  onToggleHome,
 }: {
   c: Channel;
+  onToggleHome: () => void;
   first: boolean;
   last: boolean;
   onUp: () => void;
@@ -132,14 +168,32 @@ function Row({
   onDelete: () => void;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-border bg-card/40 p-3">
+    <div
+      className={cn(
+        "flex items-center gap-2 rounded-xl border border-border bg-card/40 p-3",
+        c.featured === false && "opacity-70",
+      )}
+    >
       <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground">
         <Send className="h-4 w-4" />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm">{c.name}</span>
         <span className="block truncate text-xs text-primary">{c.handle || c.url}</span>
+        <span className="block text-[11px] text-muted-foreground">
+          {c.featured === false ? "только во «Всех каналах»" : "на главной"}
+        </span>
       </span>
+      <Btn
+        label={c.featured === false ? "Показать на главной" : "Убрать с главной"}
+        onClick={onToggleHome}
+      >
+        {c.featured === false ? (
+          <EyeOff className="h-4 w-4" />
+        ) : (
+          <Home className="h-4 w-4 text-primary" />
+        )}
+      </Btn>
       <Btn label="Выше" onClick={onUp} disabled={first}>
         <ArrowUp className="h-4 w-4" />
       </Btn>
@@ -191,6 +245,26 @@ function Editor({
         value={draft.description}
         onChange={(e) => setDraft({ ...draft, description: e.target.value })}
       />
+      <button
+        type="button"
+        onClick={() => setDraft({ ...draft, featured: !draft.featured })}
+        className="flex w-full items-center justify-between gap-3 rounded-lg border border-border bg-background px-3 py-2.5 text-left text-sm"
+      >
+        <span>Показывать на главной</span>
+        <span
+          className={cn(
+            "relative h-6 w-11 shrink-0 rounded-full transition",
+            draft.featured ? "bg-primary" : "bg-muted",
+          )}
+        >
+          <span
+            className={cn(
+              "absolute top-0.5 h-5 w-5 rounded-full bg-background transition-all",
+              draft.featured ? "left-[22px]" : "left-0.5",
+            )}
+          />
+        </span>
+      </button>
       <div className="flex gap-2">
         <button
           type="button"
