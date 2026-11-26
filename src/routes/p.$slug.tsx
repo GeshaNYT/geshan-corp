@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/auth";
 import { useSite } from "@/lib/data";
 import { AdminShortcut } from "@/components/AdminShortcut";
 import { DEFAULT_HOWTO, useServers } from "@/lib/servers";
-import { STATUS_HINTS } from "@/lib/types";
+import { PUBLIC_STATUS_HINTS } from "@/lib/types";
 
 export const Route = createFileRoute("/p/$slug")({
   component: NodePage,
@@ -99,7 +99,7 @@ function NodePage() {
         </div>
         {node.tagline && <p className="relative mt-4 text-muted-foreground">{node.tagline}</p>}
         {node.kind === "project" && node.status !== "released" && (
-          <p className="relative mt-2 text-xs text-muted-foreground">{STATUS_HINTS[node.status]}</p>
+          <p className="relative mt-2 text-xs text-muted-foreground">{PUBLIC_STATUS_HINTS[node.status]}</p>
         )}
       </header>
 

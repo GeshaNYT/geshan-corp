@@ -72,6 +72,15 @@ export const STATUS_HINTS: Record<NodeStatus, string> = {
   internal: "Внутренняя разработка, не для скачивания",
 };
 
+/** То же для посетителей — на странице проекта (без подсказок для админа) */
+export const PUBLIC_STATUS_HINTS: Record<NodeStatus, string> = {
+  released: "",
+  wip: "Проект в разработке",
+  frozen: "Разработка на паузе",
+  soon: "Скоро выйдет",
+  internal: "Внутренний проект, не для скачивания",
+};
+
 export const PLATFORM_PRESETS = [
   "Windows",
   "Android",
