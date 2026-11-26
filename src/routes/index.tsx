@@ -7,6 +7,8 @@ import { NodeCard } from "@/components/NodeCards";
 import { ProjectTree } from "@/components/ProjectTree";
 import { ServerStatus } from "@/components/ServerStatus";
 import { useSite } from "@/lib/data";
+import { useAuth } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 import { useChannels } from "@/lib/content";
 
 export const Route = createFileRoute("/")({
@@ -24,6 +26,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { isAdmin } = useAuth();
   const { data: channels } = useChannels();
   const homeChannels = (channels ?? []).filter((c) => c.featured !== false);
   const hasMoreChannels = homeChannels.length < (channels ?? []).length;
@@ -83,7 +86,7 @@ function Home() {
           <AdminShortcut tab="channels" label="Настроить каналы" />
         </div>
         <div className="relative">
-          <div className="flex items-center gap-3 pr-10">
+          <div className={cn("flex items-center gap-3", isAdmin && "pr-10")}>
             <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-primary/40 bg-background/50">
               <Users className="h-6 w-6 text-primary" />
             </span>
