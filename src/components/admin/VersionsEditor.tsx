@@ -34,15 +34,20 @@ function fromDb(v: NodeVersion) {
   }).format(d);
   return { date, time };
 }
-/** «Windows — https://…» по строкам → список файлов */
+/** «Windows — https://файл — https://пост» по строкам → список файлов (пост необязателен) */
 function parseDownloads(text: string) {
   const downloads = text
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => {
-      const m = line.match(/^(.*?)\s*[—–-]\s*(https?:\/\/\S+)$/);
-      return m ? { label: m[1].trim(), url: m[2] } : { label: "", url: line };
+      const urls = line.match(/https?:\/\/\S+/g) ?? [];
+      const label = line
+        .split(/https?:\/\//)[0]
+        .replace(/\s*[—–-]\s*$/, "")
+        .trim();
+      const url = urls[0] ?? line;
+      return urls[1] ? { label, url, post: urls[1] } : { label, url };
     });
   return { downloads, download_url: downloads[0]?.url ?? "" };
 }
@@ -131,7 +136,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
       ...fromDb(v),
       url: v.url,
       downloads: versionDownloads(v)
-        .map((d) => (d.label ? `${d.label} — ${d.url}` : d.url))
+        .map((d) => [d.label, d.url, d.post].filter(Boolean).join(" — "))
         .join("\n"),
       notes: v.notes,
     });
@@ -286,7 +291,7 @@ function Form({
         className="w-full rounded-lg border border-border bg-background p-3 font-mono text-xs outline-none focus:border-primary"
         rows={2}
         placeholder={
-          "Скачать эту версию (необязательно), каждая ссылка с новой строки:\nWindows 2.0.0 — https://t.me/...\nAndroid 1.0.0 — https://t.me/..."
+          "Скачать эту версию (необязательно), каждая ссылка с новой строки:\nWindows 2.0.0 — https://файл — https://пост (пост необязательно)\nAndroid 1.0.0 — https://t.me/..."
         }
         value={draft.downloads}
         onChange={(e) => setDraft({ ...draft, downloads: e.target.value })}

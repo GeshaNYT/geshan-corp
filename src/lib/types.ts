@@ -107,7 +107,8 @@ export interface NodeVersion {
   /** Ссылка, чтобы скачать именно эту версию (необязательно) */
   download_url?: string;
   /** Несколько файлов: «Windows», «Android»… (если пусто — берётся download_url) */
-  downloads?: { label: string; url: string }[];
+  /** post — необязательная ссылка на пост о выходе этой сборки */
+  downloads?: { label: string; url: string; post?: string }[];
   notes: string;
   /** 0 — самая новая */
   sort: number;

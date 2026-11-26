@@ -99,20 +99,34 @@ export function VersionHistory({ versions }: { versions: NodeVersion[] }) {
                 return (
                   <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
                     {dls.map((d) => (
-                      <a
+                      <span
                         key={d.url + d.label}
-                        href={d.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                        className="inline-flex flex-wrap items-center gap-x-1.5"
                       >
-                        <Download className="h-3.5 w-3.5" />
-                        {/* с подписью — «Скачать для Android 1.0.0» (у платформы может быть своя версия) */}
-                        {d.label ? `Скачать для ${d.label}` : `Скачать ${fmtVersion(v.version)}`}
-                        {samePost && /t\.me\//.test(v.url) && (
-                          <span className="text-muted-foreground"> · пост в Telegram</span>
+                        <a
+                          href={d.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          {/* с подписью — «Скачать для Android 1.0.0» (у платформы может быть своя версия) */}
+                          {d.label ? `Скачать для ${d.label}` : `Скачать ${fmtVersion(v.version)}`}
+                          {samePost && /t\.me\//.test(v.url) && (
+                            <span className="text-muted-foreground"> · пост в Telegram</span>
+                          )}
+                        </a>
+                        {d.post && (
+                          <a
+                            href={d.post}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary hover:underline"
+                          >
+                            · пост <ExternalLink className="h-3 w-3" />
+                          </a>
                         )}
-                      </a>
+                      </span>
                     ))}
                     {v.url && !samePost && (
                       <a
