@@ -9,10 +9,9 @@ import type { NodeVersion } from "@/lib/types";
 /** when: "YYYY-MM-DDTHH:mm" (дата и время по часам админа) или "YYYY-MM-DD" (только дата) */
 type Draft = { id?: string; version: string; when: string; url: string; notes: string };
 const pad = (n: number) => String(n).padStart(2, "0");
-const localNow = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-};
+/** Сегодняшняя дата по Москве — версии датируются по МСК, без времени */
+const todayMsk = () =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Moscow" }).format(new Date());
 const toLocalInput = (iso: string) => {
   const d = new Date(iso);
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
@@ -155,7 +154,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
       {!draft && (
         <button
           type="button"
-          onClick={() => setDraft({ version: "", when: localNow(), url: "", notes: "" })}
+          onClick={() => setDraft({ version: "", when: todayMsk(), url: "", notes: "" })}
           className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border py-3 text-sm text-muted-foreground transition hover:border-primary hover:text-primary"
         >
           <Plus className="h-4 w-4" /> Новая версия
@@ -195,22 +194,9 @@ function Form({
           onChange={(e) => setDraft({ ...draft, when: e.target.value })}
         />
       </div>
-      <button
-        type="button"
-        onClick={() =>
-          setDraft({
-            ...draft,
-            when: draft.when.includes("T")
-              ? draft.when.slice(0, 10)
-              : `${draft.when || localNow().slice(0, 10)}T12:00`,
-          })
-        }
-        className="text-[11px] text-muted-foreground hover:text-primary"
-      >
-        {draft.when.includes("T")
-          ? "Дата и время — у посетителей покажется в их часовом поясе. Указать только дату"
-          : "Только дата — одинакова для всех. Указать ещё и время"}
-      </button>
+      <p className="text-[11px] text-muted-foreground">
+        Дата выхода по Москве — у всех посетителей она одинаковая.
+      </p>
       <input
         className={`${field} font-mono text-xs`}
         placeholder="Ссылка на пост с обновлением (https://t.me/...)"
