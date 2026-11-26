@@ -35,6 +35,7 @@ import { ChannelsAdmin } from "@/components/admin/ChannelsAdmin";
 import { PlatformsAdmin } from "@/components/admin/PlatformsAdmin";
 import { UsersAdmin } from "@/components/admin/UsersAdmin";
 import { LinkTypesAdmin } from "@/components/admin/LinkTypesAdmin";
+import { ServersAdmin } from "@/components/admin/ServersAdmin";
 import { useAuth } from "@/lib/auth";
 import { useRefreshSite, useSite, type SiteIndex } from "@/lib/data";
 import { repo, resetDemo } from "@/lib/repo";
@@ -64,7 +65,9 @@ function AdminPage() {
   const [q, setQ] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [moving, setMoving] = useState<SiteNode | null>(null);
-  const [tab, setTab] = useState<"tree" | "channels" | "buttons" | "platforms" | "users">("tree");
+  const [tab, setTab] = useState<
+    "tree" | "channels" | "buttons" | "servers" | "platforms" | "users"
+  >("tree");
 
   const editorOpen = Boolean(search.edit || search.kind);
   const editing = search.edit ? site.byId.get(search.edit) : undefined;
@@ -250,6 +253,7 @@ function AdminPage() {
             ["tree", "Проекты"],
             ["channels", "Каналы"],
             ["buttons", "Кнопки"],
+            ["servers", "Сервер"],
             ["platforms", "Платформы"],
             ["users", "Люди"],
           ] as const
@@ -272,6 +276,7 @@ function AdminPage() {
 
       {tab === "channels" && <ChannelsAdmin />}
       {tab === "buttons" && <LinkTypesAdmin />}
+      {tab === "servers" && <ServersAdmin />}
       {tab === "platforms" && <PlatformsAdmin />}
       {tab === "users" && <UsersAdmin />}
       {tab === "tree" && (

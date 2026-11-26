@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useIsFetching, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, Copy, RefreshCw, Users } from "lucide-react";
 import { useState } from "react";
-import { MC_SERVERS } from "@/config/site";
+import { DEFAULT_PORT, serverAddress, useServers, type McServer } from "@/lib/servers";
 import { cn } from "@/lib/utils";
 
 interface McStatus {
@@ -11,11 +11,10 @@ interface McStatus {
   motd?: { clean?: string[] };
 }
 
-async function fetchStatus(kind: "java" | "bedrock"): Promise<McStatus> {
-  const s = MC_SERVERS[kind];
-  const addr = "port" in s ? `${s.host}:${s.port}` : s.host;
+async function fetchStatus(srv: McServer): Promise<McStatus> {
+  const addr = serverAddress(srv);
   const url =
-    kind === "java"
+    srv.edition === "java"
       ? `https://api.mcsrvstat.us/3/${addr}`
       : `https://api.mcsrvstat.us/bedrock/3/${addr}`;
   const res = await fetch(url);
@@ -23,10 +22,10 @@ async function fetchStatus(kind: "java" | "bedrock"): Promise<McStatus> {
   return res.json();
 }
 
-function useStatus(kind: "java" | "bedrock") {
+function useStatus(srv: McServer) {
   return useQuery({
-    queryKey: ["mc", kind],
-    queryFn: () => fetchStatus(kind),
+    queryKey: ["mc", srv.edition, serverAddress(srv)],
+    queryFn: () => fetchStatus(srv),
     refetchInterval: 60_000,
     staleTime: 30_000,
     retry: 1,
@@ -51,9 +50,9 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-function ServerRow({ kind, detailed }: { kind: "java" | "bedrock"; detailed?: boolean }) {
-  const s = MC_SERVERS[kind];
-  const q = useStatus(kind);
+function ServerRow({ srv: s, detailed }: { srv: McServer; detailed?: boolean }) {
+  const q = useStatus(s);
+  const port = s.port.trim() && s.port.trim() !== DEFAULT_PORT[s.edition] ? s.port.trim() : "";
   const st = q.data;
   const online = st?.online === true;
   const loading = q.isLoading;
@@ -80,7 +79,7 @@ function ServerRow({ kind, detailed }: { kind: "java" | "bedrock"; detailed?: bo
             </span>
           </div>
           <p className="mt-1.5 truncate font-mono text-sm text-primary">{s.host}</p>
-          {"port" in s && <p className="font-mono text-xs text-muted-foreground">Порт: {s.port}</p>}
+          {port && <p className="font-mono text-xs text-muted-foreground">Порт: {port}</p>}
         </div>
         <div className="text-right">
           <p className="flex items-center justify-end gap-1.5 text-lg font-semibold tabular-nums">
@@ -91,14 +90,14 @@ function ServerRow({ kind, detailed }: { kind: "java" | "bedrock"; detailed?: bo
             </span>
           </p>
           <p className="text-[11px] text-muted-foreground">
-            {/* Для Java показываем свою строку версий: прокси сервера сообщает «1.7.2+», что вводит в заблуждение */}
-            {"version" in s ? s.version : online && st?.version ? st.version : ""}
+            {/* Версия из настроек; если не задана — та, что сообщает сервер */}
+            {s.version.trim() || (online && st?.version ? st.version : "")}
           </p>
         </div>
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <CopyButton text={s.host} />
-        {"port" in s && <CopyButton text={String(s.port)} />}
+        {port && <CopyButton text={port} />}
       </div>
       {detailed && online && st?.motd?.clean?.length ? (
         <p className="mt-3 whitespace-pre-line rounded-lg bg-card/60 p-2.5 text-xs text-muted-foreground">
@@ -119,25 +118,22 @@ function ServerRow({ kind, detailed }: { kind: "java" | "bedrock"; detailed?: bo
 }
 
 export function ServerStatus({ detailed }: { detailed?: boolean }) {
-  const j = useStatus("java");
-  const b = useStatus("bedrock");
+  const servers = useServers().filter((x) => !x.hidden);
+  const qc = useQueryClient();
+  const fetching = useIsFetching({ queryKey: ["mc"] }) > 0;
   return (
     <div className="space-y-3">
-      <ServerRow kind="java" detailed={detailed} />
-      <ServerRow kind="bedrock" detailed={detailed} />
+      {servers.map((srv) => (
+        <ServerRow key={srv.id} srv={srv} detailed={detailed} />
+      ))}
       {detailed && (
         <button
           type="button"
-          onClick={() => {
-            void j.refetch();
-            void b.refetch();
-          }}
+          onClick={() => void qc.invalidateQueries({ queryKey: ["mc"] })}
           className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-primary"
         >
-          <RefreshCw
-            className={cn("h-3.5 w-3.5", (j.isFetching || b.isFetching) && "animate-spin")}
-          />{" "}
-          Обновить (автообновление раз в минуту)
+          <RefreshCw className={cn("h-3.5 w-3.5", fetching && "animate-spin")} /> Обновить
+          (автообновление раз в минуту)
         </button>
       )}
     </div>

@@ -10,7 +10,4 @@ export const SUPABASE_ANON_KEY: string =
 
 export const SITE_NAME = "Geshan Corporation";
 
-export const MC_SERVERS = {
-  java: { host: "mc.minecube.pro", label: "Java", version: "1.16.5 – 26.3" },
-  bedrock: { host: "pe.minecube.pro", port: 25787, label: "Bedrock" },
-};
+// Серверы Minecraft для мониторинга настраиваются в админке (вкладка «Сервер»), см. src/lib/servers.ts
