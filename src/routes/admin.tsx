@@ -42,7 +42,9 @@ import { repo, resetDemo } from "@/lib/repo";
 import type { NodeKind, SiteNode } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-type AdminSearch = { edit?: string; parent?: string; kind?: NodeKind };
+type AdminTab = "tree" | "channels" | "buttons" | "servers" | "platforms" | "users";
+const TABS: AdminTab[] = ["tree", "channels", "buttons", "servers", "platforms", "users"];
+type AdminSearch = { edit?: string; parent?: string; kind?: NodeKind; tab?: AdminTab };
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -52,6 +54,7 @@ export const Route = createFileRoute("/admin")({
     edit: typeof s.edit === "string" ? s.edit : undefined,
     parent: typeof s.parent === "string" ? s.parent : undefined,
     kind: s.kind === "section" || s.kind === "project" ? s.kind : undefined,
+    tab: TABS.includes(s.tab as AdminTab) ? (s.tab as AdminTab) : undefined,
   }),
   component: AdminPage,
 });
@@ -65,9 +68,10 @@ function AdminPage() {
   const [q, setQ] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [moving, setMoving] = useState<SiteNode | null>(null);
-  const [tab, setTab] = useState<
-    "tree" | "channels" | "buttons" | "servers" | "platforms" | "users"
-  >("tree");
+  const [tab, setTab] = useState<AdminTab>(search.tab ?? "tree");
+  useEffect(() => {
+    if (search.tab) setTab(search.tab);
+  }, [search.tab]);
 
   const editorOpen = Boolean(search.edit || search.kind);
   const editing = search.edit ? site.byId.get(search.edit) : undefined;

@@ -7,17 +7,20 @@ export function SectionTitle({
   to,
   more,
   icon,
+  action,
 }: {
   title: string;
   to?: string;
   more?: string;
   icon?: ReactNode;
+  action?: ReactNode;
 }) {
   return (
     <div className="mb-3 flex items-end justify-between gap-3">
       <h2 className="flex items-center gap-2 font-display text-3xl">
         {icon && <span className="text-primary">{icon}</span>}
         {title}
+        {action}
       </h2>
       {to && (
         <Link

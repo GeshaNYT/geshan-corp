@@ -6,6 +6,7 @@ import { ServerStatus } from "@/components/ServerStatus";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useAuth } from "@/lib/auth";
 import { useSite } from "@/lib/data";
+import { AdminShortcut } from "@/components/AdminShortcut";
 import { DEFAULT_PORT, useServers } from "@/lib/servers";
 import { STATUS_HINTS } from "@/lib/types";
 
@@ -111,7 +112,9 @@ function NodePage() {
       <div className="mt-6 space-y-6">
         {node.slug === "minecube" && (
           <section>
-            <h2 className="mb-3 font-display text-2xl">Статус серверов</h2>
+            <h2 className="mb-3 flex items-center gap-2 font-display text-2xl">
+              Статус серверов <AdminShortcut tab="servers" label="Настроить серверы" />
+            </h2>
             <ServerStatus detailed />
             <JoinHelp />
           </section>

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Download, FolderTree, Send, Server, Users } from "lucide-react";
 import { SectionTitle } from "@/components/PageHeader";
+import { AdminShortcut } from "@/components/AdminShortcut";
 import heroImg from "@/assets/geshan-hero.jpg";
 import { NodeCard } from "@/components/NodeCards";
 import { ProjectTree } from "@/components/ProjectTree";
@@ -89,6 +90,9 @@ function Home() {
                 <span className="text-gold-gradient">Geshan&rsquo;s Community</span>
               </h2>
             </div>
+            <span className="ml-auto self-start">
+              <AdminShortcut tab="channels" label="Настроить каналы" />
+            </span>
           </div>
           <p className="mt-4 max-w-2xl text-sm text-muted-foreground sm:text-base">
             Самое большое сообщество корпорации — люди вокруг наших YouTube-каналов, Telegram и
@@ -131,6 +135,7 @@ function Home() {
           title="Сервер MineCube"
           to="/p/minecube"
           more="Подробнее"
+          action={<AdminShortcut tab="servers" label="Настроить серверы" />}
         />
         <div className="rounded-3xl border border-border bg-card/40 p-4 backdrop-blur">
           <ServerStatus />
