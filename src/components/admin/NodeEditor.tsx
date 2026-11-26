@@ -776,7 +776,7 @@ export function NodeEditor({
               prefix="/p/"
             />
             <Toggle
-              label="Показывать на главной"
+              label="⭐ Закрепить наверху (первым в «Проектах» на главной)"
               checked={d.featured}
               onChange={(v) => set("featured", v)}
             />

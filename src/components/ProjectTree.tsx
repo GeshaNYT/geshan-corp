@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Download } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  ChevronsDownUp,
+  ChevronsUpDown,
+  Download,
+  Star,
+} from "lucide-react";
 import { NodeIcon } from "@/components/NodeIcon";
 import { StatusBadge } from "@/components/StatusBadge";
 import { plural } from "@/components/NodeCards";
@@ -9,10 +16,20 @@ import { useLinkTypes } from "@/lib/linkTypes";
 import type { SiteNode } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-/** Раскрывающееся дерево: главные разделы → подразделы → проекты */
-export function ProjectTree() {
+/**
+ * Раскрывающееся дерево: главные разделы → подразделы → проекты.
+ * pinFeatured — закреплённые (⭐) элементы идут первыми, над остальным деревом (используется на главной).
+ */
+export function ProjectTree({ pinFeatured }: { pinFeatured?: boolean }) {
   const site = useSite();
-  const roots = site.childrenOf(null);
+  const pinned = pinFeatured
+    ? site.nodes
+        .filter((n) => n.featured && !n.hidden && !site.pathOf(n.id).some((p) => p.hidden))
+        .sort((a, b) => a.sort - b.sort)
+    : [];
+  const pinnedIds = new Set(pinned.map((n) => n.id));
+  // Закреплённые корневые элементы не повторяем в общем списке
+  const roots = site.childrenOf(null).filter((n) => !pinnedIds.has(n.id));
   const [open, setOpen] = useState<Set<string>>(() => new Set());
 
   const toggle = (id: string) =>
@@ -42,6 +59,18 @@ export function ProjectTree() {
         </button>
       </div>
       <div className="space-y-3">
+        {pinned.map((n) => (
+          <Branch
+            key={`pin-${n.id}`}
+            node={n}
+            depth={0}
+            site={site}
+            open={open}
+            toggle={toggle}
+            pinned
+          />
+        ))}
+        {pinned.length > 0 && roots.length > 0 && <div className="h-px bg-border" />}
         {roots.map((n) => (
           <Branch key={n.id} node={n} depth={0} site={site} open={open} toggle={toggle} />
         ))}
@@ -56,7 +85,9 @@ function Branch({
   site,
   open,
   toggle,
+  pinned,
 }: {
+  pinned?: boolean;
   node: SiteNode;
   depth: number;
   site: SiteIndex;
@@ -66,7 +97,7 @@ function Branch({
   const kids = site.childrenOf(node.id);
   // Проект без вложенных — просто строка-ссылка; с вложенными — раскрывается как раздел
   if (node.kind === "project" && kids.length === 0)
-    return <ProjectRow node={node} site={site} root={depth === 0} />;
+    return <ProjectRow node={node} site={site} root={depth === 0} pinned={pinned} />;
   const isProject = node.kind === "project";
   const isOpen = open.has(node.id);
   const count = site.countProjects(node.id);
@@ -108,6 +139,9 @@ function Branch({
           <span
             className={cn("block truncate", depth === 0 ? "font-display text-2xl" : "font-medium")}
           >
+            {pinned && (
+              <Star className="mr-1.5 inline h-4 w-4 -translate-y-0.5 fill-primary text-primary" />
+            )}
             {node.title}
           </span>
           <span className="mt-0.5 flex items-center gap-2">
@@ -148,7 +182,17 @@ function Branch({
   );
 }
 
-function ProjectRow({ node, site, root }: { node: SiteNode; site: SiteIndex; root: boolean }) {
+function ProjectRow({
+  node,
+  site,
+  root,
+  pinned,
+}: {
+  node: SiteNode;
+  site: SiteIndex;
+  root: boolean;
+  pinned?: boolean;
+}) {
   const types = useLinkTypes();
   const canDownload =
     site.filesOf(node.id).length > 0 || node.links.some((l) => types.isDownload(l.kind));
@@ -166,6 +210,12 @@ function ProjectRow({ node, site, root }: { node: SiteNode; site: SiteIndex; roo
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
+          {pinned && (
+            <Star
+              className="h-3.5 w-3.5 shrink-0 fill-primary text-primary"
+              aria-label="Закреплено"
+            />
+          )}
           <span className="truncate font-medium">{node.title}</span>
           {canDownload && (
             <Download className="h-3.5 w-3.5 shrink-0 text-primary" aria-label="Можно скачать" />

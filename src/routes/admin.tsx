@@ -194,7 +194,7 @@ function AdminPage() {
     toggleFeatured: (node) =>
       void run(
         () => repo.saveNode({ ...node, featured: !node.featured }),
-        node.featured ? "Убрано с главной" : "Добавлено на главную",
+        node.featured ? "Откреплено" : "Закреплено наверху на главной",
       ),
     duplicate: (node) =>
       void run(async () => {
@@ -518,7 +518,7 @@ function TreeRow({
               <Copy className="mr-2 h-4 w-4" /> Дублировать
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => actions.toggleFeatured(node)}>
-              <Star className="mr-2 h-4 w-4" /> {node.featured ? "Убрать с главной" : "На главную"}
+              <Star className="mr-2 h-4 w-4" /> {node.featured ? "Открепить" : "Закрепить наверху"}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => actions.toggleHidden(node)}>
               {node.hidden ? <Eye className="mr-2 h-4 w-4" /> : <EyeOff className="mr-2 h-4 w-4" />}{" "}

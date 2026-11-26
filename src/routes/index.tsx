@@ -3,7 +3,6 @@ import { ArrowRight, Download, FolderTree, Send, Server, Users } from "lucide-re
 import { SectionTitle } from "@/components/PageHeader";
 import { AdminShortcut } from "@/components/AdminShortcut";
 import heroImg from "@/assets/geshan-hero.jpg";
-import { NodeCard } from "@/components/NodeCards";
 import { ProjectTree } from "@/components/ProjectTree";
 import { ServerStatus } from "@/components/ServerStatus";
 import { useSite } from "@/lib/data";
@@ -31,9 +30,6 @@ function Home() {
   const homeChannels = (channels ?? []).filter((c) => c.featured !== false);
   const hasMoreChannels = homeChannels.length < (channels ?? []).length;
   const site = useSite();
-  const featured = site.nodes
-    .filter((n) => n.featured && !n.hidden)
-    .sort((a, b) => a.sort - b.sort);
   const totalProjects = site.nodes.filter((n) => n.kind === "project" && !n.hidden).length;
   const totalSections = site.nodes.filter((n) => n.kind === "section" && !n.hidden).length;
 
@@ -144,22 +140,10 @@ function Home() {
         </div>
       </section>
 
-      {/* Главное */}
-      {featured.length > 0 && (
-        <section>
-          <SectionTitle title="Главное" to="/projects" more="Все разделы" />
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((n) => (
-              <NodeCard key={n.id} node={n} />
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* Проекты деревом */}
       <section>
         <SectionTitle title="Проекты" to="/resources" more="Ресурсы" />
-        <ProjectTree />
+        <ProjectTree pinFeatured />
       </section>
     </div>
   );
