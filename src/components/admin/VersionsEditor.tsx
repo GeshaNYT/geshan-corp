@@ -1,13 +1,31 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowDown, ArrowUp, Check, Pencil, Plus, Trash2, X } from "lucide-react";
-import { fmtDate, fmtVersion } from "@/components/Versions";
+import { fmtRelease, fmtVersion } from "@/components/Versions";
 import { useRefreshSite, useSite } from "@/lib/data";
 import { versionsApi } from "@/lib/repo";
 import type { NodeVersion } from "@/lib/types";
 
-type Draft = { id?: string; version: string; released_at: string; url: string; notes: string };
-const today = () => new Date().toISOString().slice(0, 10);
+/** when: "YYYY-MM-DDTHH:mm" (дата и время по часам админа) или "YYYY-MM-DD" (только дата) */
+type Draft = { id?: string; version: string; when: string; url: string; notes: string };
+const pad = (n: number) => String(n).padStart(2, "0");
+const localNow = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+const toLocalInput = (iso: string) => {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+/** Превращаем поле формы в то, что хранится в базе */
+function whenToDb(when: string) {
+  if (!when) return { released_at: null, released_ts: null };
+  if (when.includes("T")) {
+    const d = new Date(when); // читается в часовом поясе админа
+    return { released_at: when.slice(0, 10), released_ts: d.toISOString() };
+  }
+  return { released_at: when, released_ts: null };
+}
 
 /** Версии проекта в редакторе: сохраняются сразу, отдельно от кнопки «Сохранить» проекта */
 export function VersionsEditor({ nodeId }: { nodeId: string }) {
@@ -41,9 +59,23 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
         if (isNew) {
           // новая версия становится текущей — встаёт первой, остальные сдвигаются
           await Promise.all(versions.map((v, i) => versionsApi.save({ ...v, sort: i + 1 })));
-          await versionsApi.save({ node_id: nodeId, ...draft, sort: 0 });
+          await versionsApi.save({
+            node_id: nodeId,
+            version: draft.version,
+            url: draft.url,
+            notes: draft.notes,
+            ...whenToDb(draft.when),
+            sort: 0,
+          });
         } else {
-          await versionsApi.save({ node_id: nodeId, ...draft });
+          await versionsApi.save({
+            id: draft.id,
+            node_id: nodeId,
+            version: draft.version,
+            url: draft.url,
+            notes: draft.notes,
+            ...whenToDb(draft.when),
+          });
         }
       },
       isNew ? "Версия добавлена" : "Сохранено",
@@ -63,7 +95,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
     setDraft({
       id: v.id,
       version: v.version,
-      released_at: v.released_at ?? "",
+      when: v.released_ts ? toLocalInput(v.released_ts) : (v.released_at ?? ""),
       url: v.url,
       notes: v.notes,
     });
@@ -87,10 +119,8 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
                     текущая
                   </span>
                 )}
-                {v.released_at && (
-                  <span className="text-[11px] text-muted-foreground">
-                    {fmtDate(v.released_at)}
-                  </span>
+                {(v.released_ts || v.released_at) && (
+                  <span className="text-[11px] text-muted-foreground">{fmtRelease(v)}</span>
                 )}
               </span>
               <span className="block truncate text-[11px] text-muted-foreground">
@@ -125,7 +155,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
       {!draft && (
         <button
           type="button"
-          onClick={() => setDraft({ version: "", released_at: today(), url: "", notes: "" })}
+          onClick={() => setDraft({ version: "", when: localNow(), url: "", notes: "" })}
           className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border py-3 text-sm text-muted-foreground transition hover:border-primary hover:text-primary"
         >
           <Plus className="h-4 w-4" /> Новая версия
@@ -159,12 +189,28 @@ function Form({
           autoFocus
         />
         <input
-          type="date"
+          type={draft.when.includes("T") ? "datetime-local" : "date"}
           className={field}
-          value={draft.released_at}
-          onChange={(e) => setDraft({ ...draft, released_at: e.target.value })}
+          value={draft.when}
+          onChange={(e) => setDraft({ ...draft, when: e.target.value })}
         />
       </div>
+      <button
+        type="button"
+        onClick={() =>
+          setDraft({
+            ...draft,
+            when: draft.when.includes("T")
+              ? draft.when.slice(0, 10)
+              : `${draft.when || localNow().slice(0, 10)}T12:00`,
+          })
+        }
+        className="text-[11px] text-muted-foreground hover:text-primary"
+      >
+        {draft.when.includes("T")
+          ? "Дата и время — у посетителей покажется в их часовом поясе. Указать только дату"
+          : "Только дата — одинакова для всех. Указать ещё и время"}
+      </button>
       <input
         className={`${field} font-mono text-xs`}
         placeholder="Ссылка на пост с обновлением (https://t.me/...)"

@@ -17,6 +17,22 @@ export function fmtDate(d: string | null) {
     : dt.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
 }
 
+/** Дата версии: точный момент — в часовом поясе посетителя, иначе просто дата (она не сдвигается) */
+export function fmtRelease(v: { released_at: string | null; released_ts?: string | null }) {
+  if (v.released_ts) {
+    const dt = new Date(v.released_ts);
+    if (!Number.isNaN(dt.getTime()))
+      return dt.toLocaleString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+  }
+  return fmtDate(v.released_at);
+}
+
 export function VersionTag({ version, className }: { version: string | null; className?: string }) {
   if (!version) return null;
   return (
@@ -60,8 +76,8 @@ export function VersionHistory({ versions }: { versions: NodeVersion[] }) {
                     Текущая
                   </span>
                 )}
-                {v.released_at && (
-                  <span className="text-xs text-muted-foreground">{fmtDate(v.released_at)}</span>
+                {(v.released_ts || v.released_at) && (
+                  <span className="text-xs text-muted-foreground">{fmtRelease(v)}</span>
                 )}
               </div>
               {v.notes && (

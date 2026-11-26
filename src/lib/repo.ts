@@ -279,6 +279,7 @@ export const versionsApi = {
       url: (rest.url ?? "").trim(),
       notes: (rest.notes ?? "").trim(),
       released_at: rest.released_at || null,
+      released_ts: rest.released_ts || null,
     };
     const res = id
       ? await sb().from("node_versions").update(row).eq("id", id)

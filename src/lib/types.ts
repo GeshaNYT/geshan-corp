@@ -98,8 +98,10 @@ export interface NodeVersion {
   id: string;
   node_id: string;
   version: string;
-  /** YYYY-MM-DD */
+  /** YYYY-MM-DD — дата без времени (старые версии, по дате анонса) */
   released_at: string | null;
+  /** Точный момент выхода; показывается в часовом поясе посетителя */
+  released_ts?: string | null;
   /** Ссылка на пост с обновлением (обычно Telegram) */
   url: string;
   notes: string;

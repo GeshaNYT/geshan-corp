@@ -241,3 +241,4 @@ drop policy if exists "versions public read" on public.node_versions;
 create policy "versions public read" on public.node_versions for select using (true);
 drop policy if exists "versions admin write" on public.node_versions;
 create policy "versions admin write" on public.node_versions for all using (public.is_admin()) with check (public.is_admin());
+alter table public.node_versions add column if not exists released_ts timestamptz;
