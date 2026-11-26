@@ -35,10 +35,19 @@ function Resources() {
       }
     };
     walk(null);
+    // Ключ свежести: день выпуска → время (если указано) → когда версию занесли на сайт.
+    // Так при двух обновлениях в один день выше окажется вышедшее позже.
     const latest = (id: string) =>
       site
         .versionsOf(id)
-        .map((v) => v.released_ts || v.released_at || "")
+        .map((v) => {
+          const ts = v.released_ts ? new Date(v.released_ts) : null;
+          const day = ts
+            ? new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Moscow" }).format(ts)
+            : (v.released_at ?? "");
+          if (!day) return "";
+          return `${day}|${ts ? ts.toISOString() : ""}|${v.created_at ?? ""}`;
+        })
         .reduce((a, b) => (b > a ? b : a), "");
     return site.nodes
       .filter(
