@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, Save, Trash2 } from "lucide-react";
 import { useSaveSetting, useSetting } from "@/lib/content";
-import { DEFAULT_PORT, DEFAULT_SERVERS, type Edition, type McServer } from "@/lib/servers";
+import {
+  DEFAULT_HOWTO,
+  DEFAULT_PORT,
+  DEFAULT_SERVERS,
+  type Edition,
+  type McServer,
+} from "@/lib/servers";
 import { cn } from "@/lib/utils";
 
 /** Серверы Minecraft для мониторинга: адрес, порт, версии */
@@ -40,6 +46,7 @@ export function ServersAdmin() {
           host: s.host.trim(),
           port: s.port.trim(),
           version: s.version.trim(),
+          howto: (s.howto ?? "").trim(),
         })),
       );
       toast.success("Сохранено — мониторинг обновится");
@@ -150,6 +157,18 @@ export function ServersAdmin() {
                 value={s.version}
                 onChange={(e) => upd(s.id, { version: e.target.value })}
                 placeholder="например: 1.16.5 – 26.3"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-xs text-muted-foreground">
+                Как зайти — подсказка под мониторингом (пусто — стандартная)
+              </span>
+              <textarea
+                className="w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
+                rows={2}
+                value={s.howto ?? ""}
+                onChange={(e) => upd(s.id, { howto: e.target.value })}
+                placeholder={DEFAULT_HOWTO[s.edition]}
               />
             </label>
           </div>

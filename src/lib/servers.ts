@@ -13,8 +13,15 @@ export interface McServer {
   port: string;
   /** Пусто — версия определяется автоматически по ответу сервера */
   version: string;
+  /** Подсказка «как зайти»; пусто — стандартный текст для Java/Bedrock */
+  howto?: string;
   hidden?: boolean;
 }
+
+export const DEFAULT_HOWTO: Record<Edition, string> = {
+  java: "«Сетевая игра» → «Добавить сервер» → вставь адрес выше.",
+  bedrock: "«Играть» → «Серверы» → «Добавить сервер» → вставь адрес и порт выше.",
+};
 
 export const DEFAULT_SERVERS: McServer[] = [
   {

@@ -7,7 +7,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { useAuth } from "@/lib/auth";
 import { useSite } from "@/lib/data";
 import { AdminShortcut } from "@/components/AdminShortcut";
-import { DEFAULT_PORT, useServers } from "@/lib/servers";
+import { DEFAULT_HOWTO, useServers } from "@/lib/servers";
 import { STATUS_HINTS } from "@/lib/types";
 
 export const Route = createFileRoute("/p/$slug")({
@@ -188,25 +188,13 @@ function JoinHelp() {
   if (!servers.length) return null;
   return (
     <div className="mt-3 space-y-2 rounded-2xl border border-border bg-card/40 p-4 text-sm text-muted-foreground">
-      {servers.map((srv) => {
-        const port =
-          srv.port.trim() && srv.port.trim() !== DEFAULT_PORT[srv.edition] ? srv.port.trim() : "";
-        return (
-          <p key={srv.id}>
-            <span className="text-foreground">{srv.label}:</span>{" "}
-            {srv.edition === "java"
-              ? "«Сетевая игра» → «Добавить»"
-              : "«Серверы» → «Добавить сервер»"}
-            , адрес <span className="font-mono text-primary">{srv.host}</span>
-            {port && (
-              <>
-                , порт <span className="font-mono text-primary">{port}</span>
-              </>
-            )}
-            {srv.version.trim() && <> · версии {srv.version.trim()}</>}.
-          </p>
-        );
-      })}
+      <p className="text-xs uppercase tracking-[0.2em] text-primary">Как зайти</p>
+      {servers.map((srv) => (
+        <p key={srv.id} className="whitespace-pre-line">
+          <span className="text-foreground">{srv.label}:</span>{" "}
+          {srv.howto?.trim() || DEFAULT_HOWTO[srv.edition]}
+        </p>
+      ))}
     </div>
   );
 }
