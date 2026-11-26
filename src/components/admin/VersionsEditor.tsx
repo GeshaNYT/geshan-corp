@@ -286,7 +286,7 @@ function Form({
         className="w-full rounded-lg border border-border bg-background p-3 font-mono text-xs outline-none focus:border-primary"
         rows={2}
         placeholder={
-          "Скачать эту версию (необязательно), каждая ссылка с новой строки:\nWindows — https://t.me/...\nAndroid — https://t.me/..."
+          "Скачать эту версию (необязательно), каждая ссылка с новой строки:\nWindows 2.0.0 — https://t.me/...\nAndroid 1.0.0 — https://t.me/..."
         }
         value={draft.downloads}
         onChange={(e) => setDraft({ ...draft, downloads: e.target.value })}

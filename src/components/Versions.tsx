@@ -106,8 +106,9 @@ export function VersionHistory({ versions }: { versions: NodeVersion[] }) {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
                       >
-                        <Download className="h-3.5 w-3.5" /> Скачать {fmtVersion(v.version)}
-                        {d.label && ` для ${d.label}`}
+                        <Download className="h-3.5 w-3.5" />
+                        {/* с подписью — «Скачать для Android 1.0.0» (у платформы может быть своя версия) */}
+                        {d.label ? `Скачать для ${d.label}` : `Скачать ${fmtVersion(v.version)}`}
                         {samePost && /t\.me\//.test(v.url) && (
                           <span className="text-muted-foreground"> · пост в Telegram</span>
                         )}
