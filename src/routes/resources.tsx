@@ -23,17 +23,38 @@ function Resources() {
   const [q, setQ] = useState("");
   const [platform, setPlatform] = useState<string | null>(null);
 
-  // Всё, что можно скачать или открыть: проекты с файлами или ссылками «Скачать / Открыть»
-  const items = useMemo(
-    () =>
-      site.nodes.filter(
+  // Всё, что можно скачать: проекты с файлами или кнопками-скачиваниями.
+  // Порядок: сначала самые свежие по дате последней версии, проекты без версий — в конце,
+  // при равенстве — как в дереве проектов. Действует и для «Все», и для каждого фильтра.
+  const items = useMemo(() => {
+    const treeIndex = new Map<string, number>();
+    const walk = (pid: string | null) => {
+      for (const c of site.childrenOf(pid, { includeHidden: true })) {
+        treeIndex.set(c.id, treeIndex.size);
+        walk(c.id);
+      }
+    };
+    walk(null);
+    const latest = (id: string) =>
+      site
+        .versionsOf(id)
+        .map((v) => v.released_ts || v.released_at || "")
+        .reduce((a, b) => (b > a ? b : a), "");
+    return site.nodes
+      .filter(
         (n) =>
           n.kind === "project" &&
           !n.hidden &&
           (site.filesOf(n.id).length > 0 || n.links.some((l) => types.isDownload(l.kind))),
-      ),
-    [site, types],
-  );
+      )
+      .map((n) => ({ n, at: latest(n.id) }))
+      .sort(
+        (a, b) =>
+          b.at.localeCompare(a.at) ||
+          (treeIndex.get(a.n.id) ?? 0) - (treeIndex.get(b.n.id) ?? 0),
+      )
+      .map((x) => x.n);
+  }, [site, types]);
   const platformOrder = useSetting<string[]>("platform_order", []);
   // Одинаковые платформы объединяются в один фильтр, даже если написаны с разным регистром
   const norm = (p: string) => p.trim().toLowerCase();
