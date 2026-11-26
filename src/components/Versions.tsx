@@ -76,7 +76,7 @@ export function VersionHistory({ versions }: { versions: NodeVersion[] }) {
                   rel="noopener noreferrer"
                   className="mt-2 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
                 >
-                  Что нового <ExternalLink className="h-3.5 w-3.5" />
+                  Открыть пост <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               )}
             </div>
