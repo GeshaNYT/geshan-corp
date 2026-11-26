@@ -138,7 +138,6 @@ function Home() {
           title="Сервер MineCube"
           to="/p/minecube"
           more="Подробнее"
-          action={<AdminShortcut tab="servers" label="Настроить серверы" />}
         />
         <div className="rounded-3xl border border-border bg-card/40 p-4 backdrop-blur">
           <ServerStatus />
