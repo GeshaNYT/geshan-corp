@@ -3,11 +3,12 @@
 //  • Демо — данные в браузере (localStorage), чтобы можно было попробовать админку до подключения базы.
 import { SEED_FILES, SEED_NODES } from "@/data/seed";
 import { isSupabaseConfigured, supabase } from "./supabase";
-import type { NodeFile, NodeInput, SiteNode } from "./types";
+import type { NodeFile, NodeInput, NodeVersion, SiteNode } from "./types";
 
 export interface Snapshot {
   nodes: SiteNode[];
   files: NodeFile[];
+  versions?: NodeVersion[];
 }
 
 export interface UploadResult {
@@ -175,11 +176,17 @@ function check<T>(res: { data: T; error: { message: string } | null }): T {
 const supabaseRepo: Repo = {
   mode: "supabase",
   async load() {
-    const [nodes, files] = await Promise.all([
+    const [nodes, files, versions] = await Promise.all([
       sb().from("nodes").select("*").order("sort"),
       sb().from("node_files").select("*").order("sort"),
+      sb().from("node_versions").select("*").order("sort"),
     ]);
-    return { nodes: check(nodes) as SiteNode[], files: check(files) as NodeFile[] };
+    return {
+      nodes: check(nodes) as SiteNode[],
+      files: check(files) as NodeFile[],
+      // если таблицы версий ещё нет — просто без версий
+      versions: versions.error ? [] : (versions.data as NodeVersion[]),
+    };
   },
   async saveNode(input) {
     const { id, ...rest } = input;
@@ -260,3 +267,32 @@ const supabaseRepo: Repo = {
 };
 
 export const repo: Repo = isSupabaseConfigured ? supabaseRepo : demoRepo;
+
+/* ───────────── Версии ───────────── */
+
+export const versionsApi = {
+  async save(v: Partial<NodeVersion> & { node_id: string; version: string }) {
+    const { id, created_at: _c, ...rest } = v;
+    const row = {
+      ...rest,
+      version: rest.version.trim(),
+      url: (rest.url ?? "").trim(),
+      notes: (rest.notes ?? "").trim(),
+      released_at: rest.released_at || null,
+    };
+    const res = id
+      ? await sb().from("node_versions").update(row).eq("id", id)
+      : await sb().from("node_versions").insert(row);
+    check(res);
+  },
+  async remove(id: string) {
+    check(await sb().from("node_versions").delete().eq("id", id));
+  },
+  async reorder(list: { id: string }[]) {
+    await Promise.all(
+      list.map(async (v, i) =>
+        check(await sb().from("node_versions").update({ sort: i }).eq("id", v.id)),
+      ),
+    );
+  },
+};

@@ -223,3 +223,21 @@ create policy "avatars own read" on storage.objects for select to authenticated
   using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
 alter table public.channels add column if not exists featured boolean not null default true;
 alter table public.nodes add column if not exists badge text not null default '';
+
+-- ───────────── История версий ─────────────
+create table if not exists public.node_versions (
+  id uuid primary key default gen_random_uuid(),
+  node_id uuid not null references public.nodes (id) on delete cascade,
+  version text not null check (char_length(version) between 1 and 40),
+  released_at date,
+  url text not null default '',
+  notes text not null default '' check (char_length(notes) <= 2000),
+  sort integer not null default 0,
+  created_at timestamptz not null default now()
+);
+create index if not exists node_versions_node_idx on public.node_versions (node_id, sort);
+alter table public.node_versions enable row level security;
+drop policy if exists "versions public read" on public.node_versions;
+create policy "versions public read" on public.node_versions for select using (true);
+drop policy if exists "versions admin write" on public.node_versions;
+create policy "versions admin write" on public.node_versions for all using (public.is_admin()) with check (public.is_admin());

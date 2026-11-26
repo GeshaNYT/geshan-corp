@@ -17,6 +17,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { ICONS, NodeIcon } from "@/components/NodeIcon";
 import { useParentOptions } from "@/components/admin/MoveDialog";
+import { VersionsEditor } from "@/components/admin/VersionsEditor";
 import { formatSize, slugify, useRefreshSite, useSite } from "@/lib/data";
 import { useSaveSetting } from "@/lib/content";
 import { repo } from "@/lib/repo";
@@ -363,6 +364,22 @@ export function NodeEditor({
               <p className="text-xs text-muted-foreground">
                 {STATUS_HINTS[d.status]}. Файлы и ссылки можно добавлять при любом статусе.
               </p>
+            </Group>
+          )}
+
+          {/* Версии */}
+          {isProject && (
+            <Group
+              title="Версии"
+              hint="Новая версия становится текущей и показывается у проекта. Ссылка — на пост с обновлением в Telegram. Сохраняется сразу."
+            >
+              {node ? (
+                <VersionsEditor nodeId={node.id} />
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  Сначала добавь проект — потом здесь можно будет указать версии.
+                </p>
+              )}
             </Group>
           )}
 

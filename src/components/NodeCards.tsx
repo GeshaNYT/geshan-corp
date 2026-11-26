@@ -18,6 +18,7 @@ import {
 import { NodeIcon } from "@/components/NodeIcon";
 import { NodeBadge } from "@/components/NodeBadge";
 import { StatusBadge } from "@/components/StatusBadge";
+import { VersionTag } from "@/components/Versions";
 import { formatSize, useRefreshSite, useSite } from "@/lib/data";
 import { repo } from "@/lib/repo";
 import { countLinkClick } from "@/lib/stats";
@@ -56,7 +57,10 @@ export function NodeCard({ node, compact }: { node: SiteNode; compact?: boolean 
                   : "Раздел"}
               </span>
             ) : (
-              <StatusBadge status={node.status} />
+              <>
+                <StatusBadge status={node.status} />
+                <VersionTag version={site.currentVersion(node.id)} />
+              </>
             )}
             <NodeBadge node={node} />
           </div>

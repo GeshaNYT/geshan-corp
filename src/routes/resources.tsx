@@ -5,6 +5,7 @@ import { FileList, LinkButtons } from "@/components/NodeCards";
 import { NodeIcon } from "@/components/NodeIcon";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
+import { VersionTag } from "@/components/Versions";
 import { useSite } from "@/lib/data";
 import { orderPlatforms, useSetting } from "@/lib/content";
 import { useLinkTypes } from "@/lib/linkTypes";
@@ -94,6 +95,7 @@ function Resources() {
                   <span className="flex flex-wrap items-center gap-2">
                     <span className="font-medium">{n.title}</span>
                     <StatusBadge status={n.status} />
+                    <VersionTag version={site.currentVersion(n.id)} />
                   </span>
                   <span className="mt-0.5 block truncate text-xs text-muted-foreground">
                     {path.map((p) => p.title).join(" / ")}

@@ -4,6 +4,7 @@ import { FileList, LinkButtons, NodeCard } from "@/components/NodeCards";
 import { NodeIcon } from "@/components/NodeIcon";
 import { ServerStatus } from "@/components/ServerStatus";
 import { StatusBadge } from "@/components/StatusBadge";
+import { VersionHistory, VersionTag } from "@/components/Versions";
 import { useAuth } from "@/lib/auth";
 import { useSite } from "@/lib/data";
 import { AdminShortcut } from "@/components/AdminShortcut";
@@ -69,6 +70,7 @@ function NodePage() {
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               {node.kind === "project" && <StatusBadge status={node.status} />}
+              <VersionTag version={site.currentVersion(node.id)} />
               {node.hidden && (
                 <span className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground">
                   Скрыт
@@ -126,6 +128,8 @@ function NodePage() {
             <LinkButtons links={node.links} nodeId={node.id} />
           </section>
         )}
+
+        <VersionHistory versions={site.versionsOf(node.id)} />
 
         {paragraphs.length > 0 && (
           <section className="space-y-3 text-[15px] leading-relaxed text-foreground/90">

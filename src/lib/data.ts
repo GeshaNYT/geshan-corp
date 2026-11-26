@@ -2,7 +2,9 @@ import { useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { SEED_FILES, SEED_NODES } from "@/data/seed";
 import { repo, type Snapshot } from "./repo";
-import type { NodeFile, SiteNode } from "./types";
+import type { NodeFile, NodeVersion, SiteNode } from "./types";
+
+const EMPTY_VERSIONS: NodeVersion[] = [];
 
 export const SITE_KEY = ["site"] as const;
 
@@ -17,6 +19,9 @@ export interface SiteIndex {
   bySlug: Map<string, SiteNode>;
   childrenOf: (id: string | null, opts?: { includeHidden?: boolean }) => SiteNode[];
   filesOf: (id: string) => NodeFile[];
+  /** История версий, сначала самая новая */
+  versionsOf: (id: string) => NodeVersion[];
+  currentVersion: (id: string) => string | null;
   pathOf: (id: string) => SiteNode[];
   descendantsOf: (id: string) => SiteNode[];
   countProjects: (id: string) => number;
@@ -32,6 +37,7 @@ export function useSite(): SiteIndex {
   });
   const nodes = q.data?.nodes ?? SEED_NODES;
   const files = q.data?.files ?? SEED_FILES;
+  const versions = q.data?.versions ?? EMPTY_VERSIONS;
 
   return useMemo(() => {
     const byId = new Map(nodes.map((n) => [n.id, n]));
@@ -49,6 +55,13 @@ export function useSite(): SiteIndex {
       fileMap.get(f.node_id)!.push(f);
     }
     for (const list of fileMap.values()) list.sort((a, b) => a.sort - b.sort);
+    const verMap = new Map<string, NodeVersion[]>();
+    for (const v of versions) {
+      if (!verMap.has(v.node_id)) verMap.set(v.node_id, []);
+      verMap.get(v.node_id)!.push(v);
+    }
+    for (const list of verMap.values())
+      list.sort((a, b) => a.sort - b.sort || b.created_at.localeCompare(a.created_at));
 
     const childrenOf = (id: string | null, opts?: { includeHidden?: boolean }) =>
       (kids.get(id) ?? []).filter((n) => opts?.includeHidden || !n.hidden);
@@ -74,6 +87,8 @@ export function useSite(): SiteIndex {
       bySlug,
       childrenOf,
       filesOf: (id) => fileMap.get(id) ?? [],
+      versionsOf: (id) => verMap.get(id) ?? [],
+      currentVersion: (id) => verMap.get(id)?.[0]?.version ?? null,
       pathOf: (id) => {
         const path: SiteNode[] = [];
         let cur = byId.get(id);
@@ -89,7 +104,7 @@ export function useSite(): SiteIndex {
       countProjects: (id) =>
         descendantsOf(id).filter((n) => n.kind === "project" && !n.hidden).length,
     };
-  }, [nodes, files, q.isLoading, q.error]);
+  }, [nodes, files, versions, q.isLoading, q.error]);
 }
 
 export function useRefreshSite() {

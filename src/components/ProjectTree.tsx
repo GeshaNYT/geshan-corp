@@ -11,6 +11,7 @@ import {
 import { NodeIcon } from "@/components/NodeIcon";
 import { NodeBadge } from "@/components/NodeBadge";
 import { StatusBadge } from "@/components/StatusBadge";
+import { VersionTag } from "@/components/Versions";
 import { plural } from "@/components/NodeCards";
 import { useSite, type SiteIndex } from "@/lib/data";
 import { useLinkTypes } from "@/lib/linkTypes";
@@ -220,6 +221,7 @@ function ProjectRow({
         </span>
         <span className="mt-0.5 flex items-center gap-2">
           <StatusBadge status={node.status} />
+          <VersionTag version={site.currentVersion(node.id)} />
           {node.platforms.length > 0 && (
             <span className="truncate text-[11px] text-muted-foreground">
               {node.platforms.join(" · ")}

@@ -93,3 +93,17 @@ export function displayPlatform(p: string) {
   const preset = PLATFORM_PRESETS.find((x) => x.toLowerCase() === t.toLowerCase());
   return preset ?? t.charAt(0).toUpperCase() + t.slice(1);
 }
+
+export interface NodeVersion {
+  id: string;
+  node_id: string;
+  version: string;
+  /** YYYY-MM-DD */
+  released_at: string | null;
+  /** Ссылка на пост с обновлением (обычно Telegram) */
+  url: string;
+  notes: string;
+  /** 0 — самая новая */
+  sort: number;
+  created_at: string;
+}
