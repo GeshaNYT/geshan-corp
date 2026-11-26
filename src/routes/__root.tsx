@@ -55,9 +55,9 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
         <p className="mt-2 text-sm text-muted-foreground">
           Что-то пошло не так. Попробуйте ещё раз или вернитесь на главную.
         </p>
-        {error?.message ? (
+        {(error as Error | undefined)?.message ? (
           <p className="mt-3 break-words rounded-md bg-muted px-3 py-2 text-left font-mono text-xs text-muted-foreground">
-            {error.message}
+            {(error as Error).message}
           </p>
         ) : null}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
