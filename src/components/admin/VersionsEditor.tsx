@@ -269,7 +269,7 @@ function Form({
       />
       <input
         className={`${field} font-mono text-xs`}
-        placeholder="Ссылка, чтобы скачать эту версию (необязательно)"
+        placeholder="Ссылка, чтобы скачать эту версию (если файл в посте — та же ссылка)"
         value={draft.download_url}
         onChange={(e) => setDraft({ ...draft, download_url: e.target.value })}
         inputMode="url"

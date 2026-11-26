@@ -96,9 +96,13 @@ export function VersionHistory({ versions }: { versions: NodeVersion[] }) {
                       className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
                     >
                       <Download className="h-3.5 w-3.5" /> Скачать {fmtVersion(v.version)}
+                      {/* файл лежит прямо в посте — одна кнопка вместо двух одинаковых */}
+                      {v.download_url === v.url && /t\.me\//.test(v.url) && (
+                        <span className="text-muted-foreground"> · пост в Telegram</span>
+                      )}
                     </a>
                   )}
-                  {v.url && (
+                  {v.url && v.url !== v.download_url && (
                     <a
                       href={v.url}
                       target="_blank"
