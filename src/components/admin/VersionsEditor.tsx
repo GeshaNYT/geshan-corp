@@ -10,6 +10,8 @@ import type { NodeVersion } from "@/lib/types";
 type Draft = {
   id?: string;
   version: string;
+  /** Автоматически: дата и время в момент сохранения (по МСК) */
+  auto: boolean;
   date: string;
   time: string;
   url: string;
@@ -74,7 +76,9 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
             version: draft.version,
             url: draft.url,
             notes: draft.notes,
-            ...toDb(draft.date, draft.time),
+            ...(draft.auto
+              ? { released_at: todayMsk(), released_ts: new Date().toISOString() }
+              : toDb(draft.date, draft.time)),
             sort: 0,
           });
         } else {
@@ -84,7 +88,9 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
             version: draft.version,
             url: draft.url,
             notes: draft.notes,
-            ...toDb(draft.date, draft.time),
+            ...(draft.auto
+              ? { released_at: todayMsk(), released_ts: new Date().toISOString() }
+              : toDb(draft.date, draft.time)),
           });
         }
       },
@@ -105,6 +111,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
     setDraft({
       id: v.id,
       version: v.version,
+      auto: false,
       ...fromDb(v),
       url: v.url,
       notes: v.notes,
@@ -165,7 +172,9 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
       {!draft && (
         <button
           type="button"
-          onClick={() => setDraft({ version: "", date: todayMsk(), time: "", url: "", notes: "" })}
+          onClick={() =>
+            setDraft({ version: "", auto: true, date: todayMsk(), time: "", url: "", notes: "" })
+          }
           className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border py-3 text-sm text-muted-foreground transition hover:border-primary hover:text-primary"
         >
           <Plus className="h-4 w-4" /> Новая версия
@@ -190,7 +199,7 @@ function Form({
     "h-10 w-full rounded-lg border border-border bg-background px-3 text-sm outline-none focus:border-primary";
   return (
     <div className="space-y-2 rounded-xl border border-primary/40 bg-primary/5 p-3">
-      <div className="grid grid-cols-2 gap-2">
+      <div>
         <input
           className={`${field} font-mono`}
           placeholder="Версия, напр. 1.4.2"
@@ -198,25 +207,47 @@ function Form({
           onChange={(e) => setDraft({ ...draft, version: e.target.value })}
           autoFocus
         />
-        <input
-          type="date"
-          className={field}
-          value={draft.date}
-          onChange={(e) => setDraft({ ...draft, date: e.target.value })}
-        />
       </div>
-      <div className="flex items-center gap-2">
-        <input
-          type="time"
-          className={`${field} w-32`}
-          value={draft.time}
-          onChange={(e) => setDraft({ ...draft, time: e.target.value })}
-          aria-label="Время по Москве"
-        />
-        <span className="text-[11px] text-muted-foreground">
-          Время по МСК — необязательно. Дата и время у всех посетителей одинаковые (по Москве).
+      <button
+        type="button"
+        onClick={() => setDraft({ ...draft, auto: !draft.auto })}
+        className="flex w-full items-center justify-between gap-3 rounded-lg border border-border bg-background px-3 py-2.5 text-left text-sm"
+      >
+        <span>
+          Дата и время — автоматически
+          <span className="block text-[11px] text-muted-foreground">
+            {draft.auto ? "Возьмём момент сохранения, по МСК" : "Указываешь вручную, по МСК"}
+          </span>
         </span>
-      </div>
+        <span
+          className={`relative h-6 w-11 shrink-0 rounded-full transition ${draft.auto ? "bg-primary" : "bg-muted"}`}
+        >
+          <span
+            className={`absolute top-0.5 h-5 w-5 rounded-full bg-background transition-all ${draft.auto ? "left-[22px]" : "left-0.5"}`}
+          />
+        </span>
+      </button>
+      {!draft.auto && (
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            type="date"
+            className={field}
+            value={draft.date}
+            onChange={(e) => setDraft({ ...draft, date: e.target.value })}
+            aria-label="Дата по Москве"
+          />
+          <input
+            type="time"
+            className={field}
+            value={draft.time}
+            onChange={(e) => setDraft({ ...draft, time: e.target.value })}
+            aria-label="Время по Москве (необязательно)"
+          />
+          <span className="col-span-2 text-[11px] text-muted-foreground">
+            По МСК. Время необязательно — без него покажется только дата.
+          </span>
+        </div>
+      )}
       <input
         className={`${field} font-mono text-xs`}
         placeholder="Ссылка на пост с обновлением (https://t.me/...)"
