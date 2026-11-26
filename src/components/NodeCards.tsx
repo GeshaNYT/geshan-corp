@@ -16,6 +16,7 @@ import {
   Youtube,
 } from "lucide-react";
 import { NodeIcon } from "@/components/NodeIcon";
+import { NodeBadge } from "@/components/NodeBadge";
 import { StatusBadge } from "@/components/StatusBadge";
 import { formatSize, useRefreshSite, useSite } from "@/lib/data";
 import { repo } from "@/lib/repo";
@@ -29,9 +30,6 @@ export function NodeCard({ node, compact }: { node: SiteNode; compact?: boolean 
   const types = useLinkTypes();
   const isSection = node.kind === "section";
   const count = isSection ? site.countProjects(node.id) : 0;
-  const downloads =
-    !isSection &&
-    (site.filesOf(node.id).length > 0 || node.links.some((l) => types.isDownload(l.kind)));
 
   return (
     <Link
@@ -60,9 +58,7 @@ export function NodeCard({ node, compact }: { node: SiteNode; compact?: boolean 
             ) : (
               <StatusBadge status={node.status} />
             )}
-            {downloads && (
-              <Download className="h-3.5 w-3.5 text-primary" aria-label="Можно скачать" />
-            )}
+            <NodeBadge node={node} />
           </div>
         </div>
         <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-primary" />

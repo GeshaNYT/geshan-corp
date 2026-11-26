@@ -9,6 +9,7 @@ import {
   Star,
 } from "lucide-react";
 import { NodeIcon } from "@/components/NodeIcon";
+import { NodeBadge } from "@/components/NodeBadge";
 import { StatusBadge } from "@/components/StatusBadge";
 import { plural } from "@/components/NodeCards";
 import { useSite, type SiteIndex } from "@/lib/data";
@@ -193,9 +194,6 @@ function ProjectRow({
   root: boolean;
   pinned?: boolean;
 }) {
-  const types = useLinkTypes();
-  const canDownload =
-    site.filesOf(node.id).length > 0 || node.links.some((l) => types.isDownload(l.kind));
   return (
     <Link
       to="/p/$slug"
@@ -217,9 +215,7 @@ function ProjectRow({
             />
           )}
           <span className="truncate font-medium">{node.title}</span>
-          {canDownload && (
-            <Download className="h-3.5 w-3.5 shrink-0 text-primary" aria-label="Можно скачать" />
-          )}
+          <NodeBadge node={node} />
         </span>
         <span className="mt-0.5 flex items-center gap-2">
           <StatusBadge status={node.status} />

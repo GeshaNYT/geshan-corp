@@ -20,7 +20,7 @@ import { useParentOptions } from "@/components/admin/MoveDialog";
 import { formatSize, slugify, useRefreshSite, useSite } from "@/lib/data";
 import { useSaveSetting } from "@/lib/content";
 import { repo } from "@/lib/repo";
-import { useLinkTypes } from "@/lib/linkTypes";
+import { LINK_ICON_SET, useLinkTypes } from "@/lib/linkTypes";
 import {
   PLATFORM_PRESETS,
   STATUS_HINTS,
@@ -59,6 +59,7 @@ function emptyDraft(kind: NodeKind, parent: string | null, sort: number): NodeIn
     links: [],
     gallery: [],
     featured: false,
+    badge: "",
     hidden: false,
     sort,
   };
@@ -624,6 +625,53 @@ export function NodeEditor({
                 >
                   Добавить
                 </button>
+              </div>
+            </Group>
+          )}
+
+          {/* Значок у названия */}
+          {isProject && (
+            <Group
+              title="Значок у названия"
+              hint="Маленький значок рядом с названием в списках. «Авто» — по файлам и главной кнопке (скачать, попробовать…)"
+            >
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  ["", "Авто"],
+                  ["none", "Без значка"],
+                ].map(([v, label]) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => set("badge", v)}
+                    className={cn(
+                      "rounded-full border px-3 py-1.5 text-xs transition",
+                      (d.badge ?? "") === v
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border text-muted-foreground",
+                    )}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-10 gap-1">
+                {Object.entries(LINK_ICON_SET).map(([name, Icon]) => (
+                  <button
+                    key={name}
+                    type="button"
+                    aria-label={name}
+                    onClick={() => set("badge", name)}
+                    className={cn(
+                      "grid aspect-square place-items-center rounded-lg border transition",
+                      d.badge === name
+                        ? "border-primary bg-primary/15 text-primary"
+                        : "border-transparent hover:border-border",
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </button>
+                ))}
               </div>
             </Group>
           )}

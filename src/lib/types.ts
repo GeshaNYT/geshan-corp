@@ -49,6 +49,8 @@ export interface SiteNode {
   gallery: string[];
   featured: boolean;
   hidden: boolean;
+  /** Значок у названия: "" — авто, "none" — нет, иначе имя иконки */
+  badge?: string;
   sort: number;
   created_at: string;
   updated_at: string;
