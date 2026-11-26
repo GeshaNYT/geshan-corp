@@ -79,20 +79,20 @@ function Home() {
       {/* Geshan's Community — главное сообщество, куда выходит всё остальное */}
       <section className="relative overflow-hidden rounded-3xl border border-primary/40 bg-gradient-to-br from-primary/15 via-card to-card p-5 sm:p-7">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
+        <div className="absolute right-3 top-3 z-10">
+          <AdminShortcut tab="channels" label="Настроить каналы" />
+        </div>
         <div className="relative">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 pr-10">
             <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-primary/40 bg-background/50">
               <Users className="h-6 w-6 text-primary" />
             </span>
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-primary">Главный актив</p>
-              <h2 className="font-display text-3xl leading-tight sm:text-4xl">
+              <h2 className="font-display text-[1.6rem] leading-tight sm:text-4xl">
                 <span className="text-gold-gradient">Geshan&rsquo;s Community</span>
               </h2>
             </div>
-            <span className="ml-auto self-start">
-              <AdminShortcut tab="channels" label="Настроить каналы" />
-            </span>
           </div>
           <p className="mt-4 max-w-2xl text-sm text-muted-foreground sm:text-base">
             Самое большое сообщество корпорации — люди вокруг наших YouTube-каналов, Telegram и
