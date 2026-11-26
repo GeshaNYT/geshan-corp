@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Download, FolderTree, Send, Server } from "lucide-react";
+import { ArrowRight, Download, FolderTree, Send, Server, Users } from "lucide-react";
 import { SectionTitle } from "@/components/PageHeader";
 import heroImg from "@/assets/geshan-hero.jpg";
 import { NodeCard } from "@/components/NodeCards";
@@ -73,6 +73,52 @@ function Home() {
         </div>
       </section>
 
+      {/* Geshan's Community — главное сообщество, куда выходит всё остальное */}
+      <section className="relative overflow-hidden rounded-3xl border border-primary/40 bg-gradient-to-br from-primary/15 via-card to-card p-5 sm:p-7">
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
+        <div className="relative">
+          <div className="flex items-center gap-3">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-primary/40 bg-background/50">
+              <Users className="h-6 w-6 text-primary" />
+            </span>
+            <div>
+              <p className="text-xs uppercase tracking-[0.25em] text-primary">Главный актив</p>
+              <h2 className="font-display text-3xl leading-tight sm:text-4xl">
+                <span className="text-gold-gradient">Geshan&rsquo;s Community</span>
+              </h2>
+            </div>
+          </div>
+          <p className="mt-4 max-w-2xl text-sm text-muted-foreground sm:text-base">
+            Самое большое сообщество корпорации — люди вокруг наших YouTube-каналов, Telegram и
+            других площадок. Здесь выходят все новости, релизы и анонсы проектов.
+          </p>
+          <div className="no-scrollbar mt-5 flex snap-x gap-3 overflow-x-auto pb-1 md:grid md:grid-cols-4">
+            {(channels ?? []).map((c) => (
+              <a
+                key={c.id}
+                href={c.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="min-w-[70%] snap-start rounded-2xl border border-border bg-background/50 p-4 transition hover:border-primary sm:min-w-[45%] md:min-w-0"
+              >
+                <p className="flex items-center gap-1.5 font-medium">
+                  <Send className="h-3.5 w-3.5 text-primary" />
+                  {c.name}
+                </p>
+                <p className="text-sm text-primary">{c.handle}</p>
+                <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{c.description}</p>
+              </a>
+            ))}
+          </div>
+          <Link
+            to="/channels"
+            className="mt-3 inline-flex items-center gap-1 text-sm text-primary hover:underline"
+          >
+            Все каналы <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      </section>
+
       {/* Сервер */}
       <section>
         <SectionTitle
@@ -102,31 +148,6 @@ function Home() {
       <section>
         <SectionTitle title="Проекты" to="/resources" more="Ресурсы" />
         <ProjectTree />
-      </section>
-
-      {/* Каналы */}
-      <section>
-        <SectionTitle
-          icon={<Send className="h-4 w-4" />}
-          title="Telegram"
-          to="/channels"
-          more="Все каналы"
-        />
-        <div className="no-scrollbar -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-4 md:px-0">
-          {(channels ?? []).map((c) => (
-            <a
-              key={c.id}
-              href={c.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="min-w-[70%] snap-start rounded-2xl border border-border bg-card/40 p-4 transition hover:border-primary sm:min-w-[45%] md:min-w-0"
-            >
-              <p className="font-medium">{c.name}</p>
-              <p className="text-sm text-primary">{c.handle}</p>
-              <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{c.description}</p>
-            </a>
-          ))}
-        </div>
       </section>
     </div>
   );

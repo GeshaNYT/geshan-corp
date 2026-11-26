@@ -91,7 +91,8 @@ function ServerRow({ kind, detailed }: { kind: "java" | "bedrock"; detailed?: bo
             </span>
           </p>
           <p className="text-[11px] text-muted-foreground">
-            {online && st?.version ? st.version : "version" in s ? s.version : ""}
+            {/* Для Java показываем свою строку версий: прокси сервера сообщает «1.7.2+», что вводит в заблуждение */}
+            {"version" in s ? s.version : online && st?.version ? st.version : ""}
           </p>
         </div>
       </div>
