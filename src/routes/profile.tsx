@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Camera, Loader2, LogOut, MessageCircle, Shield } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { useAuth } from "@/lib/auth";
@@ -24,6 +24,7 @@ function ProfilePage() {
 
 function Account() {
   const auth = useAuth();
+  const navigate = useNavigate();
   const user = auth.user!;
   const profile = auth.profile;
   const [username, setUsername] = useState(profile?.username ?? "");
@@ -197,7 +198,11 @@ function Account() {
 
       <button
         type="button"
-        onClick={() => void auth.signOut()}
+        onClick={async () => {
+          await auth.signOut();
+          toast.success("Ты вышел из аккаунта");
+          void navigate({ to: "/" });
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm hover:border-red-400 hover:text-red-300"
       >
         <LogOut className="h-4 w-4" /> Выйти

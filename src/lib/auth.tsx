@@ -44,7 +44,14 @@ function ruError(msg: string) {
     return "Пароль слишком короткий (минимум 6 символов)";
   if (/email not confirmed/i.test(msg)) return "Подтверди почту по ссылке из письма";
   if (/should be different/i.test(msg)) return "Новый пароль должен отличаться от старого";
-  if (/rate limit/i.test(msg)) return "Слишком много попыток, подожди немного";
+  const wait = msg.match(/after (\d+) seconds?/i);
+  if (wait) return `Подожди ${wait[1]} сек. и попробуй снова — так защищаемся от спама`;
+  if (/rate limit/i.test(msg)) return "Слишком много попыток, подожди немного и попробуй снова";
+  if (/unable to validate email|invalid format/i.test(msg)) return "Неверный формат почты";
+  if (/user not found/i.test(msg)) return "Пользователь не найден";
+  if (/banned/i.test(msg)) return "Аккаунт заблокирован";
+  if (/same.*email|email.*same/i.test(msg)) return "Это и так твоя текущая почта";
+  if (/network|fetch/i.test(msg)) return "Нет связи с сервером, проверь интернет";
   return msg;
 }
 
@@ -103,7 +110,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { needsConfirm: !data.session };
     },
     async signOut() {
-      await supabase?.auth.signOut();
+      if (!supabase) return;
+      // Сначала пробуем выйти на сервере; если не вышло (сеть, просроченная сессия) —
+      // всё равно стираем сессию в браузере, чтобы после обновления страницы не входило снова
+      const { error } = await supabase.auth.signOut();
+      if (error) await supabase.auth.signOut({ scope: "local" });
+      setUser(null);
+      setProfile(null);
+      setRecovery(false);
     },
     async updateProfile(patch) {
       if (!supabase || !user) throw new Error("Нужно войти");
