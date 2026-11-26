@@ -15,6 +15,7 @@ type Draft = {
   date: string;
   time: string;
   url: string;
+  download_url: string;
   notes: string;
 };
 /** Сегодняшняя дата по Москве — версии датируются по МСК, без времени */
@@ -75,6 +76,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
             node_id: nodeId,
             version: draft.version,
             url: draft.url,
+            download_url: draft.download_url,
             notes: draft.notes,
             ...(draft.auto
               ? { released_at: todayMsk(), released_ts: new Date().toISOString() }
@@ -87,6 +89,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
             node_id: nodeId,
             version: draft.version,
             url: draft.url,
+            download_url: draft.download_url,
             notes: draft.notes,
             ...(draft.auto
               ? { released_at: todayMsk(), released_ts: new Date().toISOString() }
@@ -114,6 +117,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
       auto: false,
       ...fromDb(v),
       url: v.url,
+      download_url: v.download_url ?? "",
       notes: v.notes,
     });
 
@@ -173,7 +177,15 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
         <button
           type="button"
           onClick={() =>
-            setDraft({ version: "", auto: true, date: todayMsk(), time: "", url: "", notes: "" })
+            setDraft({
+              version: "",
+              auto: true,
+              date: todayMsk(),
+              time: "",
+              url: "",
+              download_url: "",
+              notes: "",
+            })
           }
           className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border py-3 text-sm text-muted-foreground transition hover:border-primary hover:text-primary"
         >
@@ -253,6 +265,13 @@ function Form({
         placeholder="Ссылка на пост с обновлением (https://t.me/...)"
         value={draft.url}
         onChange={(e) => setDraft({ ...draft, url: e.target.value })}
+        inputMode="url"
+      />
+      <input
+        className={`${field} font-mono text-xs`}
+        placeholder="Ссылка, чтобы скачать эту версию (необязательно)"
+        value={draft.download_url}
+        onChange={(e) => setDraft({ ...draft, download_url: e.target.value })}
         inputMode="url"
       />
       <textarea

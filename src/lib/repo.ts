@@ -277,6 +277,7 @@ export const versionsApi = {
       ...rest,
       version: rest.version.trim(),
       url: (rest.url ?? "").trim(),
+      download_url: (rest.download_url ?? "").trim(),
       notes: (rest.notes ?? "").trim(),
       released_at: rest.released_at || null,
       released_ts: rest.released_ts || null,

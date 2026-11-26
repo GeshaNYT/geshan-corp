@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExternalLink, History } from "lucide-react";
+import { Download, ExternalLink, History } from "lucide-react";
 import type { NodeVersion } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -86,15 +86,29 @@ export function VersionHistory({ versions }: { versions: NodeVersion[] }) {
                   {v.notes}
                 </p>
               )}
-              {v.url && (
-                <a
-                  href={v.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-                >
-                  Открыть пост <ExternalLink className="h-3.5 w-3.5" />
-                </a>
+              {(v.url || v.download_url) && (
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                  {v.download_url && (
+                    <a
+                      href={v.download_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                    >
+                      <Download className="h-3.5 w-3.5" /> Скачать {fmtVersion(v.version)}
+                    </a>
+                  )}
+                  {v.url && (
+                    <a
+                      href={v.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                    >
+                      Открыть пост <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           </li>

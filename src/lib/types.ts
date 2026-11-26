@@ -104,6 +104,8 @@ export interface NodeVersion {
   released_ts?: string | null;
   /** Ссылка на пост с обновлением (обычно Telegram) */
   url: string;
+  /** Ссылка, чтобы скачать именно эту версию (необязательно) */
+  download_url?: string;
   notes: string;
   /** 0 — самая новая */
   sort: number;
