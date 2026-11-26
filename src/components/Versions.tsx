@@ -34,6 +34,11 @@ export function fmtRelease(v: { released_at: string | null; released_ts?: string
   return fmtDate(v.released_at);
 }
 
+export function versionDownloads(v: NodeVersion) {
+  if (v.downloads?.length) return v.downloads.filter((d) => d.url);
+  return v.download_url ? [{ label: "", url: v.download_url }] : [];
+}
+
 export function VersionTag({ version, className }: { version: string | null; className?: string }) {
   if (!version) return null;
   return (
@@ -86,34 +91,41 @@ export function VersionHistory({ versions }: { versions: NodeVersion[] }) {
                   {v.notes}
                 </p>
               )}
-              {(v.url || v.download_url) && (
-                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-                  {v.download_url && (
-                    <a
-                      href={v.download_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-                    >
-                      <Download className="h-3.5 w-3.5" /> Скачать {fmtVersion(v.version)}
-                      {/* файл лежит прямо в посте — одна кнопка вместо двух одинаковых */}
-                      {v.download_url === v.url && /t\.me\//.test(v.url) && (
-                        <span className="text-muted-foreground"> · пост в Telegram</span>
-                      )}
-                    </a>
-                  )}
-                  {v.url && v.url !== v.download_url && (
-                    <a
-                      href={v.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-                    >
-                      Открыть пост <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  )}
-                </div>
-              )}
+              {(() => {
+                const dls = versionDownloads(v);
+                // файл лежит прямо в посте — одна кнопка вместо двух одинаковых
+                const samePost = dls.length === 1 && dls[0].url === v.url;
+                if (!dls.length && !v.url) return null;
+                return (
+                  <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                    {dls.map((d) => (
+                      <a
+                        key={d.url + d.label}
+                        href={d.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                      >
+                        <Download className="h-3.5 w-3.5" /> Скачать {fmtVersion(v.version)}
+                        {d.label && ` для ${d.label}`}
+                        {samePost && /t\.me\//.test(v.url) && (
+                          <span className="text-muted-foreground"> · пост в Telegram</span>
+                        )}
+                      </a>
+                    ))}
+                    {v.url && !samePost && (
+                      <a
+                        href={v.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                      >
+                        Открыть пост <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           </li>
         ))}

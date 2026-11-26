@@ -106,6 +106,8 @@ export interface NodeVersion {
   url: string;
   /** Ссылка, чтобы скачать именно эту версию (необязательно) */
   download_url?: string;
+  /** Несколько файлов: «Windows», «Android»… (если пусто — берётся download_url) */
+  downloads?: { label: string; url: string }[];
   notes: string;
   /** 0 — самая новая */
   sort: number;

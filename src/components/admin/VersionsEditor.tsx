@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowDown, ArrowUp, Check, Pencil, Plus, Trash2, X } from "lucide-react";
-import { fmtRelease, fmtVersion } from "@/components/Versions";
+import { fmtRelease, fmtVersion, versionDownloads } from "@/components/Versions";
 import { useRefreshSite, useSite } from "@/lib/data";
 import { versionsApi } from "@/lib/repo";
 import type { NodeVersion } from "@/lib/types";
@@ -15,7 +15,8 @@ type Draft = {
   date: string;
   time: string;
   url: string;
-  download_url: string;
+  /** строки «Подпись — ссылка» или просто ссылка */
+  downloads: string;
   notes: string;
 };
 /** Сегодняшняя дата по Москве — версии датируются по МСК, без времени */
@@ -32,6 +33,18 @@ function fromDb(v: NodeVersion) {
     minute: "2-digit",
   }).format(d);
   return { date, time };
+}
+/** «Windows — https://…» по строкам → список файлов */
+function parseDownloads(text: string) {
+  const downloads = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const m = line.match(/^(.*?)\s*[—–-]\s*(https?:\/\/\S+)$/);
+      return m ? { label: m[1].trim(), url: m[2] } : { label: "", url: line };
+    });
+  return { downloads, download_url: downloads[0]?.url ?? "" };
 }
 /** Форма → база. Время вводится по Москве (UTC+3) */
 function toDb(date: string, time: string) {
@@ -76,7 +89,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
             node_id: nodeId,
             version: draft.version,
             url: draft.url,
-            download_url: draft.download_url,
+            ...parseDownloads(draft.downloads),
             notes: draft.notes,
             ...(draft.auto
               ? { released_at: todayMsk(), released_ts: new Date().toISOString() }
@@ -89,7 +102,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
             node_id: nodeId,
             version: draft.version,
             url: draft.url,
-            download_url: draft.download_url,
+            ...parseDownloads(draft.downloads),
             notes: draft.notes,
             ...(draft.auto
               ? { released_at: todayMsk(), released_ts: new Date().toISOString() }
@@ -117,7 +130,9 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
       auto: false,
       ...fromDb(v),
       url: v.url,
-      download_url: v.download_url ?? "",
+      downloads: versionDownloads(v)
+        .map((d) => (d.label ? `${d.label} — ${d.url}` : d.url))
+        .join("\n"),
       notes: v.notes,
     });
 
@@ -183,7 +198,7 @@ export function VersionsEditor({ nodeId }: { nodeId: string }) {
               date: todayMsk(),
               time: "",
               url: "",
-              download_url: "",
+              downloads: "",
               notes: "",
             })
           }
@@ -267,12 +282,14 @@ function Form({
         onChange={(e) => setDraft({ ...draft, url: e.target.value })}
         inputMode="url"
       />
-      <input
-        className={`${field} font-mono text-xs`}
-        placeholder="Ссылка, чтобы скачать эту версию (если файл в посте — та же ссылка)"
-        value={draft.download_url}
-        onChange={(e) => setDraft({ ...draft, download_url: e.target.value })}
-        inputMode="url"
+      <textarea
+        className="w-full rounded-lg border border-border bg-background p-3 font-mono text-xs outline-none focus:border-primary"
+        rows={2}
+        placeholder={
+          "Скачать эту версию (необязательно), каждая ссылка с новой строки:\nWindows — https://t.me/...\nAndroid — https://t.me/..."
+        }
+        value={draft.downloads}
+        onChange={(e) => setDraft({ ...draft, downloads: e.target.value })}
       />
       <textarea
         className="w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"

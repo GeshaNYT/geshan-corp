@@ -243,3 +243,4 @@ drop policy if exists "versions admin write" on public.node_versions;
 create policy "versions admin write" on public.node_versions for all using (public.is_admin()) with check (public.is_admin());
 alter table public.node_versions add column if not exists released_ts timestamptz;
 alter table public.node_versions add column if not exists download_url text not null default '';
+alter table public.node_versions add column if not exists downloads jsonb not null default '[]';
