@@ -144,7 +144,7 @@ function NodePage() {
         )}
 
         {node.gallery.length > 0 && (
-          <section className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:px-0">
+          <section className="-mx-4 no-scrollbar flex snap-x gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:px-0">
             {node.gallery.map((src) => (
               <a
                 key={src}

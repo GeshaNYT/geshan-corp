@@ -9,6 +9,7 @@ import { useSite } from "@/lib/data";
 import { orderPlatforms, useSetting } from "@/lib/content";
 import { useLinkTypes } from "@/lib/linkTypes";
 import { cn } from "@/lib/utils";
+import { displayPlatform } from "@/lib/types";
 
 export const Route = createFileRoute("/resources")({
   head: () => ({ meta: [{ title: "Ресурсы — Geshan Corporation" }] }),
@@ -38,7 +39,7 @@ function Resources() {
   const platforms = useMemo(() => {
     const m = new Map<string, string>();
     for (const p of items.flatMap((i) => i.platforms))
-      if (!m.has(norm(p))) m.set(norm(p), p.trim().charAt(0).toUpperCase() + p.trim().slice(1));
+      if (!m.has(norm(p))) m.set(norm(p), displayPlatform(p));
     return orderPlatforms([...m.values()], platformOrder);
   }, [items, platformOrder]);
   const needle = q.trim().toLowerCase();
@@ -64,7 +65,7 @@ function Resources() {
             className="h-11 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
         </label>
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0">
+        <div className="no-scrollbar fade-x -mx-4 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0 md:[mask-image:none]">
           <Chip active={!platform} onClick={() => setPlatform(null)}>
             Все
           </Chip>

@@ -84,3 +84,10 @@ export const PLATFORM_PRESETS = [
 ];
 
 export type NodeInput = Omit<SiteNode, "id" | "created_at" | "updated_at"> & { id?: string };
+
+/** Как показывать платформу: известные — в официальном написании (macOS, iOS), свои — с большой буквы */
+export function displayPlatform(p: string) {
+  const t = p.trim();
+  const preset = PLATFORM_PRESETS.find((x) => x.toLowerCase() === t.toLowerCase());
+  return preset ?? t.charAt(0).toUpperCase() + t.slice(1);
+}

@@ -3,8 +3,9 @@ import { toast } from "sonner";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { orderPlatforms, useSaveSetting, useSetting } from "@/lib/content";
 import { useSite } from "@/lib/data";
+import { displayPlatform } from "@/lib/types";
 
-const cap = (p: string) => p.trim().charAt(0).toUpperCase() + p.trim().slice(1);
+const cap = (p: string) => displayPlatform(p);
 
 /** Порядок значков-фильтров на странице «Ресурсы» */
 export function PlatformsAdmin() {
@@ -18,7 +19,7 @@ export function PlatformsAdmin() {
     for (const n of site.nodes)
       if (n.kind === "project")
         for (const p of n.platforms)
-          if (!m.has(p.trim().toLowerCase())) m.set(p.trim().toLowerCase(), cap(p));
+          if (!m.has(p.trim().toLowerCase())) m.set(p.trim().toLowerCase(), displayPlatform(p));
     return orderPlatforms([...m.values()], saved);
   }, [site.nodes, saved]);
 

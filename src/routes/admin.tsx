@@ -244,7 +244,7 @@ function AdminPage() {
         </div>
       </div>
 
-      <div className="-mx-4 mb-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:px-0">
+      <div className="no-scrollbar fade-x -mx-4 mb-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:px-0 md:[mask-image:none]">
         {(
           [
             ["tree", "Проекты"],

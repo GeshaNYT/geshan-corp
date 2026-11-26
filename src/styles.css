@@ -68,3 +68,22 @@
   background-clip: text;
   color: transparent;
 }
+
+/* Горизонтальные ленты (фильтры, вкладки, карточки): без полосы прокрутки,
+   а чтобы было видно, что можно листать, край плавно затухает */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+@utility fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 16px,
+    #000 calc(100% - 32px),
+    transparent 100%
+  );
+}
