@@ -42,7 +42,8 @@ const TREE: Seed[] = [
             title: "Плагины",
             kind: "section",
             icon: "Puzzle",
-            tagline: "Серверные решения — внутренние разработки для стабильности MineCube.",
+            tagline:
+              "Плагины для серверов Minecraft — внутренние разработки для стабильной работы MineCube.",
             children: [
               project("invate", "Invate", "Продвинутый античит для обеспечения честной игры.", {
                 status: "internal",
@@ -83,14 +84,21 @@ const TREE: Seed[] = [
             title: "Моды",
             kind: "section",
             icon: "Wrench",
-            tagline: "Моды для Minecraft от Geshan Dev.",
+            tagline: "Моды для Minecraft — новые механики и возможности в игре.",
+          },
+          {
+            slug: "resourcepacks",
+            title: "Ресурспаки",
+            kind: "section",
+            icon: "Palette",
+            tagline: "Ресурспаки для Minecraft — новые текстуры, звуки и интерфейс.",
           },
           {
             slug: "shaders",
             title: "Шейдеры",
             kind: "section",
             icon: "Sparkles",
-            tagline: "Шейдеры для Minecraft, доступные всему сообществу.",
+            tagline: "Шейдеры для Minecraft — новый свет, тени и атмосфера в игре.",
             children: [
               project(
                 "genature",
