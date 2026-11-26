@@ -21,6 +21,7 @@ import { formatSize, slugify, useRefreshSite, useSite } from "@/lib/data";
 import { useSaveSetting } from "@/lib/content";
 import { repo } from "@/lib/repo";
 import { LINK_ICON_SET, useLinkTypes } from "@/lib/linkTypes";
+import { parseBadge } from "@/components/NodeBadge";
 import {
   PLATFORM_PRESETS,
   STATUS_HINTS,
@@ -629,52 +630,76 @@ export function NodeEditor({
             </Group>
           )}
 
-          {/* Значок у названия */}
-          {isProject && (
-            <Group
-              title="Значок у названия"
-              hint="Маленький значок рядом с названием в списках. «Авто» — по файлам и главной кнопке (скачать, попробовать…)"
-            >
-              <div className="flex flex-wrap gap-1.5">
-                {[
-                  ["", "Авто"],
-                  ["none", "Без значка"],
-                ].map(([v, label]) => (
+          {/* Значки у названия */}
+          <Group
+            title="Значки у названия"
+            hint={
+              isProject
+                ? "Маленькие значки рядом с названием в списках. «Авто» — по файлам и главным кнопкам (скачать, открыть, облако…). Можно выбрать несколько."
+                : "Маленькие значки рядом с названием раздела. Обычно у разделов их нет. Можно выбрать несколько."
+            }
+          >
+            <div className="flex flex-wrap gap-1.5">
+              {(
+                [
+                  ["auto", isProject ? "Авто" : "Без значков"],
+                  ...(isProject ? [["none", "Без значков"]] : []),
+                ] as [string, string][]
+              ).map(([v, label]) => {
+                const mode = parseBadge(d.badge);
+                const active =
+                  v === "auto" ? mode === "auto" || (!isProject && mode === "none") : mode === v;
+                return (
                   <button
                     key={v}
                     type="button"
-                    onClick={() => set("badge", v)}
+                    onClick={() => set("badge", v === "auto" ? "" : "none")}
                     className={cn(
                       "rounded-full border px-3 py-1.5 text-xs transition",
-                      (d.badge ?? "") === v
+                      active
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border text-muted-foreground",
                     )}
                   >
                     {label}
                   </button>
-                ))}
-              </div>
-              <div className="grid grid-cols-10 gap-1">
-                {Object.entries(LINK_ICON_SET).map(([name, Icon]) => (
+                );
+              })}
+            </div>
+            <div className="grid grid-cols-10 gap-1">
+              {Object.entries(LINK_ICON_SET).map(([name, Icon]) => {
+                const mode = parseBadge(d.badge);
+                const chosen = Array.isArray(mode) ? mode : [];
+                const on = chosen.includes(name);
+                return (
                   <button
                     key={name}
                     type="button"
                     aria-label={name}
-                    onClick={() => set("badge", name)}
+                    aria-pressed={on}
+                    onClick={() => {
+                      const next = on ? chosen.filter((x) => x !== name) : [...chosen, name];
+                      set("badge", next.length ? next.join(",") : "");
+                    }}
                     className={cn(
                       "grid aspect-square place-items-center rounded-lg border transition",
-                      d.badge === name
+                      on
                         ? "border-primary bg-primary/15 text-primary"
                         : "border-transparent hover:border-border",
                     )}
                   >
                     <Icon className="h-4 w-4" />
                   </button>
-                ))}
-              </div>
-            </Group>
-          )}
+                );
+              })}
+            </div>
+            {Array.isArray(parseBadge(d.badge)) && (
+              <p className="text-xs text-muted-foreground">
+                Выбрано: {(parseBadge(d.badge) as string[]).length}. Нажми ещё раз на значок, чтобы
+                убрать.
+              </p>
+            )}
+          </Group>
 
           {/* Иконка */}
           <Group title="Иконка">

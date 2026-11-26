@@ -147,6 +147,7 @@ function Branch({
           </span>
           <span className="mt-0.5 flex items-center gap-2">
             {isProject && <StatusBadge status={node.status} />}
+            <NodeBadge node={node} />
             <span className="truncate text-xs text-muted-foreground">{meta || node.tagline}</span>
           </span>
         </span>
