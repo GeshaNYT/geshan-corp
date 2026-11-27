@@ -39,12 +39,36 @@ function NotFoundComponent() {
   );
 }
 
+// После обновления сайта у открытой вкладки остаются ссылки на старые файлы, которых уже нет.
+// Такую ошибку исправляет простая перезагрузка — делаем её сами (не чаще раза в 30 секунд).
+const STALE_CHUNK =
+  /dynamically imported module|Importing a module script failed|Failed to fetch|Unable to preload CSS|Loading chunk/i;
+function reloadOnce(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const last = Number(sessionStorage.getItem("gc:chunk-reload") || 0);
+    if (Date.now() - last < 30_000) return false;
+    sessionStorage.setItem("gc:chunk-reload", String(Date.now()));
+  } catch {
+    /* хранилище недоступно — всё равно перезагрузим */
+  }
+  window.location.reload();
+  return true;
+}
+if (typeof window !== "undefined") {
+  window.addEventListener("vite:preloadError", (e) => {
+    if (reloadOnce()) e.preventDefault();
+  });
+}
+
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
+  const stale = STALE_CHUNK.test((error as Error | undefined)?.message ?? "");
   useEffect(() => {
+    if (stale && reloadOnce()) return;
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
+  }, [error, stale]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -55,7 +79,11 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
         <p className="mt-2 text-sm text-muted-foreground">
           Что-то пошло не так. Попробуйте ещё раз или вернитесь на главную.
         </p>
-        {(error as Error | undefined)?.message ? (
+        {stale ? (
+          <p className="mt-3 text-sm text-muted-foreground">
+            Сайт только что обновился — перезагрузите страницу.
+          </p>
+        ) : (error as Error | undefined)?.message ? (
           <p className="mt-3 break-words rounded-md bg-muted px-3 py-2 text-left font-mono text-xs text-muted-foreground">
             {(error as Error).message}
           </p>
