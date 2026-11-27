@@ -72,11 +72,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     const client = supabase!;
+    // Профиль кэшируется в браузере: после обновления страницы права админа (карандаши и т.п.)
+    // появляются сразу, а свежие данные с сервера подтягиваются следом
+    const PROFILE_CACHE = "geshan:profile";
     const loadProfile = async (u: User | null) => {
       setUser(u);
-      if (!u) return setProfile(null);
+      if (!u) {
+        try {
+          window.localStorage.removeItem(PROFILE_CACHE);
+        } catch {
+          /* ignore */
+        }
+        return setProfile(null);
+      }
+      try {
+        const cached = JSON.parse(window.localStorage.getItem(PROFILE_CACHE) || "null");
+        if (cached?.id === u.id) setProfile((p) => p ?? (cached as Profile));
+      } catch {
+        /* ignore */
+      }
       const { data } = await client.from("profiles").select("*").eq("id", u.id).maybeSingle();
       setProfile((data as Profile) ?? null);
+      try {
+        if (data) window.localStorage.setItem(PROFILE_CACHE, JSON.stringify(data));
+      } catch {
+        /* ignore */
+      }
     };
     client.auth.getSession().then(async ({ data }) => {
       await loadProfile(data.session?.user ?? null);

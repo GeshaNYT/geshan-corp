@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { SEED_FILES, SEED_NODES } from "@/data/seed";
 import { repo, type Snapshot } from "./repo";
@@ -7,6 +7,8 @@ import type { NodeFile, NodeVersion, SiteNode } from "./types";
 const EMPTY_VERSIONS: NodeVersion[] = [];
 
 export const SITE_KEY = ["site"] as const;
+const SITE_CACHE = "geshan:site-cache:v1";
+const restored = { current: false };
 
 const bySort = (a: SiteNode, b: SiteNode) => a.sort - b.sort || a.title.localeCompare(b.title);
 
@@ -35,6 +37,32 @@ export function useSite(): SiteIndex {
     placeholderData: repo.mode === "demo" ? undefined : { nodes: SEED_NODES, files: SEED_FILES },
     staleTime: 30_000,
   });
+  // Последние данные с сервера храним в браузере: после обновления страницы сразу видны
+  // настоящие разделы и проекты, а не стартовый набор, пока идёт загрузка
+  const qc = useQueryClient();
+  useEffect(() => {
+    if (repo.mode === "demo") return;
+    if (q.isSuccess && !q.isPlaceholderData) {
+      try {
+        window.localStorage.setItem(SITE_CACHE, JSON.stringify(q.data));
+      } catch {
+        /* переполнено или недоступно — не страшно */
+      }
+    } else if (q.isPlaceholderData && !restored.current) {
+      restored.current = true;
+      // Чуть позже, когда страница полностью «оживёт», чтобы не сбить гидратацию
+      setTimeout(() => {
+        try {
+          const raw = window.localStorage.getItem(SITE_CACHE);
+          if (raw && qc.getQueryState(SITE_KEY)?.status !== "success") {
+            qc.setQueryData(SITE_KEY, JSON.parse(raw) as Snapshot, { updatedAt: 0 });
+          }
+        } catch {
+          /* ignore */
+        }
+      }, 0);
+    }
+  }, [q.isSuccess, q.isPlaceholderData, q.data, qc]);
   const nodes = q.data?.nodes ?? SEED_NODES;
   const files = q.data?.files ?? SEED_FILES;
   const versions = q.data?.versions ?? EMPTY_VERSIONS;

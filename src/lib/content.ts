@@ -1,4 +1,5 @@
 // Каналы и настройки сайта (порядок платформ и т.п.)
+import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CHANNELS } from "@/data/seed";
 import { supabase } from "./supabase";
@@ -29,12 +30,40 @@ function check<T>(res: { data: T; error: { message: string; code?: string } | nu
   return res.data;
 }
 
+const CH_CACHE = "geshan:channels-cache:v1";
+function cachedChannels(): Channel[] | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    const raw = window.localStorage.getItem(CH_CACHE);
+    return raw ? (JSON.parse(raw) as Channel[]) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function useChannels() {
+  const qc = useQueryClient();
+  // После гидратации подставляем сохранённые каналы, пока идёт запрос (до этого — стартовые,
+  // чтобы разметка совпала с заранее собранной страницей)
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const cached = cachedChannels();
+      if (cached && qc.getQueryState(["channels"])?.status !== "success")
+        qc.setQueryData(["channels"], cached, { updatedAt: 0 });
+    }, 0);
+    return () => clearTimeout(t);
+  }, [qc]);
   return useQuery<Channel[]>({
     queryKey: ["channels"],
     queryFn: async () => {
       if (!supabase) return FALLBACK;
-      return check(await supabase.from("channels").select("*").order("sort")) as Channel[];
+      const list = check(await supabase.from("channels").select("*").order("sort")) as Channel[];
+      try {
+        window.localStorage.setItem(CH_CACHE, JSON.stringify(list));
+      } catch {
+        /* ignore */
+      }
+      return list;
     },
     placeholderData: FALLBACK,
     enabled: typeof window !== "undefined",
